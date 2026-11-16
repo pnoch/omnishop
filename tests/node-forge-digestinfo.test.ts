@@ -1,11 +1,10 @@
 import forge from "node-forge";
 import { describe, expect, it } from "vitest";
 
-// Regression guard for the pnpm patch on node-forge 1.4.0
-// (patches/node-forge@1.4.0.patch). CVE-2026-85393: the 1.4.0 fix only checked
-// the outer DigestInfo element count, so extra children inside the nested
-// DigestAlgorithm sequence still allowed low-exponent PKCS#1 v1.5 signature
-// forgery. The patch rejects those extra elements.
+// Regression guard for CVE-2026-85393, fixed upstream in node-forge 1.4.3.
+// The 1.4.0 fix only checked the outer DigestInfo element count, so extra
+// children inside the nested DigestAlgorithm sequence still allowed
+// low-exponent PKCS#1 v1.5 signature forgery. 1.4.3 rejects them.
 const N = new forge.jsbn.BigInteger(
   "E932AC92252F585B3A80A4DD76A897C8B7652952FE788F6EC8DD640587A1EE56" +
     "47670A8AD4C2BE0F9FA6E49C605ADF77B5174230AF7BD50E5D6D6D6D28CCF0A8" +

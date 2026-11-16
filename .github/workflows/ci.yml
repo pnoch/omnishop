@@ -32,11 +32,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # Fail on new production advisories. The node-forge GHSA is ignored in
-      # package.json (pnpm.auditConfig.ignoreGhsas) because it has no patched
-      # release; the fix is applied via pnpm patch and guarded by
-      # tests/node-forge-patch.test.ts. Parse the advisory list rather than the
-      # summary: pnpm keeps the ignored finding in `metadata` but removes it
+      # Fail on new production advisories. deepmerge is ignored in package.json
+      # (pnpm.auditConfig.ignoreGhsas) because it has no patched release; it is
+      # low-severity and build-time only. Parse the advisory list rather than
+      # the summary: pnpm keeps ignored findings in `metadata` but removes them
       # from `advisories`, and the text summary is misleading.
       - name: Audit production dependencies
         run: |
