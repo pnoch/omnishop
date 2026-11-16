@@ -15,9 +15,9 @@ export async function registerPushToken(): Promise<void> {
     // would only produce a 401.
     const { getSessionToken } = await import("./_core/auth");
     if (!(await getSessionToken())) return;
-    const projectId = (
-      Constants.expoConfig?.extra as { expoProjectId?: string } | undefined
-    )?.expoProjectId;
+    const projectId =
+      (Constants.expoConfig?.extra as { expoProjectId?: string } | undefined)
+        ?.expoProjectId ?? Constants.easConfig?.projectId;
     if (!projectId) return;
     const token = await Notifications.getExpoPushTokenAsync({ projectId });
     const client = createTRPCClient();

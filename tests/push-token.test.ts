@@ -4,6 +4,7 @@ const state = vi.hoisted(() => ({
   platform: "ios",
   isDevice: true,
   projectId: "proj-123" as string | undefined,
+  easProjectId: undefined as string | undefined,
   token: "ExponentPushToken[mobile]",
   failToken: false,
   failUnregister: false,
@@ -33,6 +34,9 @@ vi.mock("expo-constants", () => ({
       get extra() {
         return { expoProjectId: state.projectId };
       },
+    },
+    get easConfig() {
+      return state.easProjectId ? { projectId: state.easProjectId } : null;
     },
   },
 }));
@@ -80,6 +84,7 @@ beforeEach(() => {
   state.platform = "ios";
   state.isDevice = true;
   state.projectId = "proj-123";
+  state.easProjectId = undefined;
   state.failToken = false;
   state.failUnregister = false;
   state.registerCalls.length = 0;
@@ -114,6 +119,13 @@ describe("registerPushToken", () => {
     state.projectId = undefined;
     await registerPushToken();
     expect(state.registerCalls).toHaveLength(0);
+  });
+
+  it("falls back to the EAS-linked project id", async () => {
+    state.projectId = undefined;
+    state.easProjectId = "eas-linked-1";
+    await registerPushToken();
+    expect(state.registerCalls).toHaveLength(1);
   });
 
   it("never throws when the token request fails", async () => {

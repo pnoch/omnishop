@@ -145,7 +145,7 @@ upload. **EAS alternative:** `eas build -p android --profile production`
 `eas submit -p android`.
 
 > Native push needs an EAS project: `registerPushToken` reads
-> `extra.expoProjectId` and skips registration when it is empty. Run
+> `extra.expoProjectId`, then falls back to the EAS-linked project ID. Run
 > `eas init`/`eas login` once (or set `EXPO_PUBLIC_EXPO_PROJECT_ID`) before
 > building the store binaries, otherwise price alerts only fire while the app
 > is open.
