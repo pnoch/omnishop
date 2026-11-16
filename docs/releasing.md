@@ -192,6 +192,11 @@ TAURI_SIGNING_PRIVATE_KEY_PASSWORD="" \
 The in-app **Settings → About → Updates** row checks the endpoint and installs
 an available update (Windows exits to install; macOS/Linux apply on restart).
 
+> Desktop builds talk to the API cross-origin from `tauri://localhost` /
+> `http://tauri.localhost` / `https://tauri.localhost`. The server must include
+> those in `CORS_ALLOWED_ORIGINS` (Railway has this set), otherwise the app
+> shows **Offline / Backend unreachable** even though the API is healthy.
+
 ---
 
 ## 5. Web deploy

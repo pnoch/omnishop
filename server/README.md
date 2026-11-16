@@ -52,8 +52,10 @@ deviceLabels, revokedDevices. Migrations live in `drizzle/`; apply committed one
   `BUILT_IN_FORGE_API_KEY`
 - `CORS_ALLOWED_ORIGINS` — comma-separated list of allowed browser origins (e.g.
   `http://localhost:8081,https://app.example.com`). Required when the web app is
-  served from a different origin than the API (cross-origin dev). Not needed if
-  the web build is hosted behind the same origin as the API.
+  served from a different origin than the API (cross-origin dev), and **required
+  for the desktop app**: include `http://tauri.localhost,https://tauri.localhost,tauri://localhost`
+  or the Tauri webview reports "Backend unreachable" and stays signed out.
+  Not needed for same-origin web only.
 - Expo runtime: `EXPO_PUBLIC_APP_ID`, `EXPO_PUBLIC_API_BASE_URL`, `EXPO_PUBLIC_OAUTH_PORTAL_URL`
 - Transactional email: `RESEND_API_KEY` + `EMAIL_FROM` (Resend HTTP API, no SDK).
   Without them password-reset and email-verification sends are skipped (logged),
