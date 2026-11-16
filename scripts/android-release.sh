@@ -21,28 +21,28 @@ TARGET="${1:-all}"
 API_URL="${EXPO_PUBLIC_API_BASE_URL:-https://web.omnishop.siamcreations.app}"
 WEB_URL="${EXPO_PUBLIC_WEB_URL:-$API_URL}"
 
+echo "Building with:"
+echo "  EXPO_PUBLIC_API_BASE_URL=$API_URL"
+echo "  EXPO_PUBLIC_WEB_URL=$WEB_URL"
+echo
+
+# Export before prebuild: app.config.ts reads these while generating the native
+# manifest. Prebuilding from the dev .env produced App Links for localhost.
+export EXPO_PUBLIC_API_BASE_URL="$API_URL"
+export EXPO_PUBLIC_WEB_URL="$WEB_URL"
+
+echo "Running expo prebuild with production URLs..."
+(cd "$REPO_ROOT" && npx expo prebuild --platform android --no-install)
+
 if [ ! -f "$REPO_ROOT/credentials/keystore.properties" ]; then
   echo "ERROR: credentials/keystore.properties missing." >&2
   echo "Run scripts/android-keystore.sh first (or restore your backup)." >&2
   exit 1
 fi
 
-if [ ! -d "$REPO_ROOT/android" ]; then
-  echo "ERROR: android/ missing. Run: npx expo prebuild --platform android" >&2
-  exit 1
-fi
-
-echo "Building with:"
-echo "  EXPO_PUBLIC_API_BASE_URL=$API_URL"
-echo "  EXPO_PUBLIC_WEB_URL=$WEB_URL"
-echo
-
 # Force the JS bundle to regenerate so the env values above are actually baked.
 rm -f "$REPO_ROOT/android/app/build/generated/assets/createBundleReleaseJsAndAssets/index.android.bundle"
 rm -f "$REPO_ROOT/android/app/build/intermediates/assets/release/mergeReleaseAssets/index.android.bundle"
-
-export EXPO_PUBLIC_API_BASE_URL="$API_URL"
-export EXPO_PUBLIC_WEB_URL="$WEB_URL"
 
 GRADLE_TASKS=()
 case "$TARGET" in

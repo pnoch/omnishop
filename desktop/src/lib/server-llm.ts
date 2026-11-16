@@ -5,7 +5,22 @@ const TIMEOUT_MS = 20_000;
 export interface LlmTestResult {
   ok: boolean;
   provider: string;
-  reason?: "auth" | "error";
+  reason?: "auth" | "error" | "not-configured";
+}
+
+export interface LlmStatus {
+  builtIn: boolean;
+}
+
+/** Whether the server can run AI without a user-supplied key. */
+export async function getLlmStatus(): Promise<LlmStatus | null> {
+  try {
+    const { createTRPCClient } = await import("./trpc");
+    const status = await withTimeout(createTRPCClient().llm.status.query(), 8_000);
+    return { builtIn: status?.builtIn === true };
+  } catch {
+    return null;
+  }
 }
 
 /**

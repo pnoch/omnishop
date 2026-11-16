@@ -17,6 +17,19 @@ export function LlmSettingsSection({
   );
   const [testingLlm, setTestingLlm] = useState(false);
   const [showLlmApiKey, setShowLlmApiKey] = useState(false);
+  const [builtInAvailable, setBuiltInAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void (async () => {
+      const { getLlmStatus } = await import("../../lib/server-llm");
+      const status = await getLlmStatus();
+      if (active && status) setBuiltInAvailable(status.builtIn);
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const [prevLlm, setPrevLlm] = useState({
     apiKey: settings.llmApiKey,
@@ -72,6 +85,8 @@ export function LlmSettingsSection({
         showToast("Connection OK — provider responded");
       } else if (res.reason === "auth") {
         showToast("Check your API key — the provider rejected it");
+      } else if (res.reason === "not-configured") {
+        showToast("AI isn't configured — choose OpenAI or Ollama and add a key");
       } else {
         showToast("Connection failed — check the URL and model");
       }
@@ -95,11 +110,17 @@ export function LlmSettingsSection({
           className="w-full max-w-xs px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm shadow-sm dark:shadow-none focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all"
           aria-label="LLM provider"
         >
-          <option value="forge">Forge (Default)</option>
+          <option value="forge">Forge (Server)</option>
           <option value="openai">OpenAI</option>
           <option value="ollama">Ollama Cloud</option>
           <option value="ollama-local">Ollama Local</option>
         </select>
+
+        {llmProvider === "forge" && builtInAvailable === false && (
+          <p role="alert" className="mt-3 text-xs text-red-600 dark:text-red-400">
+            {"Built-in AI isn't configured on this server. Choose OpenAI or Ollama Cloud and add an API key to use AI discovery."}
+          </p>
+        )}
 
         {llmProvider !== "forge" && (
           <button
@@ -247,7 +268,9 @@ export function LlmSettingsSection({
 
         <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">
           {llmProvider === "forge"
-            ? "Uses the built-in service. AI discovery and price insights run on the server; no key needed."
+            ? builtInAvailable === false
+              ? "Built-in AI is not configured on this server. Pick OpenAI or Ollama Cloud above and enter your key."
+              : "Uses the built-in service. AI discovery and price insights run on the server; no key needed."
             : llmProvider === "openai"
               ? "Requires an OpenAI API key. Used for product discovery and price insights."
               : llmProvider === "ollama"
