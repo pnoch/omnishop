@@ -274,9 +274,10 @@ transactional mail uses Resend:
 ### Release page
 
 The landing/download page lives in `pnoch/omnishop-releases` and is served by
-GitHub Pages at <https://omnishop.siamcreations.app/> (custom domain, CNAME to
-`pnoch.github.io`). Edit `docs/index.html` and `docs/screenshots/` in that
-repository; the app itself is at <https://web.omnishop.siamcreations.app>.
+GitHub Pages at <https://omnishop.siamcreations.app/> (custom domain, A/AAAA
+records to GitHub Pages — not a CNAME, because `web.omnishop` is a child CNAME
+to Railway). Edit `docs/index.html` and `docs/screenshots/` in that repository;
+the app itself is at <https://web.omnishop.siamcreations.app>.
 
 The Android button resolves the first `.apk` asset from the rolling
 `android-latest` prerelease in `pnoch/omnishop`. Publish a new APK by replacing
