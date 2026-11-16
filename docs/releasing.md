@@ -94,13 +94,13 @@ RUN_DB_TESTS=1 TEST_DATABASE_URL=mysql://root:root@127.0.0.1:3306/psf_test pnpm 
 
 ### App Links / deep links
 
-Set `EXPO_PUBLIC_WEB_URL=https://omnishop.siamcreations.app` in the build
+Set `EXPO_PUBLIC_WEB_URL=https://web.omnishop.siamcreations.app` in the build
 environment **before** bundling, so `app.config.ts` emits the
-`https://omnishop.siamcreations.app` intent filter with `autoVerify` (and the
-iOS `associatedDomains`). It falls back to `EXPO_PUBLIC_API_BASE_URL`, and if
-neither is set there is no https App Link. IONOS does not allow a CNAME at the
-apex, so each app lives on its own subdomain; `www`/apex are reserved for the
-company site.
+`https://web.omnishop.siamcreations.app` intent filter with `autoVerify` (and
+the iOS `associatedDomains`). It falls back to `EXPO_PUBLIC_API_BASE_URL`, and
+if neither is set there is no https App Link. IONOS does not allow a CNAME at
+the apex, so the app lives on its own subdomain; `omnishop.siamcreations.app`
+is the landing/download page and `www`/apex are reserved for the company site.
 
 On the server, set `ANDROID_SHA256_CERT_FINGERPRINTS` (comma-separated SHA-256
 from the keystore) so `/.well-known/assetlinks.json` is served; App Links won't
@@ -211,38 +211,42 @@ migrations (`pnpm db:migrate`) before the server starts. Use `pnpm db:push` only
 while changing the schema, and commit the generated SQL — CI's
 `pnpm db:check-migrations` fails on drift.
 
-### Custom domain (`omnishop.siamcreations.app`)
+### Custom domain (`web.omnishop.siamcreations.app`)
 
-Each app gets its own subdomain under `siamcreations.app`; `www`/apex are
-reserved for the company site. The app is served same-origin, so the custom
-domain fronts both the SPA and the API. One-time setup:
+The web app lives at `web.omnishop.siamcreations.app`; the brand subdomain
+`omnishop.siamcreations.app` is the landing/download page (GitHub Pages,
+`pnoch/omnishop-releases`). `www`/apex are reserved for the company site. The
+app is served same-origin, so its custom domain fronts both the SPA and the API.
+One-time setup:
 
 ```bash
 railway login
 railway link                 # select the OmniShop project + environment
-railway domain omnishop.siamcreations.app --service app --json
+railway domain web.omnishop.siamcreations.app --service app --json
 ```
 
 The command returns the DNS target Railway expects:
 
 ```
-omnishop.siamcreations.app  CNAME  <target returned by Railway>
+web.omnishop.siamcreations.app  CNAME  <target returned by Railway>
 ```
 
 Add that CNAME in IONOS DNS. Railway may also return a `verificationDnsHost` /
-`verificationToken` (`_railway-verify.omnishop` → `railway-verify=…`); add that
-TXT record too, otherwise the certificate stays in `VALIDATING_OWNERSHIP`.
+`verificationToken` (`_railway-verify.web.omnishop` → `railway-verify=…`); add
+that TXT record too, otherwise the certificate stays in
+`VALIDATING_OWNERSHIP`.
 
 Do not point the apex MX at Railway; `support@siamcreations.app` stays on IONOS.
 Wait for Railway to show the domain as verified and serving TLS, then check:
 
 ```bash
-curl -sI https://omnishop.siamcreations.app/privacy
+curl -sI https://web.omnishop.siamcreations.app/privacy
 ```
 
-Set `EXPO_PUBLIC_WEB_URL=https://omnishop.siamcreations.app` on Railway **and**
-in the EAS/CI build environment, then rebuild the web export and native bundles
-(`EXPO_PUBLIC_*` is inlined at bundle time; use `--clear` after changing it).
+Set `EXPO_PUBLIC_WEB_URL=https://web.omnishop.siamcreations.app` on Railway
+**and** in the EAS/CI build environment, then rebuild the web export and native
+bundles (`EXPO_PUBLIC_*` is inlined at bundle time; use `--clear` after changing
+it).
 Do this only after the domain serves TLS: the server uses the same value to
 validate OAuth redirect origins. That value also drives
 `getPrivacyPolicyUrl()`, the Android App Link host, and the iOS associated
@@ -270,10 +274,9 @@ transactional mail uses Resend:
 ### Release page
 
 The landing/download page lives in `pnoch/omnishop-releases` and is served by
-GitHub Pages at <https://omnishop-releases.siamcreations.app/> (custom domain,
-CNAME to `pnoch.github.io`). Edit `docs/index.html` and
-`docs/screenshots/` in that repository; the app itself stays at
-<https://omnishop.siamcreations.app>.
+GitHub Pages at <https://omnishop.siamcreations.app/> (custom domain, CNAME to
+`pnoch.github.io`). Edit `docs/index.html` and `docs/screenshots/` in that
+repository; the app itself is at <https://web.omnishop.siamcreations.app>.
 
 The Android button resolves the first `.apk` asset from the rolling
 `android-latest` prerelease in `pnoch/omnishop`. Publish a new APK by replacing

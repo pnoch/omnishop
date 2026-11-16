@@ -49,9 +49,9 @@ Copy for App Store Connect and Google Play Console. Keep this in sync with
 
 | Field | Value |
 | --- | --- |
-| Privacy policy | `https://omnishop.siamcreations.app/privacy` (served by the SPA; override with `EXPO_PUBLIC_PRIVACY_URL`) |
+| Privacy policy | `https://web.omnishop.siamcreations.app/privacy` (served by the SPA; override with `EXPO_PUBLIC_PRIVACY_URL`) |
 | Support email | `support@siamcreations.app` (override with `EXPO_PUBLIC_SUPPORT_EMAIL`) |
-| Marketing URL | `https://omnishop-releases.siamcreations.app/` |
+| Marketing URL | `https://omnishop.siamcreations.app/` |
 
 ## Required assets (not in the repo — supply at submission)
 
