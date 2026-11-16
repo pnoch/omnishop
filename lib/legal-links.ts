@@ -24,9 +24,8 @@ export function getPrivacyPolicyUrl(): string {
 
 export function getSupportEmail(): string {
   // `??` would accept an empty-string override and produce `mailto:`. The
-  // mailbox keeps the pre-rebrand domain because that is the verified address;
-  // point EXPO_PUBLIC_SUPPORT_EMAIL at an omnishop mailbox once one exists.
-  return SUPPORT_EMAIL_OVERRIDE || "support@productstockfinder.savvylife.icu";
+  // mailbox lives on the company domain (IONOS MX/SPF are already configured).
+  return SUPPORT_EMAIL_OVERRIDE || "support@siamcreations.app";
 }
 
 export function getSupportMailtoUrl(): string {

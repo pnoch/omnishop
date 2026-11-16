@@ -88,9 +88,9 @@ describe("getPrivacyPolicyUrl", () => {
 describe("getSupportEmail / getSupportMailtoUrl", () => {
   it("returns the default support address when unset", async () => {
     const { getSupportEmail, getSupportMailtoUrl } = await load();
-    expect(getSupportEmail()).toBe("support@productstockfinder.savvylife.icu");
+    expect(getSupportEmail()).toBe("support@siamcreations.app");
     expect(getSupportMailtoUrl()).toBe(
-      "mailto:support@productstockfinder.savvylife.icu",
+      "mailto:support@siamcreations.app",
     );
   });
 
@@ -108,9 +108,9 @@ describe("getSupportEmail / getSupportMailtoUrl", () => {
     const { getSupportEmail, getSupportMailtoUrl } = await load({
       EXPO_PUBLIC_SUPPORT_EMAIL: "",
     });
-    expect(getSupportEmail()).toBe("support@productstockfinder.savvylife.icu");
+    expect(getSupportEmail()).toBe("support@siamcreations.app");
     expect(getSupportMailtoUrl()).toBe(
-      "mailto:support@productstockfinder.savvylife.icu",
+      "mailto:support@siamcreations.app",
     );
   });
 });
