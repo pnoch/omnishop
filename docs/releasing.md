@@ -94,12 +94,13 @@ RUN_DB_TESTS=1 TEST_DATABASE_URL=mysql://root:root@127.0.0.1:3306/psf_test pnpm 
 
 ### App Links / deep links
 
-Set `EXPO_PUBLIC_WEB_URL=https://www.siamcreations.app` in the build environment
-**before** bundling, so `app.config.ts` emits the `https://www.siamcreations.app`
-intent filter with `autoVerify` (and the iOS `associatedDomains`). It falls back
-to `EXPO_PUBLIC_API_BASE_URL`, and if neither is set there is no https App Link.
-IONOS does not allow a CNAME at the apex, so `www` is the canonical host and
-`siamcreations.app` redirects to it.
+Set `EXPO_PUBLIC_WEB_URL=https://omnishop.siamcreations.app` in the build
+environment **before** bundling, so `app.config.ts` emits the
+`https://omnishop.siamcreations.app` intent filter with `autoVerify` (and the
+iOS `associatedDomains`). It falls back to `EXPO_PUBLIC_API_BASE_URL`, and if
+neither is set there is no https App Link. IONOS does not allow a CNAME at the
+apex, so each app lives on its own subdomain; `www`/apex are reserved for the
+company site.
 
 On the server, set `ANDROID_SHA256_CERT_FINGERPRINTS` (comma-separated SHA-256
 from the keystore) so `/.well-known/assetlinks.json` is served; App Links won't
@@ -210,45 +211,46 @@ migrations (`pnpm db:migrate`) before the server starts. Use `pnpm db:push` only
 while changing the schema, and commit the generated SQL — CI's
 `pnpm db:check-migrations` fails on drift.
 
-### Custom domain (`siamcreations.app`)
+### Custom domain (`omnishop.siamcreations.app`)
 
-IONOS DNS does not support a CNAME at the apex, so `www.siamcreations.app` is
-the canonical host and the apex redirects to it. The app is served same-origin,
-so the custom domain fronts both the SPA and the API. One-time setup:
+Each app gets its own subdomain under `siamcreations.app`; `www`/apex are
+reserved for the company site. The app is served same-origin, so the custom
+domain fronts both the SPA and the API. One-time setup:
 
 ```bash
 railway login
 railway link                 # select the OmniShop project + environment
-railway domain www.siamcreations.app --service app --json
+railway domain omnishop.siamcreations.app --service app --json
 ```
 
 The command returns the DNS target Railway expects:
 
 ```
-www.siamcreations.app  CNAME  <target returned by Railway>
+omnishop.siamcreations.app  CNAME  <target returned by Railway>
 ```
 
 Add that CNAME in IONOS DNS. Railway may also return a `verificationDnsHost` /
-`verificationToken` (`_railway-verify.www` → `railway-verify=…`); add that TXT
-record too, otherwise the certificate stays in `VALIDATING_OWNERSHIP`.
+`verificationToken` (`_railway-verify.omnishop` → `railway-verify=…`); add that
+TXT record too, otherwise the certificate stays in `VALIDATING_OWNERSHIP`.
 
-Then configure the apex (`siamcreations.app`) as a redirect to
-`https://www.siamcreations.app` in IONOS **Domains & SSL → Redirect**. Do not
-point the apex MX at Railway; `support@siamcreations.app` stays on IONOS.
+Do not point the apex MX at Railway; `support@siamcreations.app` stays on IONOS.
 Wait for Railway to show the domain as verified and serving TLS, then check:
 
 ```bash
-curl -sI https://www.siamcreations.app/privacy
+curl -sI https://omnishop.siamcreations.app/privacy
 ```
 
-Set `EXPO_PUBLIC_WEB_URL=https://www.siamcreations.app` on Railway **and** in the
-EAS/CI build environment, then rebuild the web export and native bundles
+Set `EXPO_PUBLIC_WEB_URL=https://omnishop.siamcreations.app` on Railway **and**
+in the EAS/CI build environment, then rebuild the web export and native bundles
 (`EXPO_PUBLIC_*` is inlined at bundle time; use `--clear` after changing it).
 Do this only after the domain serves TLS: the server uses the same value to
 validate OAuth redirect origins. That value also drives
 `getPrivacyPolicyUrl()`, the Android App Link host, and the iOS associated
 domain. Also set `ANDROID_SHA256_CERT_FINGERPRINTS` / `APPLE_TEAM_ID` as
 described above so the well-known verification files answer for the new host.
+
+Railway plans cap custom domains per service; remove unused domains (for
+example the old `www` alias) before adding another subdomain.
 
 ### Transactional email (`siamcreations.app`)
 
