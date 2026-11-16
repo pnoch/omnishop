@@ -94,10 +94,10 @@ RUN_DB_TESTS=1 TEST_DATABASE_URL=mysql://root:root@127.0.0.1:3306/psf_test pnpm 
 
 ### App Links / deep links
 
-Set `EXPO_PUBLIC_WEB_URL` (e.g. `https://app.example.com`) in `.env` **before**
-bundling, so `app.config.ts` emits the `https://<host>` intent filter with
-`autoVerify` (and the iOS `associatedDomains`). It falls back to
-`EXPO_PUBLIC_API_BASE_URL`, and if neither is set there is no https App Link.
+Set `EXPO_PUBLIC_WEB_URL=https://siamcreations.app` in the build environment
+**before** bundling, so `app.config.ts` emits the `https://siamcreations.app`
+intent filter with `autoVerify` (and the iOS `associatedDomains`). It falls back
+to `EXPO_PUBLIC_API_BASE_URL`, and if neither is set there is no https App Link.
 
 On the server, set `ANDROID_SHA256_CERT_FINGERPRINTS` (comma-separated SHA-256
 from the keystore) so `/.well-known/assetlinks.json` is served; App Links won't
@@ -207,6 +207,48 @@ Dockerfile is built on deploy.
 migrations (`pnpm db:migrate`) before the server starts. Use `pnpm db:push` only
 while changing the schema, and commit the generated SQL — CI's
 `pnpm db:check-migrations` fails on drift.
+
+### Custom domain (`siamcreations.app`)
+
+The app is served same-origin, so the custom domain fronts both the SPA and the
+API. One-time setup:
+
+```bash
+railway login
+railway link                 # select the OmniShop project + environment
+railway domain siamcreations.app --service app --json
+```
+
+The command returns the DNS target Railway expects. In IONOS DNS, add that
+CNAME. If IONOS refuses a CNAME at the apex, use `www.siamcreations.app` for the
+CNAME and redirect the apex to `www`; otherwise Railway can issue the apex
+certificate once the record resolves. Wait for Railway to show the domain as
+verified and serving TLS, then check:
+
+```bash
+curl -sI https://siamcreations.app/privacy
+```
+
+Set `EXPO_PUBLIC_WEB_URL=https://siamcreations.app` on Railway **and** in the
+EAS/CI build environment, then rebuild the web export and native bundles
+(`EXPO_PUBLIC_*` is inlined at bundle time; use `--clear` after changing it).
+That value drives `getPrivacyPolicyUrl()`, the Android App Link host, and the
+iOS associated domain. Also set `ANDROID_SHA256_CERT_FINGERPRINTS` /
+`APPLE_TEAM_ID` as described above so the well-known verification files answer
+for the new host.
+
+### Transactional email (`siamcreations.app`)
+
+`support@siamcreations.app` stays on IONOS (root MX unchanged). Only outbound
+transactional mail uses Resend:
+
+1. Resend dashboard → Domains → add `siamcreations.app`.
+2. Copy the DKIM TXT record and the `send` subdomain MX/SPF records into IONOS
+   DNS. Do not replace the root MX; the support inbox depends on it.
+3. Set `EMAIL_FROM=no-reply@siamcreations.app` on Railway and keep the existing
+   `RESEND_API_KEY`.
+4. Verify end-to-end with `POST /api/auth/forgot` (expect a real Resend message
+   id) and a test password-reset email.
 
 ---
 
