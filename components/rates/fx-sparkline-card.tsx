@@ -55,7 +55,7 @@ export function FxSparklineCard({
         borderColor: colors.border,
         padding: 12,
         flex: 1,
-        minWidth: "45%",
+        minWidth: 0,
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>

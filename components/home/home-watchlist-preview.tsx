@@ -3,23 +3,8 @@ import { formatPrice } from "@shared/currency";
 import { useColors } from "@/hooks/use-colors";
 import { StockBadge } from "@/components/stock-badge";
 import { getBestPrice } from "@/lib/currency";
-import type { Product, StockStatus } from "@/lib/types";
-
-const STOCK_ORDER: Record<StockStatus, number> = {
-  in_stock: 0,
-  back_order: 1,
-  out_of_stock: 2,
-  unknown: 3,
-};
-
-function getBestStatus(product: Product): StockStatus {
-  const listings = product.listings ?? [];
-  if (!listings.length) return "unknown";
-  const sorted = [...listings].sort(
-    (a, b) => STOCK_ORDER[a.stockStatus] - STOCK_ORDER[b.stockStatus],
-  );
-  return sorted[0]!.stockStatus;
-}
+import { getBestStatus } from "@/lib/product-stock";
+import type { Product } from "@/lib/types";
 
 export function HomeWatchlistPreview({
   watchlist,
@@ -87,11 +72,13 @@ export function HomeWatchlistPreview({
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {product.brand} · {product.category}
+                {product.brand} · {product.category} ·{" "}
+                {(product.listings ?? []).length} distributor
+                {(product.listings ?? []).length === 1 ? "" : "s"}
               </Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>
-              {bestPrice && (
+              {bestPrice ? (
                 <Text
                   style={{
                     color: colors.primary,
@@ -100,6 +87,10 @@ export function HomeWatchlistPreview({
                   }}
                 >
                   {formatPrice(bestPrice.price, bestPrice.currency)}
+                </Text>
+              ) : (
+                <Text style={{ color: colors.muted, fontSize: 12 }}>
+                  No price
                 </Text>
               )}
               <View style={{ marginTop: 4 }}>

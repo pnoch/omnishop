@@ -18,6 +18,7 @@ import {
   updateSettings,
 } from "@/lib/storage";
 import { clampSelection, defaultAlertTarget } from "@/lib/concierge";
+import { SAMPLE_LISTINGS, freshenSampleListings } from "@/lib/sample-data";
 import { getCountry } from "@shared/countries";
 import { PRODUCT_CATALOG, searchCatalog } from "@shared/catalog";
 import type { Product } from "@/lib/types";
@@ -32,7 +33,11 @@ function toProduct(entry: CatalogEntry): Product {
     ...entry,
     addedAt: new Date().toISOString(),
     isWatched: true,
-    listings: [],
+    // Seed the known sample listings so the first screen shows prices and
+    // stock instead of "0 distributors / No data" until a live refresh lands.
+    listings: SAMPLE_LISTINGS[entry.id]
+      ? freshenSampleListings(SAMPLE_LISTINGS[entry.id]!)
+      : [],
     tags: [],
   };
 }

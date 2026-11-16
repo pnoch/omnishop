@@ -23,6 +23,7 @@ import { useMonitoringHealth } from "@/hooks/use-monitoring-health";
 import { useHomeData } from "@/hooks/use-home-data";
 import { HomeHeader } from "@/components/home/home-header";
 import { HomeFeed } from "@/components/home/home-feed";
+import { HomeStats } from "@/components/home/home-stats";
 import { HomeWatchlistPreview } from "@/components/home/home-watchlist-preview";
 import { showAlert } from "@/lib/alert";
 import { greetingFor, buildFeedItems } from "@/lib/home-feed";
@@ -230,6 +231,11 @@ export default function HomeScreen() {
           </View>
         ) : (
           <>
+            <HomeStats
+              watchlist={watchlist}
+              alertCount={alerts.filter((alert) => !alert.triggeredAt).length}
+            />
+
             <HomeFeed
               feedItems={feedItems}
               productNames={productNames}

@@ -26,7 +26,7 @@ export function StockBadge({
       text: colors.error,
       label: "Out of Stock",
     },
-    unknown: { bg: colors.muted + "22", text: colors.muted, label: "Unknown" },
+    unknown: { bg: colors.muted + "22", text: colors.muted, label: "No data" },
   };
   const c = config[status] ?? config.unknown;
   return (

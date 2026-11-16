@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Platform, useWindowDimensions, View } from "react-native";
 import { EXCHANGE_RATES } from "@shared/currency";
 import { FxSparklineCard } from "./fx-sparkline-card";
 
@@ -15,10 +15,17 @@ interface FxRateGridProps {
 
 export function FxRateGrid({ currentRates, history, change }: FxRateGridProps) {
   const currencies = CURRENCIES;
+  const { width } = useWindowDimensions();
+  const columns =
+    Platform.OS === "web" && width >= 1200
+      ? 4
+      : Platform.OS === "web" && width >= 760
+        ? 3
+        : 2;
 
   const rows: string[][] = [];
-  for (let i = 0; i < currencies.length; i += 2) {
-    rows.push(currencies.slice(i, i + 2));
+  for (let i = 0; i < currencies.length; i += columns) {
+    rows.push(currencies.slice(i, i + columns));
   }
 
   return (

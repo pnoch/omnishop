@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Animated,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useQuery } from "@tanstack/react-query";
@@ -29,6 +30,8 @@ export const TrendingSection = memo(function TrendingSection({
 } = {}) {
   const colors = useColors();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isWide = Platform.OS === "web" && width >= 900;
   const { showToast } = useToast();
   const { isPro } = useEntitlements();
   const [paywallVisible, setPaywallVisible] = React.useState(false);
@@ -222,35 +225,46 @@ export const TrendingSection = memo(function TrendingSection({
           ? "Hard-to-find products matching your search"
           : "Hard-to-find products from the community"}
       </Text>
-      {visibleProducts.map((product, idx) => (
-        <Animated.View
-          key={product.id}
-          style={{
-            opacity: entryAnims[idx],
-            transform: [
+      <View
+        style={{
+          flexDirection: isWide ? "row" : "column",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+        {visibleProducts.map((product, idx) => (
+          <Animated.View
+            key={product.id}
+            style={[
+              { width: isWide ? "48.5%" : "100%" },
               {
-                translateY: entryAnims[idx]!.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [16, 0],
-                }),
+                opacity: entryAnims[idx],
+                transform: [
+                  {
+                    translateY: entryAnims[idx]!.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [16, 0],
+                    }),
+                  },
+                  {
+                    scale: entryAnims[idx]!.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.96, 1],
+                    }),
+                  },
+                ],
               },
-              {
-                scale: entryAnims[idx]!.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0.96, 1],
-                }),
-              },
-            ],
-          }}
-        >
-          <TrendingProductRow
-            product={product}
-            isInWatchlist={watchlistIds.has(product.id)}
-            onAdd={handleAdd}
-            onPress={handlePress}
-          />
-        </Animated.View>
-      ))}
+            ]}
+          >
+            <TrendingProductRow
+              product={product}
+              isInWatchlist={watchlistIds.has(product.id)}
+              onAdd={handleAdd}
+              onPress={handlePress}
+            />
+          </Animated.View>
+        ))}
+      </View>
       {pickerProduct && (
         <TagPickerSheet
           visible={!!pickerProduct}

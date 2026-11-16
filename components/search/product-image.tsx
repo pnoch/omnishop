@@ -66,15 +66,15 @@ function ImagePlaceholder({
         height: PLACEHOLDER_SIZE,
         borderRadius: 8,
         marginRight,
-        backgroundColor: colors.border + "66",
+        backgroundColor: colors.primary + "12",
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: colors.primary + "22",
       }}
-      accessibilityLabel="No image"
+      accessibilityLabel="Product image unavailable"
     >
-      <IconSymbol name="photo" size={20} color={colors.muted} />
+      <IconSymbol name="photo" size={20} color={colors.primary} />
     </View>
   );
 }
@@ -171,15 +171,15 @@ export function ProductImage({
             height: size,
             borderRadius: 8,
             marginRight,
-            backgroundColor: colors.border + "66",
+            backgroundColor: colors.primary + "12",
             alignItems: "center",
             justifyContent: "center",
             borderWidth: 1,
-            borderColor: colors.border,
+            borderColor: colors.primary + "22",
           }}
-          accessibilityLabel="No image"
+          accessibilityLabel="Product image unavailable"
         >
-          <IconSymbol name="photo" size={Math.max(14, size * 0.42)} color={colors.muted} />
+          <IconSymbol name="photo" size={Math.max(14, size * 0.42)} color={colors.primary} />
           <Text style={{ color: colors.muted, fontSize: 7, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
             No image
           </Text>

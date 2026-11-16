@@ -43,8 +43,8 @@ describe("StockBadge", () => {
     expect(screen.getByText(/Out of Stock/)).toBeTruthy();
   });
 
-  it("renders Unknown for unknown status", () => {
+  it("renders No data for unknown status", () => {
     render(<StockBadge status="whatever" />);
-    expect(screen.getByText(/Unknown/)).toBeTruthy();
+    expect(screen.getByText(/No data/)).toBeTruthy();
   });
 });

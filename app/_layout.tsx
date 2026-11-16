@@ -4,7 +4,7 @@ import { useAppSync } from "@/hooks/use-app-sync";
 import { useOnboardingGate } from "@/hooks/use-onboarding-gate";
 import "@/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -48,6 +48,75 @@ export const unstable_settings = {
 // Discovery does a raw fetch (the tRPC client can't wrap its abort/timeout
 // needs), so register the API headers it must carry — auth + BYO-LLM.
 setDiscoveryHeadersProvider(trpcHeaders);
+
+const ROUTE_TITLES: Record<string, string> = {
+  "/": "Home",
+  "/watchlist": "Watchlist",
+  "/discover": "Discover",
+  "/drops": "Price Drops",
+  "/alerts": "Alerts",
+  "/rates": "Exchange Rates",
+  "/settings": "Settings",
+  "/search": "Add Product",
+  "/stats": "Statistics",
+  "/health": "Distributor Health",
+  "/available": "Available Now",
+  "/sourcing": "Sourcing",
+  "/restock-watches": "Restock Watches",
+  "/connected-marketplaces": "Marketplaces",
+  "/you": "Account",
+  "/privacy": "Privacy",
+  "/diagnostics": "Diagnostics",
+  "/build-order": "Build Order",
+  "/distributor-analysis": "Distributor Analysis",
+};
+
+function documentTitleFor(pathname: string): string | undefined {
+  if (ROUTE_TITLES[pathname]) return ROUTE_TITLES[pathname];
+  if (pathname.startsWith("/product/")) return "Product";
+  if (pathname.startsWith("/compare/")) return "Compare Prices";
+  if (pathname.startsWith("/health/")) return "Distributor Health";
+  if (pathname.startsWith("/w/")) return "Shared Watchlist";
+  return undefined;
+}
+
+function WebDocumentTitle() {
+  const pathname = usePathname();
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
+    const title = documentTitleFor(pathname);
+    document.title = title ? `${title} — OmniShop` : "OmniShop";
+  }, [pathname]);
+  return null;
+}
+
+function WebPolish() {
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
+    const id = "omnishop-web-polish";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      button, [role="button"], a { cursor: pointer; }
+      :focus-visible { outline: 3px solid #0F52BA; outline-offset: 2px; }
+      @media (prefers-color-scheme: dark) {
+        :focus-visible { outline-color: #3B7DD8; }
+      }
+      @media (hover: hover) {
+        [role="button"], button, a {
+          transition: filter 120ms ease, opacity 120ms ease;
+        }
+        [role="button"]:hover, button:hover { filter: brightness(0.985); }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      style.remove();
+    };
+  }, []);
+  return null;
+}
 
 export default function RootLayout() {
   const initialInsets = initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
@@ -163,6 +232,8 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
+          <WebDocumentTitle />
+          <WebPolish />
           {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
           {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
           {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
