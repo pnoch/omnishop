@@ -124,6 +124,23 @@ describe("real product images from distributor pages", () => {
     expect(mockedGenerateImage).not.toHaveBeenCalled();
   });
 
+  it("uses a trusted manufacturer page without client sources", async () => {
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      headers: { get: () => "text/html; charset=utf-8" },
+      text: async () =>
+        '<meta property="og:image" content="https://cdn.mikrotik.com/web-assets/rb_images/1831_tm.webp">',
+      url: "https://mikrotik.com/product/crs326_24s_2q_rm",
+    } as never);
+
+    const result = await getProductImage("mikrotik-crs326-24s");
+
+    expect(result).toEqual({
+      imageUrl: "https://cdn.mikrotik.com/web-assets/rb_images/1831_tm.webp",
+    });
+    expect(mockedGenerateImage).not.toHaveBeenCalled();
+  });
+
   it("rejects a page about a different product", async () => {
     mockedFetch.mockResolvedValue({
       ok: true,

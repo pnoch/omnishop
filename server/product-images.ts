@@ -3,6 +3,7 @@ import * as cheerio from "cheerio";
 import { productImages } from "../drizzle/schema";
 import { PRODUCT_CATALOG } from "../shared/src/catalog.js";
 import { DISTRIBUTORS } from "../shared/src/distributors.js";
+import { PRODUCT_IMAGE_SOURCES } from "../shared/src/product-image-sources.js";
 import { getDb } from "./db";
 import { fetchWithTimeout } from "./fetch-timeout";
 import { generateImage } from "./_core/imageGeneration";
@@ -43,8 +44,19 @@ async function getProductImageInner(
 
   const product = PRODUCT_CATALOG.find((p) => p.id === productId);
 
-  // Prefer the real product page image. This works for discovered products
-  // too, even when they are not in the static catalog.
+  // Reviewed manufacturer pages first: they remain valid when distributor
+  // links rot or return search/404 pages.
+  const curated = PRODUCT_IMAGE_SOURCES[productId];
+  if (curated?.length) {
+    const real = await resolveDistributorImages(curated, product, true);
+    if (real) {
+      await writeCached(productId, real);
+      return { imageUrl: real };
+    }
+  }
+
+  // Then the product pages supplied by the client (validated against the
+  // distributor allowlist and the page title).
   if (sourceUrls?.length) {
     const real = await resolveDistributorImages(sourceUrls, product);
     if (real) {
@@ -152,9 +164,10 @@ function pageMatchesProduct(
 async function resolveDistributorImages(
   sourceUrls: string[],
   product: CatalogProduct | undefined,
+  trusted = false,
 ): Promise<string | null> {
   for (const sourceUrl of sourceUrls) {
-    if (!isAllowedImageSource(sourceUrl)) continue;
+    if (!trusted && !isAllowedImageSource(sourceUrl)) continue;
     try {
       const response = await fetchWithTimeout(
         sourceUrl,
@@ -174,7 +187,7 @@ async function resolveDistributorImages(
         continue;
       }
       const html = await response.text();
-      if (!pageMatchesProduct(html, product)) continue;
+      if (!trusted && !pageMatchesProduct(html, product)) continue;
       const image = extractProductImageUrl(html, response.url || sourceUrl);
       if (image) return image;
     } catch {
