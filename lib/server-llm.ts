@@ -7,7 +7,27 @@ const TIMEOUT_MS = 20_000;
 export interface LlmTestResult {
   ok: boolean;
   provider: string;
-  reason?: "auth" | "error";
+  reason?: "auth" | "error" | "not-configured";
+}
+
+export interface LlmStatus {
+  builtIn: boolean;
+}
+
+/**
+ * Whether the server can run AI features without a user-supplied key. Returns
+ * null when the server is unreachable, so callers keep the AI affordance
+ * enabled rather than hiding it on a transient network error.
+ */
+export async function getLlmStatus(): Promise<LlmStatus | null> {
+  if (!isServerConfigured()) return null;
+  try {
+    const client = createTRPCClient();
+    const status = await withTimeout(client.llm.status.query(), 8_000);
+    return { builtIn: status?.builtIn === true };
+  } catch {
+    return null;
+  }
 }
 
 /**

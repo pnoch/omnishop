@@ -74,7 +74,57 @@ describe("OAuth state envelope", () => {
 });
 
 describe("GET /api/auth/oauth/start", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Configure both providers so the happy-path tests exercise URL building
+    // rather than the "not configured" guard.
+    process.env.GOOGLE_CLIENT_ID = "test-google-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-google-secret";
+    process.env.APPLE_CLIENT_ID = "test-apple-id";
+    process.env.APPLE_TEAM_ID = "TEAMID1234";
+    process.env.APPLE_KEY_ID = "KEYID12345";
+    process.env.APPLE_PRIVATE_KEY = "test-private-key";
+  });
+
+  it("rejects providers the server has no credentials for", async () => {
+    const saved = {
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      EXPO_PUBLIC_GOOGLE_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
+    };
+    delete process.env.GOOGLE_CLIENT_ID;
+    delete process.env.GOOGLE_CLIENT_SECRET;
+    delete process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID;
+    try {
+      const handler = makeApp();
+      const res = makeRes();
+      await handler("GET", "/api/auth/oauth/start")(
+        makeReq({ provider: "google" }),
+        res,
+      );
+      expect(res.status).toHaveBeenCalledWith(503);
+      expect(res.json).toHaveBeenCalledWith({
+        error: "google sign-in is not configured on this server",
+      });
+    } finally {
+      for (const [key, value] of Object.entries(saved)) {
+        if (value === undefined) delete process.env[key];
+        else process.env[key] = value;
+      }
+    }
+  });
+
+  it("builds the provider authorize URL instead of a dead local endpoint", async () => {
+    const handler = makeApp();
+    const res = makeRes();
+    await handler("GET", "/api/auth/oauth/start")(
+      makeReq({ provider: "google" }),
+      res,
+    );
+    const url: string = res.json.mock.calls[0][0].url;
+    expect(url.startsWith("https://accounts.google.com/o/oauth2/v2/auth?")).toBe(true);
+    expect(url).not.toContain("/api/oauth/authorize");
+  });
 
   it("sanitizes the redirectUri before signing it into state", async () => {
     const handler = makeApp();

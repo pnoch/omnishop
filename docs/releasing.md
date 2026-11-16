@@ -113,11 +113,14 @@ Env changes are baked at bundle time and Metro caches transforms — rebuild wit
 
 ## 3. Android release (APK)
 
-`android/` is generated, so prebuild first, then build:
+`android/` is generated, so prebuild first, then build with the release script
+(it bakes the production API/web URLs into the JS bundle; `pnpm build:apk`
+alone reuses whatever URL was last cached, including the dev localhost):
 
 ```bash
 npx expo prebuild --platform android          # re-applies all config plugins
-pnpm build:apk                                 # cd android && ./gradlew assembleRelease
+scripts/android-release.sh apk                # signed APK, production URLs baked in
+scripts/android-release.sh aab                # Play Store bundle
 ```
 
 Output: `android/app/build/outputs/apk/release/app-release.apk` (signed with

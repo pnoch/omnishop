@@ -1,7 +1,7 @@
 import { Product, Distributor } from "./types";
 import { getApiBaseUrl } from "@/constants/oauth";
 import { defaultStorage } from "@/lib/storage";
-import { BYO_LLM_AUTH_ERR_MSG, MAX_DISCOVERY_QUERY } from "@shared/const";
+import { BYO_LLM_AUTH_ERR_MSG, LLM_NOT_CONFIGURED_MSG, MAX_DISCOVERY_QUERY } from "@shared/const";
 
 export class DiscoveryAuthError extends Error {
   kind = "auth" as const;
@@ -14,10 +14,10 @@ export class DiscoveryAuthError extends Error {
 }
 
 export class DiscoveryError extends Error {
-  kind: "network" | "server" | "timeout" | "parse" | "byo-auth";
+  kind: "network" | "server" | "timeout" | "parse" | "byo-auth" | "not-configured";
   status?: number;
   cause?: unknown;
-  constructor(kind: "network" | "server" | "timeout" | "parse" | "byo-auth", message: string, opts?: { status?: number; cause?: unknown }) {
+  constructor(kind: "network" | "server" | "timeout" | "parse" | "byo-auth" | "not-configured", message: string, opts?: { status?: number; cause?: unknown }) {
     super(message);
     this.kind = kind;
     this.status = opts?.status;
@@ -37,6 +37,14 @@ export function toDiscoverErrorState(e: unknown): DiscoverErrorState {
       title: "Check your API key",
       message:
         "Your AI provider rejected the API key. Update it in Settings → AI / LLM, or switch back to the built-in provider.",
+      retry: false,
+    };
+  }
+  if (e instanceof DiscoveryError && e.kind === "not-configured") {
+    return {
+      title: "AI isn't set up yet",
+      message:
+        "Add an OpenAI or Ollama API key in Settings → AI / LLM to use AI discovery.",
       retry: false,
     };
   }
@@ -145,6 +153,9 @@ export async function discoverProduct(
     const message = await readTrpcErrorMessage(res);
     if (message.includes(BYO_LLM_AUTH_ERR_MSG)) {
       throw new DiscoveryError("byo-auth", message, { status: res.status });
+    }
+    if (message.includes(LLM_NOT_CONFIGURED_MSG)) {
+      throw new DiscoveryError("not-configured", message, { status: res.status });
     }
     throw new DiscoveryError("server", `Discovery failed (${res.status})`, { status: res.status });
   }

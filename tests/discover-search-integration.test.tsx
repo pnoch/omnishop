@@ -67,6 +67,7 @@ vi.mock("@/hooks/use-colors", () => ({
 }));
 vi.mock("expo-router", () => ({
   useRouter: () => ({ push: vi.fn(), back: vi.fn() }),
+  useFocusEffect: (cb: () => void | (() => void)) => ReactGlobal.useEffect(cb, [cb]),
   useLocalSearchParams: () => ({}),
 }));
 vi.mock("@/hooks/use-auth", () => ({ useAuth: () => ({ user: null, isAuthenticated: false }) }));

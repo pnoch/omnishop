@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { UserCircle } from "lucide-react";
 import { useAuth, buildLoginUrl, refreshCurrentUser } from "../../hooks/use-auth";
+import { getOAuthPortalUrl } from "../../lib/api-base";
 import { useAccountSync } from "../../hooks/use-account-sync";
 import { useEmailAuth } from "../../hooks/use-email-auth";
 import { usePasswordChange } from "../../hooks/use-password-change";
@@ -50,6 +51,7 @@ export function AccountSection({
         />
       ) : (
         <SignedOutAccountCard
+          oauthAvailable={Boolean(getOAuthPortalUrl())}
           syncStatus={syncStatus}
           syncStatusClass={syncStatusClass}
           onSignIn={() => void handleSignIn()}

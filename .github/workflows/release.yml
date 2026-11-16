@@ -19,6 +19,12 @@ on:
       - "v*"
   workflow_dispatch:
 
+# Baked into the desktop renderer at build time. Without these the shipped app
+# runs "local only": no sign-in, sync, push, or server-backed prices.
+env:
+  VITE_API_BASE_URL: https://web.omnishop.siamcreations.app
+  VITE_VAPID_PUBLIC_KEY: BBKb-AAQjxTvXv_8Q1wKveZ_rVZ3fwl3Weue9MEcgvRBpFbHIqiJEoYmQn1LDQs7fr6TQ_wgnbinNZNv1jKoXbc
+
 jobs:
   publish:
     permissions:

@@ -8,6 +8,7 @@ vi.mock("../server/_core/llm", () => ({
   invokeLLM: vi.fn(async () => ({
     choices: [{ message: { content: llm.content } }],
   })),
+  isBuiltInLlmConfigured: () => true,
 }));
 
 function authedCtx(ip = "9.9.9.9"): TrpcContext {

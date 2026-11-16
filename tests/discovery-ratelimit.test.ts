@@ -22,6 +22,7 @@ vi.mock("../server/_core/llm", () => ({
       },
     ],
   })),
+  isBuiltInLlmConfigured: () => true,
 }));
 
 function authedCtx(ip: string): TrpcContext {

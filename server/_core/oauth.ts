@@ -793,6 +793,14 @@ export function registerOAuthRoutes(app: Express) {
       res.status(400).json({ error: "invalid provider; expected google or apple" });
       return;
     }
+    const providerConfig =
+      provider === "google" ? googleOAuthConfig() : appleOAuthConfig();
+    if (!providerConfig.configured) {
+      res
+        .status(503)
+        .json({ error: `${provider} sign-in is not configured on this server` });
+      return;
+    }
     const { webBase } = oauthBases();
     // Sanitize before signing: the state envelope must never carry an
     // attacker-controlled redirect target, even though the callback
@@ -829,40 +837,26 @@ export function registerOAuthRoutes(app: Express) {
         maxAge: OAUTH_STATE_TTL_MS,
       });
     }
-    const { apiBase, oauthRedirect } = oauthBases();
+    const { oauthRedirect } = oauthBases();
 
-    const googleClientId = process.env.GOOGLE_CLIENT_ID ?? process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID ?? "";
-    const appleClientId = process.env.APPLE_CLIENT_ID ?? process.env.EXPO_PUBLIC_APPLE_CLIENT_ID ?? "";
-
-    let url: string;
-    if (provider === "google" && googleClientId) {
-      const params = new URLSearchParams({
-        client_id: googleClientId,
-        redirect_uri: oauthRedirect,
-        response_type: "code",
-        scope: "openid email profile",
-        state,
-        prompt: "select_account",
-      });
-      url = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-    } else if (provider === "apple" && appleClientId) {
-      const params = new URLSearchParams({
-        client_id: appleClientId,
-        redirect_uri: oauthRedirect,
-        response_type: "code",
-        scope: "name email",
-        state,
-        response_mode: "form_post",
-      });
-      url = `https://appleid.apple.com/auth/authorize?${params.toString()}`;
-    } else {
-      const base = apiBase || webBase;
-      if (base) {
-        url = `${base}/api/oauth/authorize?provider=${encodeURIComponent(provider)}&state=${encodeURIComponent(state)}`;
-      } else {
-        url = `/api/oauth/authorize?provider=${encodeURIComponent(provider)}&state=${encodeURIComponent(state)}`;
-      }
-    }
+    const url =
+      provider === "google"
+        ? `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams({
+            client_id: providerConfig.clientId,
+            redirect_uri: oauthRedirect,
+            response_type: "code",
+            scope: "openid email profile",
+            state,
+            prompt: "select_account",
+          }).toString()}`
+        : `https://appleid.apple.com/auth/authorize?${new URLSearchParams({
+            client_id: providerConfig.clientId,
+            redirect_uri: oauthRedirect,
+            response_type: "code",
+            scope: "name email",
+            state,
+            response_mode: "form_post",
+          }).toString()}`;
     res.json({ url });
   });
 

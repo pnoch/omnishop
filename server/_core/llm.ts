@@ -217,14 +217,30 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
+const usesForge = () =>
+  Boolean(ENV.forgeApiUrl.trim() && ENV.forgeApiKey.trim());
+
+/**
+ * True when the server itself can run an LLM call — either a configured Forge
+ * endpoint or an OpenAI key. Clients use this to hide/disable AI features
+ * instead of letting them fail on every tap.
+ */
+export function isBuiltInLlmConfigured(): boolean {
+  return usesForge() || ENV.openaiApiKey.trim().length > 0;
+}
+
 const resolveApiUrl = () =>
-  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
+  usesForge()
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
-    : "";
+    : ENV.openaiApiKey.trim()
+      ? "https://api.openai.com/v1/chat/completions"
+      : "";
+
+const builtInApiKey = () => (usesForge() ? ENV.forgeApiKey : ENV.openaiApiKey);
 
 const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+  if (!isBuiltInLlmConfigured()) {
+    throw new Error("No built-in LLM provider is configured");
   }
 };
 
@@ -388,6 +404,9 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
 
   if (model) {
     payload.model = model;
+  } else if (!usesForge()) {
+    // OpenAI requires an explicit model; Forge picks its own default.
+    payload.model = "gpt-4o-mini";
   }
 
   if (tools && tools.length > 0) {
@@ -429,7 +448,7 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
+      authorization: `Bearer ${builtInApiKey()}`,
     },
     body: JSON.stringify(payload),
   });
@@ -459,13 +478,12 @@ export type ModelsResponse = {
 export async function listLLMModels(): Promise<ModelsResponse> {
   assertApiKey();
 
-  const url =
-    ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
-      ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/models`
-      : "";
+  const url = usesForge()
+    ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/models`
+    : "https://api.openai.com/v1/models";
 
   const response = await fetchWithBackoff(url, {
-    headers: { authorization: `Bearer ${ENV.forgeApiKey}` },
+    headers: { authorization: `Bearer ${builtInApiKey()}` },
   });
 
   if (!response.ok) {

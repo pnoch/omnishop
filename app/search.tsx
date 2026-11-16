@@ -38,6 +38,7 @@ export default function SearchScreen({
     setQuery,
     adding,
     discovering,
+    aiUnavailable,
     setPendingTags,
     pickerItem,
     setPickerItem,
@@ -187,6 +188,7 @@ export default function SearchScreen({
           <SearchDiscoverFooter
             query={query}
             discovering={discovering}
+            aiUnavailable={aiUnavailable}
             onDiscover={handleDiscover}
           />
         }

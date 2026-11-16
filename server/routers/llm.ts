@@ -1,5 +1,6 @@
 import { router, publicProcedure } from "../_core/trpc";
 import { checkRateLimit } from "../rate-limit";
+import { isBuiltInLlmConfigured } from "../_core/llm";
 import {
   UserLlmAuthError,
   invokeUserLlm,
@@ -21,11 +22,28 @@ import { tryConsumeBudget } from "../spend-budget";
  * with a 401 that the client reads as a connectivity error.
  */
 export const llmRouter = router({
+  /**
+   * Reports whether the server has a built-in provider. The UI uses this to
+   * disable AI discovery/insights instead of letting every request fail when
+   * neither Forge nor OPENAI_API_KEY is set.
+   */
+  status: publicProcedure.query(() => ({
+    builtIn: isBuiltInLlmConfigured(),
+  })),
+
   test: publicProcedure.mutation(async ({ ctx }) => {
     checkRateLimit(ctx, "llm.test", 10, 60_000);
     const userLlm = userLlmConfigFromHeaders(ctx.req.headers);
     if (!userLlm) {
-      return { ok: true as const, provider: "forge" as const };
+      // No BYO provider: report the built-in service's real state. Returning
+      // ok:true unconditionally told users a dead AI stack was working.
+      return isBuiltInLlmConfigured()
+        ? { ok: true as const, provider: "forge" as const }
+        : {
+            ok: false as const,
+            provider: "forge" as const,
+            reason: "not-configured" as const,
+          };
     }
     // `ollama-local` runs on this host, so testing it is server-funded and must
     // still count against the process-wide budget.

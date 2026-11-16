@@ -11,16 +11,18 @@ import {
 export function SearchDiscoverFooter({
   query,
   discovering,
+  aiUnavailable = false,
   onDiscover,
 }: {
   query: string;
   discovering: boolean;
+  aiUnavailable?: boolean;
   onDiscover: () => void;
 }) {
   const colors = useColors();
   if (query.trim().length === 0) return null;
 
-  const label = isFacebookInput(query)
+  const marketplaceLabel = isFacebookInput(query)
     ? "Import Facebook Link"
     : isLazadaInput(query)
       ? "Import Lazada Link"
@@ -28,7 +30,8 @@ export function SearchDiscoverFooter({
         ? "Import Shopee Link"
         : isEbayInput(query)
           ? "Import eBay Link"
-          : "Discover with AI";
+          : null;
+  const label = marketplaceLabel ?? (aiUnavailable ? "AI discovery needs setup" : "Discover with AI");
 
   return (
     <View style={{ paddingHorizontal: 16 }}>

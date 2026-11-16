@@ -1,7 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { TRPCError } from "@trpc/server";
 
-vi.mock("../server/_core/llm", () => ({ invokeLLM: vi.fn() }));
+const llmConfig = vi.hoisted(() => ({ builtIn: true }));
+vi.mock("../server/_core/llm", () => ({
+  invokeLLM: vi.fn(),
+  isBuiltInLlmConfigured: () => llmConfig.builtIn,
+}));
 vi.mock("../server/spend-budget", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../server/spend-budget")>();
   return { ...actual, tryConsumeBudget: vi.fn() };
@@ -11,7 +15,7 @@ import { discoveryRouter } from "../server/routers/discovery";
 import { invokeLLM } from "../server/_core/llm";
 import { tryConsumeBudget } from "../server/spend-budget";
 import type { TrpcContext } from "../server/_core/context";
-import { BYO_LLM_AUTH_ERR_MSG } from "../shared/const";
+import { BYO_LLM_AUTH_ERR_MSG, LLM_NOT_CONFIGURED_MSG } from "../shared/const";
 
 function ctx(headers: Record<string, string> = {}): TrpcContext {
   return {
@@ -26,6 +30,17 @@ describe("discovery.discover spend budget", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.unstubAllGlobals();
+    llmConfig.builtIn = true;
+  });
+
+  it("rejects with setup instructions when no AI provider is configured", async () => {
+    llmConfig.builtIn = false;
+    const caller = discoveryRouter.createCaller(ctx());
+    await expect(caller.discover({ query: "rtx 5090" })).rejects.toMatchObject({
+      message: LLM_NOT_CONFIGURED_MSG,
+    });
+    expect(invokeLLM).not.toHaveBeenCalled();
+    expect(tryConsumeBudget).not.toHaveBeenCalled();
   });
 
   it("refuses without calling the LLM once the budget is spent", async () => {

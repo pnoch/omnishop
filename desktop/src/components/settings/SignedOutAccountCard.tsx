@@ -1,11 +1,13 @@
 import type { SyncStatus } from "../../../../lib/sync";
 
 export function SignedOutAccountCard({
+  oauthAvailable,
   syncStatus,
   syncStatusClass,
   onSignIn,
   emailAuth,
 }: {
+  oauthAvailable: boolean;
   syncStatus: SyncStatus;
   syncStatusClass: string;
   onSignIn: () => void;
@@ -37,13 +39,15 @@ export function SignedOutAccountCard({
             {syncStatus.label}
           </p>
         </div>
-        <button
-          onClick={onSignIn}
-          className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
-          aria-label="Sign in"
-        >
-          Sign in
-        </button>
+        {oauthAvailable && (
+          <button
+            onClick={onSignIn}
+            className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
+            aria-label="Sign in"
+          >
+            Sign in
+          </button>
+        )}
       </div>
       <div className="mt-3 space-y-2">
         <div className="flex gap-2">

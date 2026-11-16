@@ -3,7 +3,11 @@ import { llmRouter } from "../server/routers/llm";
 import { invokeLLM } from "../server/_core/llm";
 import type { TrpcContext } from "../server/_core/context";
 
-vi.mock("../server/_core/llm", () => ({ invokeLLM: vi.fn() }));
+const llmState = vi.hoisted(() => ({ builtIn: true }));
+vi.mock("../server/_core/llm", () => ({
+  invokeLLM: vi.fn(),
+  isBuiltInLlmConfigured: () => llmState.builtIn,
+}));
 
 const budget = vi.hoisted(() => ({
   tryConsumeBudget: vi.fn((_key: string) => true),
@@ -29,12 +33,31 @@ describe("llm.test", () => {
     vi.clearAllMocks();
     vi.unstubAllGlobals();
     budget.tryConsumeBudget.mockReturnValue(true);
+    llmState.builtIn = true;
   });
 
   it("reports forge as ok without calling any provider", async () => {
     const caller = llmRouter.createCaller(ctx());
     await expect(caller.test()).resolves.toEqual({ ok: true, provider: "forge" });
     expect(invokeLLM).not.toHaveBeenCalled();
+  });
+
+  it("reports forge as not configured instead of pretending it works", async () => {
+    llmState.builtIn = false;
+    const caller = llmRouter.createCaller(ctx());
+    await expect(caller.test()).resolves.toEqual({
+      ok: false,
+      provider: "forge",
+      reason: "not-configured",
+    });
+    expect(invokeLLM).not.toHaveBeenCalled();
+  });
+
+  it("exposes the built-in provider capability", async () => {
+    llmState.builtIn = false;
+    await expect(llmRouter.createCaller(ctx()).status()).resolves.toEqual({
+      builtIn: false,
+    });
   });
 
   it("works signed out (public) with the caller's key", async () => {

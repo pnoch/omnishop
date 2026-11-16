@@ -34,7 +34,7 @@ import {
   DiscoveryError,
   setDiscoveryHeadersProvider,
 } from "../lib/llm-discovery";
-import { MAX_DISCOVERY_QUERY, BYO_LLM_AUTH_ERR_MSG } from "../shared/const";
+import { MAX_DISCOVERY_QUERY, BYO_LLM_AUTH_ERR_MSG, LLM_NOT_CONFIGURED_MSG } from "../shared/const";
 
 describe("discoverProduct", () => {
   beforeEach(() => {
@@ -207,6 +207,20 @@ describe("discoverProduct", () => {
     });
   });
 
+  it("maps a server with no AI provider to a setup error", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 412,
+      json: async () => ({
+        error: { json: { message: LLM_NOT_CONFIGURED_MSG } },
+      }),
+    });
+    await expect(discoverProduct("rtx 5090")).rejects.toMatchObject({
+      name: "DiscoveryError",
+      kind: "not-configured",
+    });
+  });
+
   it("returns null on invalid JSON response", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -242,6 +256,17 @@ describe("toDiscoverErrorState", () => {
       title: "Check your API key",
       message:
         "Your AI provider rejected the API key. Update it in Settings → AI / LLM, or switch back to the built-in provider.",
+      retry: false,
+    });
+  });
+
+  it("maps a server without AI configured to setup instructions", () => {
+    expect(
+      toDiscoverErrorState(new DiscoveryError("not-configured", "boom")),
+    ).toEqual({
+      title: "AI isn't set up yet",
+      message:
+        "Add an OpenAI or Ollama API key in Settings → AI / LLM to use AI discovery.",
       retry: false,
     });
   });

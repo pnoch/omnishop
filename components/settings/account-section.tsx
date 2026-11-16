@@ -56,6 +56,7 @@ export function AccountSection({
     deleteStep,
     setDeleteStep,
     oauthLoading,
+    oauthProviders,
     resending,
     handleResendVerification,
     handleDeleteAccount,
@@ -194,11 +195,12 @@ export function AccountSection({
             </View>
           </>
         )}
-        {!isAuthenticated && (
+        {!isAuthenticated && (oauthProviders.google || oauthProviders.apple) && (
           <>
             <View style={{ height: 1, backgroundColor: colors.border }} />
             <AccountOAuthButtons
               colors={colors}
+              oauthProviders={oauthProviders}
               oauthLoading={oauthLoading}
               onOAuth={(provider) => void handleOAuth(provider)}
             />

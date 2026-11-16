@@ -11,6 +11,11 @@ export const DEVICE_REVOKED_ERR_MSG = "This device was signed out (10003)";
 // The client matches on this token and shows "check your API key" copy instead
 // of a generic server error. Never contains the provider response body.
 export const BYO_LLM_AUTH_ERR_MSG = "AI provider rejected the API key (10004)";
+// Returned when neither the built-in server provider nor a BYO provider is
+// configured. The client matches this token and points at Settings → AI / LLM
+// instead of showing a generic discovery failure.
+export const LLM_NOT_CONFIGURED_MSG =
+  "AI features are not configured on this server (10005)";
 export const PRICE_HISTORY_SYNC_DAYS = 30;
 export const PRICE_HISTORY_DAYS = 365;
 // How long a server price snapshot counts as fresh. Shared by the server

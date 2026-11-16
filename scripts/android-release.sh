@@ -18,7 +18,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET="${1:-all}"
 
 # Production API/web URL. Override with EXPO_PUBLIC_API_BASE_URL if needed.
-API_URL="${EXPO_PUBLIC_API_BASE_URL:-https://app-production-263c.up.railway.app}"
+API_URL="${EXPO_PUBLIC_API_BASE_URL:-https://web.omnishop.siamcreations.app}"
 WEB_URL="${EXPO_PUBLIC_WEB_URL:-$API_URL}"
 
 if [ ! -f "$REPO_ROOT/credentials/keystore.properties" ]; then

@@ -3,12 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "reac
 import { useColors } from "@/hooks/use-colors";
 import { SectionHeader } from "./section-header";
 import { RadioPicker } from "./radio-picker";
-import { testLlmConnection } from "@/lib/server-llm";
+import { getLlmStatus, testLlmConnection } from "@/lib/server-llm";
 import { showAlert } from "@/lib/alert";
 import type { AppSettings } from "@/lib/types";
 
 const LLM_PROVIDERS = [
-  { label: "Forge (Default)", value: "forge" as const },
+  { label: "Forge (Server)", value: "forge" as const },
   { label: "OpenAI", value: "openai" as const },
   { label: "Ollama Cloud", value: "ollama" as const },
   { label: "Ollama Local", value: "ollama-local" as const },
@@ -44,6 +44,17 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
 
   const provider = settings.llmProvider ?? "forge";
   const [testing, setTesting] = useState(false);
+  const [builtInAvailable, setBuiltInAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void getLlmStatus().then((status) => {
+      if (active && status) setBuiltInAvailable(status.builtIn);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleTest = async () => {
     if (testing) return;
@@ -63,6 +74,11 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
         showAlert(
           "Check your API key",
           `Your ${providerLabel} provider rejected the key.`,
+        );
+      } else if (res.reason === "not-configured") {
+        showAlert(
+          "AI not configured",
+          "The built-in AI service isn't configured on this server. Choose OpenAI or Ollama Cloud and add an API key.",
         );
       } else {
         showAlert(
@@ -86,6 +102,12 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
         value={provider}
         onSelect={(v: string) => onUpdate("llmProvider", v as AppSettings["llmProvider"])}
       />
+
+      {provider === "forge" && builtInAvailable === false && (
+        <Text style={{ fontSize: 12, color: colors.error, marginTop: 8 }}>
+          {"Built-in AI isn't configured on this server. Choose OpenAI or Ollama Cloud and add an API key to use AI discovery."}
+        </Text>
+      )}
 
       {provider !== "forge" && (
         <TouchableOpacity
@@ -312,7 +334,9 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
 
       <Text style={{ fontSize: 12, color: colors.muted, marginTop: 12 }}>
         {provider === "forge"
-          ? "Uses the built-in service. AI discovery and price insights run on the server; no key needed."
+          ? builtInAvailable === false
+            ? "Built-in AI is not configured on this server. Pick OpenAI or Ollama Cloud above and enter your key."
+            : "Uses the built-in service. AI discovery and price insights run on the server; no key needed."
           : provider === "openai"
             ? "Requires an OpenAI API key. Used for product discovery and price insights."
             : provider === "ollama"

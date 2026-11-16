@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Keyboard, Platform } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { log } from "@shared/log";
 import { showAlert } from "@/lib/alert";
@@ -9,6 +9,8 @@ import { useEntitlements } from "@/hooks/use-entitlements";
 import { track } from "@/lib/telemetry";
 import { PRODUCT_CATALOG } from "@shared/catalog";
 import { toDiscoverErrorState } from "@/lib/llm-discovery";
+import { getLlmStatus } from "@/lib/server-llm";
+import { getSettings } from "@/lib/storage";
 import {
   clearRecentSearches,
   getRecentSearches,
@@ -42,6 +44,28 @@ export function useSearchScreen() {
   const [manualVisible, setManualVisible] = useState(false);
   const [manualPrefill, setManualPrefill] = useState<string | null>(null);
   const [ebayPrefill, setEbayPrefill] = useState<EbaySearchListing | null>(null);
+  const [aiUnavailable, setAiUnavailable] = useState(false);
+
+  // The default (Forge) provider only works when the server has credentials.
+  // Check on focus so the affordance updates after the user adds a key in
+  // Settings, and don't advertise a button that can only fail.
+  useFocusEffect(
+    useCallback(() => {
+      let active = true;
+      void Promise.all([getLlmStatus(), getSettings()]).then(
+        ([status, settings]) => {
+          if (!active) return;
+          const provider = settings?.llmProvider ?? "forge";
+          setAiUnavailable(
+            provider === "forge" && status !== null && !status.builtIn,
+          );
+        },
+      );
+      return () => {
+        active = false;
+      };
+    }, []),
+  );
 
   useEffect(() => {
     void getRecentSearches().then(setRecentSearches);
@@ -74,6 +98,17 @@ export function useSearchScreen() {
     if (!query.trim() || discovering) return;
     if (isMarketplaceInput(query)) {
       setManualVisible(true);
+      return;
+    }
+    if (aiUnavailable) {
+      showAlert(
+        "AI isn't set up yet",
+        "Add an OpenAI or Ollama API key in Settings → AI / LLM to use AI discovery.",
+        [
+          { text: "Open Settings", onPress: () => router.push("/settings") },
+          { text: "Cancel", style: "cancel" },
+        ],
+      );
       return;
     }
     Keyboard.dismiss();
@@ -236,6 +271,7 @@ export function useSearchScreen() {
     setQuery,
     adding,
     discovering,
+    aiUnavailable,
     pendingTags,
     setPendingTags,
     pickerItem,

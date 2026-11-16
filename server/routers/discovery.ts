@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../_core/trpc";
 import { checkRateLimit } from "../rate-limit";
+import { isBuiltInLlmConfigured } from "../_core/llm";
 import { tryConsumeBudget } from "../spend-budget";
 import {
   UserLlmAuthError,
@@ -11,6 +12,7 @@ import {
 } from "../user-llm";
 import {
   BYO_LLM_AUTH_ERR_MSG,
+  LLM_NOT_CONFIGURED_MSG,
   MAX_DISCOVERY_QUERY,
 } from "../../shared/const.js";
 
@@ -51,6 +53,12 @@ export const discoveryRouter = router({
       // user-funded, so the process-wide spend budget (which guards the
       // operator's paid provider) does not apply.
       const userLlm = userLlmConfigFromHeaders(ctx.req.headers);
+      if (!userLlm && !isBuiltInLlmConfigured()) {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: LLM_NOT_CONFIGURED_MSG,
+        });
+      }
       // Process-wide cap: per-user rate limits don't bound total provider spend.
       if (isServerFundedLlm(userLlm) && !tryConsumeBudget("discovery.discover")) {
         throw new TRPCError({

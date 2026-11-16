@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { useRouter } from "expo-router";
 import { Platform } from "react-native";
-import { getOAuthUrl } from "@/constants/oauth";
+import { getApiBaseUrl, getOAuthUrl } from "@/constants/oauth";
 import { useAuth } from "@/hooks/use-auth";
 import { clearAllData } from "@/lib/storage";
 import { showAlert } from "@/lib/alert";
@@ -32,7 +32,31 @@ export function useAccountSection({
   const [deleting, setDeleting] = useState(false);
   const [deleteStep, setDeleteStep] = useState<1 | 2>(1);
   const [oauthLoading, setOauthLoading] = useState<"google" | "apple" | null>(null);
+  const [oauthProviders, setOauthProviders] = useState<{ google: boolean; apple: boolean }>({ google: false, apple: false });
   const [resending, setResending] = useState(false);
+
+  // Only offer providers the server can actually complete. Rendering the
+  // buttons while unconfigured sent users to a dead endpoint.
+  useEffect(() => {
+    let active = true;
+    const baseUrl = getApiBaseUrl();
+    if (!baseUrl) return;
+    fetch(`${baseUrl}/api/auth/oauth/providers`)
+      .then((res) => (res.ok ? res.json() : { google: false, apple: false }))
+      .then((data) => {
+        if (!active) return;
+        setOauthProviders({
+          google: data.google === true,
+          apple: data.apple === true,
+        });
+      })
+      .catch(() => {
+        if (active) setOauthProviders({ google: false, apple: false });
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleResendVerification = async () => {
     setResending(true);
@@ -155,6 +179,7 @@ export function useAccountSection({
     deleteStep,
     setDeleteStep,
     oauthLoading,
+    oauthProviders,
     resending,
     handleResendVerification,
     handleDeleteAccount,

@@ -6,15 +6,18 @@ type Colors = ReturnType<typeof useColors>;
 
 export function AccountOAuthButtons({
   colors,
+  oauthProviders,
   oauthLoading,
   onOAuth,
 }: {
   colors: Colors;
+  oauthProviders: { google: boolean; apple: boolean };
   oauthLoading: "google" | "apple" | null;
   onOAuth: (provider: "google" | "apple") => void;
 }) {
   return (
     <View style={{ padding: 12, gap: 8 }}>
+      {oauthProviders.google && (
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={() => onOAuth("google")}
@@ -43,6 +46,8 @@ export function AccountOAuthButtons({
           </>
         )}
       </TouchableOpacity>
+      )}
+      {oauthProviders.apple && (
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={() => onOAuth("apple")}
@@ -71,6 +76,7 @@ export function AccountOAuthButtons({
           </>
         )}
       </TouchableOpacity>
+      )}
     </View>
   );
 }

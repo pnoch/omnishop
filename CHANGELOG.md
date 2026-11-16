@@ -4,6 +4,21 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.29.1] - 2026-11-16
+
+### Fixed
+
+- OAuth sign-in no longer appears when the server has no Google/Apple
+  credentials, and `/api/auth/oauth/start` returns an explicit "not configured"
+  error instead of redirecting to a route that never existed.
+- AI discovery reports a setup message and points at Settings → AI / LLM when
+  neither Forge nor `OPENAI_API_KEY` is configured, instead of failing with a
+  500. The settings screen now reports the real built-in provider state.
+- Android and desktop release builds bake `EXPO_PUBLIC_*` / `VITE_*` production
+  URLs. Previously released installers could ship as "Local only" with no
+  sign-in, sync, push, or server-backed prices.
+- Android release builds bump `versionCode` to 5.
+
 ## [5.29.0] - 2026-11-16
 
 ### Changed
