@@ -142,7 +142,10 @@ Upload to Play Console (internal track). `versionCode` is whatever
 `android/app/build.gradle` has after prebuild; Play requires it to increase per
 upload. **EAS alternative:** `eas build -p android --profile production`
 (`eas.json` has `autoIncrement: true` and production `EXPO_PUBLIC_*` env) +
-`eas submit -p android`.
+`eas submit -p android`. When EAS asks to generate a keystore, **upload the
+existing `credentials/release.keystore` instead** (same alias/password); a new
+key cannot update the installed app or the Play listing. The locally built
+`app-release.aab` is already signed with that key and can be uploaded directly.
 
 > Native push needs an EAS project: `registerPushToken` reads
 > `extra.expoProjectId`, then falls back to the EAS-linked project ID. Run
