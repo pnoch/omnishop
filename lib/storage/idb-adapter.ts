@@ -1,6 +1,7 @@
 import { log } from "@shared/log";
 import type { StorageAdapter } from "./adapter";
 
+// Pre-rebrand IndexedDB name: kept so web installs keep their local data.
 const DB_NAME = "psf-storage";
 const STORE_NAME = "kv";
 const DB_VERSION = 1;

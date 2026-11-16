@@ -4,7 +4,7 @@ const { withAndroidManifest } = require("@expo/config-plugins");
 // `expo prebuild` because `android/` is gitignored.
 //
 // - SYSTEM_ALERT_WINDOW is now REQUIRED by the native overlay renderer
-//   (modules/psf-webview-renderer) for background price refresh, so it is no
+//   (modules/omnishop-webview-renderer) for background price refresh, so it is no
 //   longer removed. The overlay is 1x1, non-focusable, non-touchable.
 // - READ/WRITE_EXTERNAL_STORAGE: legacy permissions pulled in by
 //   expo-file-system. Play wants them scoped to the SDK floor that still uses

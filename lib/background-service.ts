@@ -3,7 +3,7 @@ import {
   startForegroundService,
   stopForegroundService,
   isForegroundServiceRunning,
-} from "@/modules/psf-foreground-service";
+} from "@/modules/omnishop-foreground-service";
 
 // Thin, Android-guarded wrapper. The native module no-ops off Android, so these
 // are safe everywhere; failures are logged, never thrown.

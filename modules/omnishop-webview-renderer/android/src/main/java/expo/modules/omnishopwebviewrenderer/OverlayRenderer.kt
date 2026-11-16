@@ -1,4 +1,4 @@
-package expo.modules.psfwebviewrenderer
+package expo.modules.omnishopwebviewrenderer
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -268,7 +268,7 @@ export function useCompareScreen() {
     }
     const shareText = buildShareText({ product, listings, displayCurrency, limit: 5 });
     const deepLink = Linking.createURL(`/product/${encodeURIComponent(id)}`, {
-      scheme: "productstockfinder",
+      scheme: "omnishop",
     });
     const message = `${shareText}\n\n${deepLink}`;
     try {

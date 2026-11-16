@@ -305,7 +305,7 @@ describe("GET /api/oauth/callback (web ticket redirect)", () => {
       );
       const res = makeRes();
       const req: any = {
-        ...makeReq({}, { cookie: `psf_oauth_state=${oauthStateNonce(state)}` }),
+        ...makeReq({}, { cookie: `omnishop_oauth_state=${oauthStateNonce(state)}` }),
         query: { code: "auth-code", state },
         ip: "10.9.9.101",
       };
@@ -366,7 +366,7 @@ describe("GET /api/oauth/callback (web ticket redirect)", () => {
       mockedGetUser.mockResolvedValue({ id: 7 } as any);
       const getHandler = setupRoutes();
       const state = signOAuthState({
-        redirectUri: "productstockfinder:/oauth/callback",
+        redirectUri: "omnishop:/oauth/callback",
         deviceId: "dev-9",
         provider: "google",
       });
@@ -378,7 +378,7 @@ describe("GET /api/oauth/callback (web ticket redirect)", () => {
       };
       await getHandler("GET", "/api/oauth/callback")(req, res);
       const redirectLocation: string = res.redirect.mock.calls[0][1];
-      expect(redirectLocation).toContain("productstockfinder:/oauth/callback?ticket=");
+      expect(redirectLocation).toContain("omnishop:/oauth/callback?ticket=");
     } finally {
       vi.unstubAllGlobals();
       delete process.env.GOOGLE_CLIENT_ID;

@@ -7,7 +7,7 @@ import subprocess
 import time
 import xml.etree.ElementTree as ET
 
-PACKAGE = "com.app.stocktrackerpro.nativepreview"
+PACKAGE = "com.omnishop.android"
 ROOT = Path(__file__).resolve().parents[1]
 
 

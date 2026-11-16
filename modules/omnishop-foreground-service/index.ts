@@ -12,7 +12,7 @@ type NativeApi = {
 let native: NativeApi | null = null;
 if (Platform.OS === "android") {
   try {
-    native = requireNativeModule<NativeApi>("PsfForegroundService");
+    native = requireNativeModule<NativeApi>("OmniShopForegroundService");
   } catch {
     native = null;
   }

@@ -37,4 +37,18 @@ describe("desktop export interops with the shared backup parser", () => {
     });
     expect(parseBackup(legacy)).toBeNull();
   });
+
+  it("accepts the pre-rebrand export format", () => {
+    const legacy = JSON.stringify({
+      format: "product-stock-finder-backup",
+      version: 1,
+      exportedAt: "2026-01-01T00:00:00.000Z",
+      watchlist: [],
+      alerts: [],
+      reminders: [],
+      stockWatches: [],
+      settings: {},
+    });
+    expect(parseBackup(legacy)).not.toBeNull();
+  });
 });

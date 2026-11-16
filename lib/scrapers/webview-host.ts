@@ -33,12 +33,12 @@ export interface WebViewHost {
   ): Promise<MarketplacePageSnapshot>;
 }
 
-export const STORAGE_CLEARED_SENTINEL = "__psf_storage_cleared__";
+export const STORAGE_CLEARED_SENTINEL = "__omnishop_storage_cleared__";
 
 // The snapshot page script posts this marker immediately before its JSON
 // payload. Kept distinct from STORAGE_CLEARED_SENTINEL and from the raw HTML
 // that load() posts so the host can route each message unambiguously.
-export const SNAPSHOT_MESSAGE_MARKER = "__psf_marketplace_snapshot__";
+export const SNAPSHOT_MESSAGE_MARKER = "__omnishop_marketplace_snapshot__";
 
 // Bounds enforced both when the page emits the message and again at the native
 // boundary, so a hostile or broken page cannot flood the bridge.

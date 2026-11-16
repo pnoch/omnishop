@@ -5,7 +5,7 @@ import { storage } from "./storage";
 import { isTauri } from "./lib/tauri";
 import { applyBackup, buildBackup, parseBackup } from "../../lib/backup";
 
-const EXPORT_FILENAME = "product-stock-finder-export.json";
+const EXPORT_FILENAME = "omnishop-export.json";
 
 async function readCurrentBackupInput() {
   const [watchlist, alerts, reminders, stockWatches, settings] =

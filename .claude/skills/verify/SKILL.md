@@ -15,7 +15,7 @@ search, sync, push) need the local API server and `adb reverse`.
 
 ```bash
 # 1. API server (headed browser so eBay search works; xvfb for the display)
-PSF_BROWSER_HEADED=1 setsid xvfb-run -a pnpm dev:server > /tmp/opencode/api.log 2>&1 < /dev/null & disown
+OMNISHOP_BROWSER_HEADED=1 setsid xvfb-run -a pnpm dev:server > /tmp/opencode/api.log 2>&1 < /dev/null & disown
 sleep 10 && curl -sS -o /dev/null -w "%{http_code}\n" http://localhost:3000/api/trpc/trending.get
 
 # 2. Emulator must be running; wire it to the host
@@ -73,7 +73,7 @@ Drops 1010, Alerts 1300.
 
 ## Evidence
 
-Screenshots go to `$PSF_EVIDENCE` (default `/tmp/opencode/psf-evidence`). A
+Screenshots go to `$OMNISHOP_EVIDENCE` (default `/tmp/opencode/omnishop-evidence`). A
 proof is: the action (a tap/text) plus the resulting screen, plus the side
 effect (the product appears in Watch, the price history gains a point). Capture
 both the before and after. Do not claim a flow works from a single final
@@ -91,7 +91,7 @@ pkill -f "tsx watch" 2>/dev/null           # stop the API server you started
 ```
 
 Never kill by process name broadly; kill only what this run started. Evidence
-in `$PSF_EVIDENCE` survives cleanup.
+in `$OMNISHOP_EVIDENCE` survives cleanup.
 
 ## Helpers
 

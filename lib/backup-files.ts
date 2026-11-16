@@ -6,7 +6,7 @@ import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
 
 function backupFileName(): string {
-  return `product-stock-finder-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  return `omnishop-backup-${new Date().toISOString().slice(0, 10)}.json`;
 }
 
 export async function exportBackupFile(json: string): Promise<boolean> {

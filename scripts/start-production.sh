@@ -15,7 +15,7 @@ done
 
 if [ -S /tmp/.X11-unix/X99 ]; then
   export DISPLAY=:99
-  export PSF_BROWSER_HEADED=1
+  export OMNISHOP_BROWSER_HEADED=1
 else
   echo "Xvfb did not create :99; starting in headless browser mode" >&2
 fi

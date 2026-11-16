@@ -4,7 +4,7 @@ import { getAndroidIntentFilters } from "../app.config";
 describe("Android app links", () => {
   it("adds an HTTPS intent filter for the configured web host", () => {
     const filters = getAndroidIntentFilters({
-      scheme: "productstockfinder",
+      scheme: "omnishop",
       webHost: "app.example.com",
     });
     expect(

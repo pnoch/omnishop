@@ -62,7 +62,7 @@ function stateSecret(): string {
   return STATE_SECRET;
 }
 
-const OAUTH_STATE_COOKIE = "psf_oauth_state";
+const OAUTH_STATE_COOKIE = "omnishop_oauth_state";
 
 /**
  * Reads the nonce out of a signed state *without* verifying it. `/start` needs
@@ -430,6 +430,14 @@ export function registerOAuthRoutes(app: Express) {
     };
   }
 
+  // `productstockfinder` is the pre-rebrand scheme. Keep accepting it so an
+  // app installed before the rename can still complete an OAuth login.
+  function nativeSchemeOf(uri: string): "omnishop" | "productstockfinder" | null {
+    if (uri.startsWith("omnishop:")) return "omnishop";
+    if (uri.startsWith("productstockfinder:")) return "productstockfinder";
+    return null;
+  }
+
   function resolveSafeRedirectUri(input: string, webBase: string): string {
     const trimmed = input.trim();
     if (!trimmed) return "/";
@@ -443,7 +451,7 @@ export function registerOAuthRoutes(app: Express) {
     ) {
       return trimmed;
     }
-    if (trimmed.startsWith("productstockfinder:")) return trimmed;
+    if (nativeSchemeOf(trimmed)) return trimmed;
     try {
       const url = new URL(trimmed);
       if (webBase) {
@@ -614,7 +622,7 @@ export function registerOAuthRoutes(app: Express) {
       // Login-CSRF guard (see /start): the web flow must echo the nonce cookie.
       // Only the custom-scheme redirect is native; a deviceId alone must not
       // exempt an http(s) redirect, or an attacker can skip the nonce check.
-      const isNativeFlow = state.redirectUri.startsWith("productstockfinder:");
+      const isNativeFlow = nativeSchemeOf(state.redirectUri) !== null;
       if (!isNativeFlow) {
         const cookies = parseCookieHeader(req.headers.cookie ?? "");
         if (
@@ -694,8 +702,8 @@ export function registerOAuthRoutes(app: Express) {
           (user as { credentialsChangedAt?: number }).credentialsChangedAt ?? 0,
         ),
       });
-      const isNative = state.redirectUri.startsWith("productstockfinder:");
-      if (isNative) {
+      const nativeScheme = nativeSchemeOf(state.redirectUri);
+      if (nativeScheme) {
         const ticket = issueOAuthTicket(openId, state.deviceId);
         const safeRedirect = resolveSafeRedirectUri(state.redirectUri, webBase);
         if (safeRedirect.startsWith("http://") || safeRedirect.startsWith("https://")) {
@@ -704,7 +712,7 @@ export function registerOAuthRoutes(app: Express) {
           return;
         }
         const params = new URLSearchParams({ ticket });
-        res.redirect(302, `productstockfinder:/oauth/callback?${params.toString()}`);
+        res.redirect(302, `${nativeScheme}:/oauth/callback?${params.toString()}`);
         return;
       }
       const cookieOptions = getSessionCookieOptions(req);

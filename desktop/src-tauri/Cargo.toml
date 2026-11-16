@@ -1,10 +1,10 @@
 [package]
-name = "product-stock-finder"
+name = "omnishop"
 version = "5.28.2"
 edition = "2021"
 
 [lib]
-name = "product_stock_finder_lib"
+name = "omnishop_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

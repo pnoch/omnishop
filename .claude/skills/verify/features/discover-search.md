@@ -44,7 +44,7 @@ $D shot discover-dgx
 - Server-backed sections (eBay, Facebook) require the API server + `adb reverse
   tcp:3000`. A release build with a loopback API URL runs Local mode and shows
   "Could not search eBay" for every query.
-- The eBay search needs `PSF_BROWSER_HEADED=1` on the server; headless is
+- The eBay search needs `OMNISHOP_BROWSER_HEADED=1` on the server; headless is
   blocked by eBay.
 - Facebook search needs a signed-in session in the app browser; without it the
   section shows sign-in guidance, not results.

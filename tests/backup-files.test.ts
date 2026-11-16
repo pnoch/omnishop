@@ -171,7 +171,7 @@ describe("exportBackupFile — native", () => {
       string,
       { encoding: string },
     ];
-    expect(uri).toContain("/cache/product-stock-finder-backup-");
+    expect(uri).toContain("/cache/omnishop-backup-");
     expect(json).toBe('{"a":1}');
     expect(opts.encoding).toBe("utf8");
     expect(shareAsync).toHaveBeenCalledTimes(1);

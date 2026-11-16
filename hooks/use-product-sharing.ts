@@ -59,7 +59,7 @@ export function useProductSharing({
     // `id` can be a user-supplied model number (CSV import), so encode it or a
     // "/" or space produces a malformed deep link.
     const deepLink = Linking.createURL(`/product/${encodeURIComponent(id)}`, {
-      scheme: "productstockfinder",
+      scheme: "omnishop",
     });
     const message = `${shareText}\n\n${deepLink}`;
     try {

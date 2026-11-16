@@ -73,7 +73,7 @@ describe("with-android-cleartext-traffic", () => {
   });
 
   it("writes the network-security config into the Android project", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "psf-nsc-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "omnishop-nsc-"));
     try {
       const config = plugin({ name: "x", slug: "x" });
       await config.mods.android.dangerous({

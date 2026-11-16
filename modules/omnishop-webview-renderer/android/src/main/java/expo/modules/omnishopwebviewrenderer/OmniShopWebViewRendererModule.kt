@@ -1,4 +1,4 @@
-package expo.modules.psfwebviewrenderer
+package expo.modules.omnishopwebviewrenderer
 
 import android.content.Intent
 import android.net.Uri
@@ -7,11 +7,11 @@ import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
-class PsfWebViewRendererModule : Module() {
+class OmniShopWebViewRendererModule : Module() {
   private var renderer: OverlayRenderer? = null
 
   override fun definition() = ModuleDefinition {
-    Name("PsfWebViewRenderer")
+    Name("OmniShopWebViewRenderer")
 
     AsyncFunction("render") { url: String, waitForSelector: String?, timeoutMs: Double, promise: Promise ->
       val context = appContext.reactContext ?: run {

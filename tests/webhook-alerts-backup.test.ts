@@ -30,7 +30,7 @@ describe("webhook URL is a backup secret", () => {
 
   it("never adopts a URL from an imported backup", () => {
     const crafted = JSON.stringify({
-      format: "product-stock-finder-backup",
+      format: "omnishop-backup",
       version: 1,
       exportedAt: new Date().toISOString(),
       watchlist: [],
@@ -53,7 +53,7 @@ describe("webhook URL is a backup secret", () => {
   it("does not adopt a URL from a hand-built backup (merge defense)", () => {
     const result = applyBackup(
       {
-        format: "product-stock-finder-backup",
+        format: "omnishop-backup",
         version: 1,
         exportedAt: new Date().toISOString(),
         watchlist: [],

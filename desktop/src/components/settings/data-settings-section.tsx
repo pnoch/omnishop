@@ -40,7 +40,7 @@ export function DataSettingsSection() {
         storage.getSettings(),
       ]);
       const csv = watchlistToCsv(watchlist, appSettings.displayCurrency ?? "USD");
-      const fileName = `product-stock-finder-watchlist-${new Date().toISOString().slice(0, 10)}.csv`;
+      const fileName = `omnishop-watchlist-${new Date().toISOString().slice(0, 10)}.csv`;
       const result = await saveCsv(fileName, csv);
       if (result.status === "cancelled") {
         setImportExportMessage("Export cancelled");
@@ -66,7 +66,7 @@ export function DataSettingsSection() {
         storage.getSettings(),
       ]);
       const json = buildBackup({ watchlist, alerts, reminders, stockWatches, settings });
-      const fileName = `product-stock-finder-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      const fileName = `omnishop-backup-${new Date().toISOString().slice(0, 10)}.json`;
       if (isTauri()) {
         const { save } = await import("@tauri-apps/plugin-dialog");
         const { writeFile } = await import("@tauri-apps/plugin-fs");

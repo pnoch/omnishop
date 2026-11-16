@@ -1,7 +1,7 @@
 const RENDER_TIMEOUT_MS = 20_000;
 
 // Thin bounded wrapper over the shared scraper browser module (browser pool +
-// patchright launch live there, including the PSF_BROWSER_HEADED gate — no
+// patchright launch live there, including the OMNISHOP_BROWSER_HEADED gate — no
 // launch code is duplicated here). Patchright is lazy-imported so merely
 // importing this module never loads it.
 export async function renderWithBrowser(url: string): Promise<string> {

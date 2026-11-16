@@ -1,5 +1,5 @@
 use playwright_rs::{Browser, Playwright};
-use std::sync::OnceLock;
+use std::sync::{Once, OnceLock};
 use tokio::sync::Mutex;
 
 /// Region-appropriate context signals, mirroring `REGION_SIGNALS` in
@@ -115,10 +115,42 @@ fn host_of(url: &str) -> String {
 /// desktop's Rust and TypeScript browser paths share one jar.
 fn cookie_dir() -> std::path::PathBuf {
     let home = std::env::var("HOME").unwrap_or_else(|_| "~".to_string());
-    std::path::Path::new(&home)
+    let dir = std::path::Path::new(&home)
+        .join(".cache")
+        .join("omnishop")
+        .join("cookies");
+    static MIGRATE: Once = Once::new();
+    MIGRATE.call_once(|| migrate_legacy_cookie_dir(&dir));
+    dir
+}
+
+/// Copies the pre-rebrand jar once so existing Cloudflare clearance and cart
+/// cookies survive the directory rename. Mirrors `ensureCookieDir` in
+/// lib/scrapers/browser.ts; the two processes share one jar.
+fn migrate_legacy_cookie_dir(dest: &std::path::Path) {
+    let _ = std::fs::create_dir_all(dest);
+    let home = std::env::var("HOME").unwrap_or_else(|_| "~".to_string());
+    let legacy = std::path::Path::new(&home)
         .join(".cache")
         .join("product-stock-finder")
-        .join("cookies")
+        .join("cookies");
+    let entries = match std::fs::read_dir(legacy) {
+        Ok(entries) => entries,
+        Err(_) => return,
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|ext| ext.to_str()) != Some("json") {
+            continue;
+        }
+        let Some(name) = path.file_name() else {
+            continue;
+        };
+        let target = dest.join(name);
+        if !target.exists() {
+            let _ = std::fs::copy(&path, &target);
+        }
+    }
 }
 
 fn cookie_file(domain: &str) -> std::path::PathBuf {
@@ -425,7 +457,7 @@ mod tests {
     fn cookie_files_are_per_domain_json_under_the_shared_dir() {
         let path = cookie_file("server2u.com").to_string_lossy().to_string();
         assert!(
-            path.ends_with(".cache/product-stock-finder/cookies/fy9pqx.json"),
+            path.ends_with(".cache/omnishop/cookies/fy9pqx.json"),
             "{path}"
         );
     }

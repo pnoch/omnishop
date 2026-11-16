@@ -380,7 +380,13 @@ fn strip_device_local_settings(mut settings: serde_json::Value) -> serde_json::V
 }
 
 fn default_backup_format() -> String {
-    "product-stock-finder-backup".to_string()
+    "omnishop-backup".to_string()
+}
+
+/// Pre-rebrand export format. Accepted on import so backups written before the
+/// rename still restore; exports always use `default_backup_format`.
+fn is_supported_backup_format(format: &str) -> bool {
+    format == default_backup_format() || format == "product-stock-finder-backup"
 }
 
 // Wire shape of lib/backup.ts's BackupData. The desktop export must be readable
@@ -408,7 +414,7 @@ struct ExportData {
 fn validate_import_schema(data: &ExportData) -> Result<(), String> {
     // Reject an unrelated JSON file that merely has the right keys. A missing
     // `format` is allowed: older desktop exports predate the shared schema.
-    if data.format != default_backup_format() {
+    if !is_supported_backup_format(&data.format) {
         return Err(format!("Unsupported backup format: {}", data.format));
     }
     // top-level shape
@@ -823,6 +829,46 @@ async fn read_value_for_key(
         return Err(format!("Refusing to read disallowed key: {key}"));
     }
     read_json_file(&data_dir, &key)
+}
+
+/// One-time copy of the mirrored JSON collections from the pre-rebrand Tauri
+/// identifiers. The identifier is part of `app_data_dir`, so without this a
+/// rebranded install would start with an empty watchlist/settings. Only known
+/// storage keys are copied; WebKit caches are left behind.
+fn migrate_legacy_app_data(app: &tauri::AppHandle) {
+    use tauri::Manager;
+
+    let Ok(current) = app.path().app_data_dir() else {
+        return;
+    };
+    migrate_legacy_app_data_at(&current);
+}
+
+fn migrate_legacy_app_data_at(current: &std::path::Path) {
+    let Some(parent) = current.parent() else {
+        return;
+    };
+    let _ = std::fs::create_dir_all(current);
+    for legacy_id in ["com.app.stocktrackerpro", "com.app.stockfinder"] {
+        let legacy = parent.join(legacy_id);
+        if legacy == current {
+            continue;
+        }
+        for key in [
+            "watchlist_products",
+            "price_alerts",
+            "back_order_reminders",
+            "app_settings",
+            "back_in_stock_watches",
+            "fx_rates",
+        ] {
+            let source = legacy.join(format!("{key}.json"));
+            let target = current.join(format!("{key}.json"));
+            if source.is_file() && !target.exists() {
+                let _ = std::fs::copy(source, target);
+            }
+        }
+    }
 }
 
 /// Only the keys the renderer legitimately mirrors to disk.
@@ -2291,6 +2337,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
+            migrate_legacy_app_data(app.handle());
             let open_item = MenuItemBuilder::new("Open").id("open").build(app)?;
             let check_item = MenuItemBuilder::new("Check Now")
                 .id("check_now")
@@ -2763,7 +2810,7 @@ mod tests {
     #[test]
     fn export_data_round_trips_the_shared_backup_schema() {
         let value = serde_json::json!({
-            "format": "product-stock-finder-backup",
+            "format": "omnishop-backup",
             "version": 1,
             "exportedAt": "2026-01-01T00:00:00.000Z",
             "watchlist": [],
@@ -2780,7 +2827,7 @@ mod tests {
         let out = serde_json::to_value(&parsed).unwrap();
         assert_eq!(out["exportedAt"], "2026-01-01T00:00:00.000Z");
         assert!(out.get("stockWatches").is_some());
-        assert_eq!(out["format"], "product-stock-finder-backup");
+        assert_eq!(out["format"], "omnishop-backup");
     }
 
     #[test]
@@ -2794,7 +2841,7 @@ mod tests {
             "RON", "RSD", "SAR", "SEK", "TRY", "TWD", "UAH", "VND",
         ] {
             let value = serde_json::json!({
-                "format": "product-stock-finder-backup",
+                "format": "omnishop-backup",
                 "version": 1,
                 "exportedAt": "2026-01-01T00:00:00.000Z",
                 "watchlist": [],
@@ -2814,7 +2861,7 @@ mod tests {
     #[test]
     fn validate_import_schema_rejects_unknown_currency() {
         let value = serde_json::json!({
-            "format": "product-stock-finder-backup",
+            "format": "omnishop-backup",
             "version": 1,
             "exportedAt": "2026-01-01T00:00:00.000Z",
             "watchlist": [],
@@ -2841,7 +2888,56 @@ mod tests {
         let parsed: ExportData = serde_json::from_value(legacy).unwrap();
         assert_eq!(parsed.exported_at, "2026-01-01T00:00:00.000Z");
         // A missing format defaults to the shared one.
-        assert_eq!(parsed.format, "product-stock-finder-backup");
+        assert_eq!(parsed.format, "omnishop-backup");
+    }
+
+    #[test]
+    fn migrates_legacy_app_data_without_overwriting_current_files() {
+        let root = std::env::temp_dir().join(format!(
+            "omnishop-migrate-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let current = root.join("com.omnishop.desktop");
+        let legacy = root.join("com.app.stocktrackerpro");
+        std::fs::create_dir_all(&current).unwrap();
+        std::fs::create_dir_all(&legacy).unwrap();
+        std::fs::write(current.join("watchlist_products.json"), r#"["current"]"#).unwrap();
+        std::fs::write(legacy.join("watchlist_products.json"), r#"["legacy"]"#).unwrap();
+        std::fs::write(legacy.join("price_alerts.json"), r#"["alert"]"#).unwrap();
+        std::fs::write(legacy.join("not_a_storage_key.json"), r#"["ignored"]"#).unwrap();
+
+        migrate_legacy_app_data_at(&current);
+
+        assert_eq!(
+            std::fs::read_to_string(current.join("watchlist_products.json")).unwrap(),
+            r#"["current"]"#
+        );
+        assert_eq!(
+            std::fs::read_to_string(current.join("price_alerts.json")).unwrap(),
+            r#"["alert"]"#
+        );
+        assert!(!current.join("not_a_storage_key.json").exists());
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn validate_import_schema_accepts_the_pre_rebrand_format() {
+        let legacy = serde_json::json!({
+            "format": "product-stock-finder-backup",
+            "version": 1,
+            "exportedAt": "2026-01-01T00:00:00.000Z",
+            "watchlist": [],
+            "alerts": [],
+            "reminders": [],
+            "stockWatches": [],
+            "settings": {}
+        });
+        let parsed: ExportData = serde_json::from_value(legacy).unwrap();
+        assert!(validate_import_schema(&parsed).is_ok());
     }
 
     #[test]

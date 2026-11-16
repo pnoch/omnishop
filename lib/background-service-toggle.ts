@@ -1,5 +1,5 @@
 import { enableBackgroundService, disableBackgroundService } from "./background-service";
-import { isOverlayGranted, requestOverlay } from "@/modules/psf-webview-renderer";
+import { isOverlayGranted, requestOverlay } from "@/modules/omnishop-webview-renderer";
 
 // Keeps the native side in sync with the persisted toggle value. Background
 // rendering needs the overlay permission, so prompt for it when enabling.

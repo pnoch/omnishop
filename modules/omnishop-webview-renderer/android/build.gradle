@@ -3,11 +3,11 @@ plugins {
   id 'expo-module-gradle-plugin'
 }
 
-group = 'expo.modules.psfwebviewrenderer'
+group = 'expo.modules.omnishopwebviewrenderer'
 version = '1.0.0'
 
 android {
-  namespace "expo.modules.psfwebviewrenderer"
+  namespace "expo.modules.omnishopwebviewrenderer"
   defaultConfig {
     versionCode 1
     versionName "1.0.0"

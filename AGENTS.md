@@ -6,8 +6,9 @@ Guidance for AI coding agents working in this repository. Read this before touch
 
 **OmniShop** (formerly "Product Stock Finder" and "Stock Tracker Pro") is an Expo/React Native mobile + web app for tracking product availability and prices across 33 global electronics distributors (28 have registered parsers — health dashboard/classifyFetchStatus shows live status; MikroTik/Ubiquiti focus). Users maintain a watchlist, set price alerts, schedule back-order reminders, watch for restocks, and compare price history across distributors.
 
-- **App name in UI:** "OmniShop" (rebranded from "Product Stock Finder"; the package/bundle id, slug, scheme, storage keys, and signing key are unchanged)
-- **Bundle ID:** `com.app.stocktrackerpro`
+- **App name in UI:** "OmniShop" (formerly "Product Stock Finder"; the folder, npm package, GitHub repo, Expo slug, URL scheme, bundle ids, desktop crate, cache dirs, and backup format were renamed in the 2026-11 rebrand)
+- **Bundle ID:** `com.omnishop.app` (desktop Tauri: `com.omnishop.desktop`)
+- **Compatibility:** the pre-rebrand OAuth scheme (`productstockfinder:`), backup format (`product-stock-finder-backup`), cookie cache dir, and `PSF_*` env vars are still accepted/read; exports and new paths use the OmniShop names. AsyncStorage keys, the web IndexedDB name (`psf-storage`), the Android keystore alias/certificate, and the release-signing key filenames are data/signing identity and intentionally unchanged.
 - **Platform targets:** iOS, Android, Web (Expo web)
 - **State:** Local-first with optional backend sync. AsyncStorage is the source of truth when signed out; when signed in, `lib/sync.ts` syncs watchlist/alerts/reminders/settings with the server (last-write-wins + tombstones, server-authoritative timestamps). Live scraping runs through `lib/scrapers/` (plain HTTP → headless browser escalation with circuit breakers). The backend (Express + tRPC + Drizzle) is fully integrated — see server routers below. A fresh install starts with an **empty watchlist**; nothing is auto-seeded. `lib/sample-data.ts` still provides preview/detail listings for CRS804/CRS326 when a user adds them.
 
@@ -242,7 +243,7 @@ Anything under `lib/_core/`, `server/_core/`, or `shared/_core/` is framework-le
 - DB-backed tests use `TEST_DATABASE_URL` + `RUN_DB_TESTS=1` (see `pnpm test`).
 - Desktop auto-update (`tauri-plugin-updater`): `bundle.createUpdaterArtifacts` is on, so `tauri build` needs `TAURI_SIGNING_PRIVATE_KEY` (and optional `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`). Put the matching public key in `desktop/src-tauri/tauri.conf.json` (`plugins.updater.pubkey`) and publish the release `latest.json` at the configured endpoint (the repo's GitHub Releases by default). `.github/workflows/release.yml` automates this on a `v*` tag (`tauri-apps/tauri-action` builds + signs + publishes the release and `latest.json`). `tauri dev` is unaffected; until the real pubkey is set, the in-app check reports a friendly error.
 - `scripts/load-env.js` loads env with system > `.env` priority.
-- Server browser scraping is **headless by default**. Set `PSF_BROWSER_HEADED=1` to launch headed — Cloudflare's gate keys on headed-ness (Winncom/B&H return 403 headless, 200 headed), so production sets it and runs under a virtual display (`xvfb-run -a pnpm start`, or a systemd unit with `Xvfb`). Server-only; mobile/web/desktop are unaffected.
+- Server browser scraping is **headless by default**. Set `OMNISHOP_BROWSER_HEADED=1` to launch headed (the pre-rebrand `PSF_BROWSER_HEADED` still works) — Cloudflare's gate keys on headed-ness (Winncom/B&H return 403 headless, 200 headed), so production sets it and runs under a virtual display (`xvfb-run -a pnpm start`, or a systemd unit with `Xvfb`). Server-only; mobile/web/desktop are unaffected.
 
 ## Before You Commit
 
@@ -259,5 +260,5 @@ Anything under `lib/_core/`, `server/_core/`, or `shared/_core/` is framework-le
 - `CHANGELOG.md` — per-release notes (current version `5.17.0`)
 - `docs/releasing.md` — release runbook (version bump, Android signing/App Links/FCM, desktop tag + updater, web deploy)
 - `server/README.md` — backend guide (auth, DB, tRPC, storage, LLM, image gen) — read only if adding backend features
-- `docs/superpowers/` — design specs (`specs/`) and implementation plans (`plans/`) for recent phases
+- `docs/superpowers/` — design specs (`specs/`) and implementation plans (`plans/`) for recent phases. Entries written before the 2026-11 rebrand keep the historical `product-stock-finder`/`PSF_*` names; current code and docs use `omnishop`/`OMNISHOP_*`.
 - `references/periodic-updates.md` — reference doc on periodic updates

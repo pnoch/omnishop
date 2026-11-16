@@ -37,7 +37,7 @@ export async function launchBrowser(): Promise<never> {
 // iOS/web) resolves to null so a background fetch reports
 // BrowserUnavailableError and resilient falls through to plain HTTP.
 let overlay: OverlayRenderer | null = null;
-void import("@/modules/psf-webview-renderer")
+void import("@/modules/omnishop-webview-renderer")
   .then((mod) => {
     overlay = mod;
   })

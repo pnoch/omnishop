@@ -75,7 +75,7 @@ describe("buildBackup / parseBackup round-trip", () => {
     });
     const parsed = parseBackup(json);
     expect(parsed).not.toBeNull();
-    expect(parsed!.format).toBe("product-stock-finder-backup");
+    expect(parsed!.format).toBe("omnishop-backup");
     expect(parsed!.version).toBe(1);
     expect(parsed!.watchlist.map((p) => p.id)).toEqual(["p1"]);
     expect(parsed!.alerts.map((a) => a.id)).toEqual(["a1"]);
@@ -110,7 +110,7 @@ describe("parseBackup validation", () => {
   it("rejects future versions", () => {
     expect(
       parseBackup(
-        JSON.stringify({ format: "product-stock-finder-backup", version: 99 }),
+        JSON.stringify({ format: "omnishop-backup", version: 99 }),
       ),
     ).toBeNull();
   });
@@ -118,7 +118,7 @@ describe("parseBackup validation", () => {
   it("coerces malformed collections to empty arrays", () => {
     const parsed = parseBackup(
       JSON.stringify({
-        format: "product-stock-finder-backup",
+        format: "omnishop-backup",
         version: 1,
         watchlist: "nope",
         alerts: 42,
@@ -130,6 +130,23 @@ describe("parseBackup validation", () => {
     expect(parsed!.reminders).toEqual([]);
     expect(parsed!.stockWatches).toEqual([]);
     expect(parsed!.settings).toBeUndefined();
+  });
+
+  it("accepts backups written before the rebrand", () => {
+    const parsed = parseBackup(
+      JSON.stringify({
+        format: "product-stock-finder-backup",
+        version: 1,
+        exportedAt: "2026-01-01T00:00:00.000Z",
+        watchlist: [product("p1")],
+        alerts: [],
+        reminders: [],
+        stockWatches: [],
+      }),
+    );
+    expect(parsed).not.toBeNull();
+    expect(parsed!.format).toBe("omnishop-backup");
+    expect(parsed!.watchlist.map((p) => p.id)).toEqual(["p1"]);
   });
 });
 
@@ -343,7 +360,7 @@ describe("applyBackup merge-by-id", () => {
 
   it("leaves settings untouched when backup has none", () => {
     const json = JSON.stringify({
-      format: "product-stock-finder-backup",
+      format: "omnishop-backup",
       version: 1,
       watchlist: [],
     });
@@ -422,7 +439,7 @@ describe("BYO-LLM key is device-local", () => {
 
   it("never adopts a key from an imported backup", () => {
     const crafted = JSON.stringify({
-      format: "product-stock-finder-backup",
+      format: "omnishop-backup",
       version: 1,
       exportedAt: NOW,
       watchlist: [],

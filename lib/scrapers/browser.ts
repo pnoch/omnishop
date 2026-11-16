@@ -1,5 +1,5 @@
 import { chromium, Browser, BrowserContext } from "patchright";
-import { chmod, mkdir, readFile, writeFile } from "fs/promises";
+import { access, chmod, copyFile, mkdir, readFile, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { USER_AGENTS } from "./utils";
 import { BrowserBlockedError } from "./resilient";
@@ -14,12 +14,49 @@ const VIEWPORTS = [
   { width: 1280, height: 720 },
 ];
 
-const COOKIE_DIR = join(
+const COOKIE_DIR = join(process.env.HOME || "~", ".cache", "omnishop", "cookies");
+const LEGACY_COOKIE_DIR = join(
   process.env.HOME || "~",
   ".cache",
   "product-stock-finder",
   "cookies",
 );
+
+let cookieDirReady: Promise<void> | null = null;
+
+// The jar is shared with the desktop Rust scraper, so both sides migrate the
+// pre-rebrand directory once instead of forcing every store to re-challenge
+// Cloudflare after the rename.
+function ensureCookieDir(): Promise<void> {
+  if (!cookieDirReady) {
+    cookieDirReady = (async () => {
+      await mkdir(COOKIE_DIR, { recursive: true });
+      let entries: string[];
+      try {
+        entries = await readdir(LEGACY_COOKIE_DIR);
+      } catch {
+        return;
+      }
+      await Promise.all(
+        entries
+          .filter((name) => name.endsWith(".json"))
+          .map(async (name) => {
+            const target = join(COOKIE_DIR, name);
+            try {
+              await access(target);
+            } catch {
+              try {
+                await copyFile(join(LEGACY_COOKIE_DIR, name), target);
+              } catch {
+                // A missing/unreadable legacy file is not fatal.
+              }
+            }
+          }),
+      );
+    })();
+  }
+  return cookieDirReady;
+}
 
 function getRandomItem<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -50,6 +87,7 @@ function isCookieArray(value: unknown): value is any[] {
 
 async function loadCookies(domain: string): Promise<any[]> {
   try {
+    await ensureCookieDir();
     const filePath = join(COOKIE_DIR, `${hashDomain(domain)}.json`);
     const data = await readFile(filePath, "utf-8");
     const parsed = JSON.parse(data);
@@ -61,7 +99,7 @@ async function loadCookies(domain: string): Promise<any[]> {
 
 async function saveCookies(domain: string, cookies: any[]): Promise<void> {
   try {
-    await mkdir(COOKIE_DIR, { recursive: true });
+    await ensureCookieDir();
     const filePath = join(COOKIE_DIR, `${hashDomain(domain)}.json`);
     // Distributor session cookies are credentials: owner-only. `mode` applies
     // only on create, so chmod too (files written by older builds keep 0644).
@@ -123,13 +161,22 @@ async function launchWith(headless: boolean): Promise<Browser> {
 
 let warnedMissingDisplay = false;
 
+function headedRequested(): boolean {
+  // PSF_BROWSER_HEADED is the pre-rebrand name; keep honoring it so existing
+  // deployments do not silently lose headed mode after the rename.
+  return (
+    process.env.OMNISHOP_BROWSER_HEADED === "1" ||
+    process.env.PSF_BROWSER_HEADED === "1"
+  );
+}
+
 // Headed mode is an explicit opt-in: Cloudflare's gate keys on headed-ness, so
-// production sets PSF_BROWSER_HEADED=1 and runs under a virtual display
+// production sets OMNISHOP_BROWSER_HEADED=1 and runs under a virtual display
 // (Xvfb). Default stays headless so dev machines never pop windows. If headed
 // is requested but the display is gone (Xvfb died, stale DISPLAY), degrade to
 // headless with a warning instead of failing every browser-backed scrape.
 export async function launchBrowser(): Promise<Browser> {
-  if (process.env.PSF_BROWSER_HEADED !== "1") return launchWith(true);
+  if (!headedRequested()) return launchWith(true);
   try {
     return await launchWith(false);
   } catch (error) {
@@ -137,7 +184,7 @@ export async function launchBrowser(): Promise<Browser> {
     if (!warnedMissingDisplay) {
       warnedMissingDisplay = true;
       log.warn(
-        "[browser] PSF_BROWSER_HEADED=1 but no usable X display " +
+        "[browser] OMNISHOP_BROWSER_HEADED=1 but no usable X display " +
           `(${process.env.DISPLAY ?? "DISPLAY unset"}); falling back to headless. ` +
           "Run under Xvfb (scripts/start-production.sh) for Cloudflare-gated distributors.",
       );

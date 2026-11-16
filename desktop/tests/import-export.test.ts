@@ -49,7 +49,7 @@ vi.mock("../src/storage", () => ({
 
 function backupWith(products: unknown[]): string {
   return JSON.stringify({
-    format: "product-stock-finder-backup",
+    format: "omnishop-backup",
     version: 1,
     exportedAt: new Date().toISOString(),
     watchlist: products,

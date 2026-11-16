@@ -1,6 +1,7 @@
 import { ScrollView, Text, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { ScreenContainer } from "@/components/screen-container";
+import { getSupportEmail } from "@/lib/legal-links";
 
 function Section({
   title,
@@ -81,7 +82,7 @@ export default function PrivacyPolicyScreen() {
         </Section>
 
         <Section colors={colors} title="Contact">
-          Questions about this policy: support@productstockfinder.savvylife.icu
+          {`Questions about this policy: ${getSupportEmail()}`}
         </Section>
       </ScrollView>
     </ScreenContainer>

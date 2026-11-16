@@ -7,7 +7,7 @@ android {
     namespace = "com.omnishop.android"
     compileSdk = 37
     defaultConfig {
-        applicationId = "com.app.stocktrackerpro.nativepreview"
+        applicationId = "com.omnishop.android"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

@@ -3,7 +3,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 const start = vi.fn(async () => {});
 const stop = vi.fn(async () => {});
 const isRunning = vi.fn(async () => false);
-vi.mock("@/modules/psf-foreground-service", () => ({
+vi.mock("@/modules/omnishop-foreground-service", () => ({
   startForegroundService: () => start(),
   stopForegroundService: () => stop(),
   isForegroundServiceRunning: () => isRunning(),

@@ -7,7 +7,7 @@ import * as ReactNative from "react-native";
 // The desktop build aliases this module away, so only the Expo path matters.
 const env = {
   apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? "",
-  deepLinkScheme: "productstockfinder",
+  deepLinkScheme: "omnishop",
 };
 
 export const API_BASE_URL = env.apiBaseUrl;

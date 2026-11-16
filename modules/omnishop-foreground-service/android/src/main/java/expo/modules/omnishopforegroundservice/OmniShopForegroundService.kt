@@ -1,4 +1,4 @@
-package expo.modules.psfforegroundservice
+package expo.modules.omnishopforegroundservice
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -11,11 +11,11 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 
-class PsfForegroundService : Service() {
+class OmniShopForegroundService : Service() {
   companion object {
-    const val CHANNEL_ID = "psf_background_refresh"
+    const val CHANNEL_ID = "omnishop_background_refresh"
     const val NOTIFICATION_ID = 4821
-    const val ACTION_STOP = "expo.modules.psfforegroundservice.STOP"
+    const val ACTION_STOP = "expo.modules.omnishopforegroundservice.STOP"
 
     @Volatile
     var isRunning: Boolean = false
@@ -29,7 +29,7 @@ class PsfForegroundService : Service() {
       return START_NOT_STICKY
     }
     createChannel()
-    val stopIntent = Intent(this, PsfForegroundService::class.java).setAction(ACTION_STOP)
+    val stopIntent = Intent(this, OmniShopForegroundService::class.java).setAction(ACTION_STOP)
     val stopPending = PendingIntent.getService(
       this,
       0,

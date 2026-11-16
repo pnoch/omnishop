@@ -27,7 +27,7 @@ describe("desktop release workflow", () => {
   it("publishes the manifest at the endpoint the app checks", () => {
     const endpoint = conf.plugins.updater.endpoints[0] as string;
     expect(endpoint).toBe(
-      "https://github.com/pnoch/product-stock-finder/releases/latest/download/latest.json",
+      "https://github.com/pnoch/omnishop/releases/latest/download/latest.json",
     );
     // tauri-action generates and uploads latest.json beside the signed bundles.
     expect(conf.bundle.createUpdaterArtifacts).toBe(true);

@@ -9,7 +9,7 @@ vi.mock("@/lib/background-service", () => ({
 
 const isOverlayGranted = vi.fn(async () => false);
 const requestOverlay = vi.fn(async () => {});
-vi.mock("@/modules/psf-webview-renderer", () => ({
+vi.mock("@/modules/omnishop-webview-renderer", () => ({
   isOverlayGranted: () => isOverlayGranted(),
   requestOverlay: () => requestOverlay(),
 }));

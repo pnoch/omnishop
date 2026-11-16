@@ -8,11 +8,11 @@ const read = (p: string) => readFileSync(path.join(root, p), "utf8");
 describe("native Android modules wiring", () => {
   it("the overlay renderer declares SYSTEM_ALERT_WINDOW and uses an overlay window", () => {
     const manifest = read(
-      "modules/psf-webview-renderer/android/src/main/AndroidManifest.xml",
+      "modules/omnishop-webview-renderer/android/src/main/AndroidManifest.xml",
     );
     expect(manifest).toContain("android.permission.SYSTEM_ALERT_WINDOW");
     const renderer = read(
-      "modules/psf-webview-renderer/android/src/main/java/expo/modules/psfwebviewrenderer/OverlayRenderer.kt",
+      "modules/omnishop-webview-renderer/android/src/main/java/expo/modules/omnishopwebviewrenderer/OverlayRenderer.kt",
     );
     expect(renderer).toContain("TYPE_APPLICATION_OVERLAY");
     // Extraction must happen natively (no RN bridge) so it survives background.
@@ -21,7 +21,7 @@ describe("native Android modules wiring", () => {
 
   it("the foreground service declares the dataSync permission", () => {
     const manifest = read(
-      "modules/psf-foreground-service/android/src/main/AndroidManifest.xml",
+      "modules/omnishop-foreground-service/android/src/main/AndroidManifest.xml",
     );
     expect(manifest).toContain("FOREGROUND_SERVICE_DATA_SYNC");
     expect(manifest).toContain('foregroundServiceType="dataSync"');

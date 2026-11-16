@@ -63,10 +63,10 @@ function appleTeamId(): string {
   return process.env.APPLE_TEAM_ID?.trim() ?? "";
 }
 function iosBundleId(): string {
-  return process.env.IOS_BUNDLE_ID?.trim() ?? "com.app.stocktrackerpro";
+  return process.env.IOS_BUNDLE_ID?.trim() ?? "com.omnishop.app";
 }
 function androidPackage(): string {
-  return process.env.ANDROID_PACKAGE?.trim() ?? "com.app.stocktrackerpro";
+  return process.env.ANDROID_PACKAGE?.trim() ?? "com.omnishop.app";
 }
 // Comma-separated SHA-256 cert fingerprints (release + upload key). Required by
 // Android for autoVerify; without it the intent filter is ignored.

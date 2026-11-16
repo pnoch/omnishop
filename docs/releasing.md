@@ -127,8 +127,9 @@ Verify before uploading:
 
 ```bash
 APK=android/app/build/outputs/apk/release/app-release.apk
-"$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "$APK"   # CN=Product Stock Finder
-"$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK" | grep ^package:
+# Existing key: CN=Product Stock Finder. A regenerated key (scripts/android-keystore.sh): CN=OmniShop.
+"$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "$APK"
+"$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK" | grep "package: name='com.omnishop.app'"
 ```
 
 Upload to Play Console (internal track). `versionCode` is whatever
@@ -159,7 +160,7 @@ installers + `latest.json` to the GitHub Release. The release is created as a
 endpoint points at:
 
 ```
-https://github.com/pnoch/product-stock-finder/releases/latest/download/latest.json
+https://github.com/pnoch/omnishop/releases/latest/download/latest.json
 ```
 
 `plugins.updater.requireSignedVersion` is on, so the artifact signature must
@@ -197,7 +198,7 @@ hydration mismatch). Web push needs `VAPID_*` (server) +
 The repo ships a `Dockerfile`; Railway builds it in preference to Nixpacks.
 The image installs Chromium + Xvfb and starts the server via
 `scripts/start-production.sh`, which runs Xvfb on `:99` and sets
-`PSF_BROWSER_HEADED=1`. Headed Chromium is required: Cloudflare's gate keys on
+`OMNISHOP_BROWSER_HEADED=1`. Headed Chromium is required: Cloudflare's gate keys on
 headed-ness, so headless returns 403 for Winncom/B&H (see Phase 1106). Ensure
 the Railway service is connected to the GitHub repo (not a bare image) so the
 Dockerfile is built on deploy.
@@ -213,7 +214,7 @@ while changing the schema, and commit the generated SQL — CI's
 
 - [ ] `pnpm verify` green on the release commit.
 - [ ] `CHANGELOG.md` has the version; version lockstep test passes.
-- [ ] Android APK signed by `CN=Product Stock Finder`; `versionCode` increased.
+- [ ] Android APK package `com.omnishop.app`, signed by the release key (existing cert `CN=Product Stock Finder`); `versionCode` increased.
 - [ ] `assetlinks.json` returns 200 and lists the release SHA-256.
 - [ ] Desktop `latest.json` published (not draft) and the app's update check finds it.
 - [ ] Tag pushed; `main` pushed.
@@ -223,5 +224,5 @@ while changing the schema, and commit the generated SQL — CI's
 - **`tauri build` fails to decode the pubkey** → `plugins.updater.pubkey` is still the placeholder; set the real minisign public key.
 - **App Links don't open the app** → `EXPO_PUBLIC_WEB_URL` not set at bundle time, or `ANDROID_SHA256_CERT_FINGERPRINTS` missing/mismatched.
 - **Android remote push silent** → no FCM credentials (step 0).
-- **Browser-backed scrapes blocked / eBay search empty** → `PSF_BROWSER_HEADED=1` is set but the X display is gone. The server logs `[browser] ... falling back to headless` and keeps running headless; restart under `xvfb-run -a` (or `scripts/start-production.sh`) for Cloudflare-gated distributors.
+- **Browser-backed scrapes blocked / eBay search empty** → `OMNISHOP_BROWSER_HEADED=1` is set but the X display is gone. The server logs `[browser] ... falling back to headless` and keeps running headless; restart under `xvfb-run -a` (or `scripts/start-production.sh`) for Cloudflare-gated distributors.
 - **Release APK rejected by Play** → built with the debug key; ensure `credentials/keystore.properties` exists before `expo prebuild`.

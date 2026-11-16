@@ -73,7 +73,7 @@ self.addEventListener("push", (event) => {
   }
   if (!data || typeof data !== "object") data = {};
   const {
-    title = "Product Stock Finder",
+    title = "OmniShop",
     body = "",
     eventId = null,
     type,

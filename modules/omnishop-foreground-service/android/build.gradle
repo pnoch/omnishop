@@ -3,11 +3,11 @@ plugins {
   id 'expo-module-gradle-plugin'
 }
 
-group = 'expo.modules.psfforegroundservice'
+group = 'expo.modules.omnishopforegroundservice'
 version = '1.0.0'
 
 android {
-  namespace "expo.modules.psfforegroundservice"
+  namespace "expo.modules.omnishopforegroundservice"
   defaultConfig {
     versionCode 1
     versionName "1.0.0"

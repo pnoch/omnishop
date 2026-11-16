@@ -104,7 +104,7 @@ describe("GET /api/auth/oauth/start", () => {
     // The callback requires this cookie (login-CSRF guard); if /start stops
     // setting it, every web OAuth login breaks.
     const cookieCall = vi.mocked(res.cookie).mock.calls.find(
-      (call: unknown[]) => call[0] === "psf_oauth_state",
+      (call: unknown[]) => call[0] === "omnishop_oauth_state",
     );
     expect(cookieCall?.[1]).toBe(nonce);
     expect(vi.mocked(res.cookie).mock.calls[0]?.[2]).toMatchObject({
@@ -236,7 +236,7 @@ describe("GET /api/oauth/callback", () => {
         makeReq(
           { code: "auth-code", state },
           {},
-          { headers: { cookie: `psf_oauth_state=${oauthStateNonce(state)}` } },
+          { headers: { cookie: `omnishop_oauth_state=${oauthStateNonce(state)}` } },
         ),
         res,
       );
@@ -269,7 +269,43 @@ describe("GET /api/oauth/callback", () => {
       vi.mocked(db.getUserByEmail).mockResolvedValue(null as any);
       vi.mocked(db.getUserByOpenId).mockResolvedValue({ id: 7 } as any);
       const handler = makeApp();
-      const state = signOAuthState({ redirectUri: "productstockfinder:/oauth/callback", deviceId: "dev-9", provider: "google" });
+      const state = signOAuthState({ redirectUri: "omnishop:/oauth/callback", deviceId: "dev-9", provider: "google" });
+      const res = makeRes();
+      await handler("GET", "/api/oauth/callback")(
+        makeReq({ code: "auth-code", state }),
+        res,
+      );
+      const redirectUrl: string = res.redirect.mock.calls[0][1];
+      expect(redirectUrl).toContain("omnishop:/oauth/callback?ticket=");
+    } finally {
+      vi.unstubAllGlobals();
+      delete process.env.GOOGLE_CLIENT_ID;
+      delete process.env.GOOGLE_CLIENT_SECRET;
+    }
+  });
+
+  it("still redirects the pre-rebrand scheme for older installs", async () => {
+    process.env.GOOGLE_CLIENT_ID = "test-google-id";
+    process.env.GOOGLE_CLIENT_SECRET = "test-google-secret";
+    const fetchMock = vi.fn(async (url: string) => {
+      if (String(url).includes("oauth2.googleapis.com/token")) {
+        return { ok: true, json: async () => ({ access_token: "at-1", expires_in: 3600 }) };
+      }
+      return {
+        ok: true,
+        json: async () => ({ sub: "google-1", email: "g@example.com", name: "G User" }),
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      vi.mocked(db.getUserByEmail).mockResolvedValue(null as any);
+      vi.mocked(db.getUserByOpenId).mockResolvedValue({ id: 7 } as any);
+      const handler = makeApp();
+      const state = signOAuthState({
+        redirectUri: "productstockfinder:/oauth/callback",
+        deviceId: "dev-9",
+        provider: "google",
+      });
       const res = makeRes();
       await handler("GET", "/api/oauth/callback")(
         makeReq({ code: "auth-code", state }),
@@ -307,14 +343,14 @@ describe("POST /api/auth/oauth/consume", () => {
         id: 7, openId: "google:google-1", email: "g@example.com", name: "G User",
       } as any);
       const handler = makeApp();
-      const state = signOAuthState({ redirectUri: "productstockfinder:/oauth/callback", deviceId, provider: "google" });
+      const state = signOAuthState({ redirectUri: "omnishop:/oauth/callback", deviceId, provider: "google" });
       const res = makeRes();
       await handler("GET", "/api/oauth/callback")(
         makeReq({ code: "auth-code", state }),
         res,
       );
       const redirectUrl: string = res.redirect.mock.calls[0][1];
-      return new URL(redirectUrl.replace("productstockfinder:/", "https://app.local/")).searchParams.get("ticket")!;
+      return new URL(redirectUrl.replace("omnishop:/", "https://app.local/")).searchParams.get("ticket")!;
     } finally {
       vi.unstubAllGlobals();
       delete process.env.GOOGLE_CLIENT_ID;

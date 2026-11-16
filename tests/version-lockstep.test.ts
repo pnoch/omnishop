@@ -27,7 +27,7 @@ describe("version lockstep", () => {
       new RegExp(`^version = "${esc(version)}"`, "m"),
     );
     expect(read("desktop/src-tauri/Cargo.lock")).toMatch(
-      new RegExp(`name = "product-stock-finder"\\nversion = "${esc(version)}"`),
+      new RegExp(`name = "omnishop"\\nversion = "${esc(version)}"`),
     );
   });
 

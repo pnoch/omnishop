@@ -30,7 +30,57 @@ describe("launchBrowser", () => {
     expect(launch.mock.calls[1][0]).not.toHaveProperty("channel");
   });
 
-  it("launches headed when PSF_BROWSER_HEADED=1", async () => {
+  it("launches headed when OMNISHOP_BROWSER_HEADED=1", async () => {
+    const prev = process.env.OMNISHOP_BROWSER_HEADED;
+    process.env.OMNISHOP_BROWSER_HEADED = "1";
+    try {
+      const chrome = { isConnected: () => true };
+      launch.mockResolvedValueOnce(chrome);
+      await expect(launchBrowser()).resolves.toBe(chrome);
+      expect(launch.mock.calls[0][0]).toMatchObject({
+        headless: false,
+        channel: "chrome",
+      });
+    } finally {
+      if (prev === undefined) delete process.env.OMNISHOP_BROWSER_HEADED;
+      else process.env.OMNISHOP_BROWSER_HEADED = prev;
+    }
+  });
+
+  it("falls back to headless when headed mode has no X display", async () => {
+    const prev = process.env.OMNISHOP_BROWSER_HEADED;
+    process.env.OMNISHOP_BROWSER_HEADED = "1";
+    try {
+      const bundled = { isConnected: () => true };
+      launch
+        .mockRejectedValueOnce(new Error("Missing X server or $DISPLAY"))
+        .mockRejectedValueOnce(new Error("Missing X server or $DISPLAY"))
+        .mockResolvedValueOnce(bundled);
+      await expect(launchBrowser()).resolves.toBe(bundled);
+      expect(launch).toHaveBeenCalledTimes(3);
+      expect(launch.mock.calls[2][0]).toMatchObject({ headless: true });
+    } finally {
+      if (prev === undefined) delete process.env.OMNISHOP_BROWSER_HEADED;
+      else process.env.OMNISHOP_BROWSER_HEADED = prev;
+    }
+  });
+
+  it("does not mask non-display headed launch errors", async () => {
+    const prev = process.env.OMNISHOP_BROWSER_HEADED;
+    process.env.OMNISHOP_BROWSER_HEADED = "1";
+    try {
+      launch
+        .mockRejectedValueOnce(new Error("chrome exploded"))
+        .mockRejectedValueOnce(new Error("chromium exploded"));
+      await expect(launchBrowser()).rejects.toThrow("chromium exploded");
+      expect(launch).toHaveBeenCalledTimes(2);
+    } finally {
+      if (prev === undefined) delete process.env.OMNISHOP_BROWSER_HEADED;
+      else process.env.OMNISHOP_BROWSER_HEADED = prev;
+    }
+  });
+
+  it("still honors the pre-rebrand PSF_BROWSER_HEADED", async () => {
     const prev = process.env.PSF_BROWSER_HEADED;
     process.env.PSF_BROWSER_HEADED = "1";
     try {
@@ -47,41 +97,10 @@ describe("launchBrowser", () => {
     }
   });
 
-  it("falls back to headless when headed mode has no X display", async () => {
-    const prev = process.env.PSF_BROWSER_HEADED;
-    process.env.PSF_BROWSER_HEADED = "1";
-    try {
-      const bundled = { isConnected: () => true };
-      launch
-        .mockRejectedValueOnce(new Error("Missing X server or $DISPLAY"))
-        .mockRejectedValueOnce(new Error("Missing X server or $DISPLAY"))
-        .mockResolvedValueOnce(bundled);
-      await expect(launchBrowser()).resolves.toBe(bundled);
-      expect(launch).toHaveBeenCalledTimes(3);
-      expect(launch.mock.calls[2][0]).toMatchObject({ headless: true });
-    } finally {
-      if (prev === undefined) delete process.env.PSF_BROWSER_HEADED;
-      else process.env.PSF_BROWSER_HEADED = prev;
-    }
-  });
-
-  it("does not mask non-display headed launch errors", async () => {
-    const prev = process.env.PSF_BROWSER_HEADED;
-    process.env.PSF_BROWSER_HEADED = "1";
-    try {
-      launch
-        .mockRejectedValueOnce(new Error("chrome exploded"))
-        .mockRejectedValueOnce(new Error("chromium exploded"));
-      await expect(launchBrowser()).rejects.toThrow("chromium exploded");
-      expect(launch).toHaveBeenCalledTimes(2);
-    } finally {
-      if (prev === undefined) delete process.env.PSF_BROWSER_HEADED;
-      else process.env.PSF_BROWSER_HEADED = prev;
-    }
-  });
-
-  it("stays headless when PSF_BROWSER_HEADED is unset", async () => {
-    const prev = process.env.PSF_BROWSER_HEADED;
+  it("stays headless when OMNISHOP_BROWSER_HEADED is unset", async () => {
+    const prev = process.env.OMNISHOP_BROWSER_HEADED;
+    const prevLegacy = process.env.PSF_BROWSER_HEADED;
+    delete process.env.OMNISHOP_BROWSER_HEADED;
     delete process.env.PSF_BROWSER_HEADED;
     try {
       const chrome = { isConnected: () => true };
@@ -89,7 +108,8 @@ describe("launchBrowser", () => {
       await launchBrowser();
       expect(launch.mock.calls[0][0]).toMatchObject({ headless: true });
     } finally {
-      if (prev !== undefined) process.env.PSF_BROWSER_HEADED = prev;
+      if (prev !== undefined) process.env.OMNISHOP_BROWSER_HEADED = prev;
+      if (prevLegacy !== undefined) process.env.PSF_BROWSER_HEADED = prevLegacy;
     }
   });
 });

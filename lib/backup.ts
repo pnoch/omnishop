@@ -7,7 +7,8 @@ import type {
 } from "./types";
 import { stripBackupSecrets } from "./settings-privacy";
 
-export const BACKUP_FORMAT = "product-stock-finder-backup";
+export const BACKUP_FORMAT = "omnishop-backup";
+export const LEGACY_BACKUP_FORMATS = ["product-stock-finder-backup"];
 export const BACKUP_VERSION = 1;
 
 // Baseline used to tell "explicitly customized on the exporting device" apart
@@ -103,7 +104,12 @@ export function parseBackup(json: string): BackupData | null {
   }
   if (!parsed || typeof parsed !== "object") return null;
   const obj = parsed as Record<string, unknown>;
-  if (obj.format !== BACKUP_FORMAT) return null;
+  if (
+    obj.format !== BACKUP_FORMAT &&
+    !LEGACY_BACKUP_FORMATS.includes(obj.format as string)
+  ) {
+    return null;
+  }
   if (typeof obj.version !== "number" || obj.version > BACKUP_VERSION) {
     return null;
   }

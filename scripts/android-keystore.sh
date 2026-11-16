@@ -18,7 +18,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CRED_DIR="$REPO_ROOT/credentials"
 KEYSTORE="$CRED_DIR/release.keystore"
 PROPS="$CRED_DIR/keystore.properties"
-ALIAS="psf-release"
+ALIAS="omnishop-release"
 
 if [ -f "$KEYSTORE" ]; then
   echo "Keystore already exists at $KEYSTORE — refusing to overwrite."
@@ -35,7 +35,7 @@ keytool -genkeypair -v \
   -alias "$ALIAS" \
   -keyalg RSA -keysize 2048 -validity 10000 \
   -storepass "$PW" -keypass "$PW" \
-  -dname "CN=Product Stock Finder, OU=Mobile, O=Product Stock Finder, L=Unknown, ST=Unknown, C=US"
+  -dname "CN=OmniShop, OU=Mobile, O=OmniShop, L=Unknown, ST=Unknown, C=US"
 
 printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=../../credentials/release.keystore\n' \
   "$PW" "$PW" "$ALIAS" > "$PROPS"

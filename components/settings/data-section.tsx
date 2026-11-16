@@ -105,7 +105,7 @@ export function DataSection() {
       const csv = watchlistToCsv(watchlist, currency);
       const ok = await exportCsvFile(
         csv,
-        `product-stock-finder-watchlist-${new Date().toISOString().slice(0, 10)}.csv`,
+        `omnishop-watchlist-${new Date().toISOString().slice(0, 10)}.csv`,
       );
       showAlert(
         ok ? "CSV Exported" : "Export Failed",

@@ -114,7 +114,7 @@ export function useAccountSection({
         window.location.href = url;
         return;
       }
-      const result = await WebBrowser.openAuthSessionAsync(url, "productstockfinder:/oauth/callback");
+      const result = await WebBrowser.openAuthSessionAsync(url, "omnishop:/oauth/callback");
       if (result.type === "success" && result.url) {
         await Linking.openURL(result.url);
       }

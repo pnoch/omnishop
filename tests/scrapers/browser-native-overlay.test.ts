@@ -11,7 +11,7 @@ vi.mock("@/lib/scrapers/webview-host", async (orig) => {
 });
 
 const renderOverlay = vi.fn(async () => "<html>overlay</html>");
-vi.mock("@/modules/psf-webview-renderer", () => ({
+vi.mock("@/modules/omnishop-webview-renderer", () => ({
   renderOverlay: (...a: unknown[]) => renderOverlay(...(a as [])),
 }));
 

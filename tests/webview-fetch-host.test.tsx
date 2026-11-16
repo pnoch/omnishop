@@ -202,7 +202,7 @@ describe("WebViewFetchHost", () => {
     const props = wvFor("https://clear.test");
     expect(String(props.injectedJavaScript)).toContain("localStorage.clear()");
     act(() => {
-      props.onMessage({ nativeEvent: { data: "__psf_storage_cleared__" } });
+      props.onMessage({ nativeEvent: { data: "__omnishop_storage_cleared__" } });
     });
     await expect(cleared).resolves.toBeUndefined();
   });

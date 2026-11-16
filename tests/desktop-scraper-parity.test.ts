@@ -400,10 +400,13 @@ describe("desktop/mobile scraper parity", () => {
     expect(sharedBrowser).toContain("await context.addCookies(cookies)");
     expect(sharedBrowser).toContain("await saveCookies(domain, cookies)");
     // Same jar directory on both sides.
-    for (const part of ['".cache"', '"product-stock-finder"', '"cookies"']) {
-      expect(sharedBrowser, `shared jar lost ${part}`).toContain(`  ${part},\n`);
-      expect(browserRs, `Rust jar lost ${part}`).toContain(`.join(${part})`);
+    for (const part of [".cache", "omnishop", "cookies"]) {
+      expect(sharedBrowser, `shared jar lost ${part}`).toContain(`"${part}"`);
+      expect(browserRs, `Rust jar lost ${part}`).toContain(`.join("${part}")`);
     }
+    // The pre-rebrand jar is migrated so existing clearance cookies survive.
+    expect(sharedBrowser).toContain('"product-stock-finder"');
+    expect(browserRs).toContain('"product-stock-finder"');
 
     expect(browserRs).toContain("fn hash_domain");
     expect(browserRs).toContain("load_cookies(&domain)");

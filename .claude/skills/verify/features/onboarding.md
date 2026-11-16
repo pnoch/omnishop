@@ -10,13 +10,13 @@
 ## How to get to it (user POV)
 
 First launch only (gated by `has_seen_onboarding`). Clear app data to see it
-again: `adb shell pm clear com.app.stocktrackerpro`.
+again: `adb shell pm clear com.omnishop.app`.
 
 ## Driving it with drive.sh
 
 ```bash
 D=.claude/skills/verify/scripts/drive.sh
-adb -s emulator-5554 shell pm clear com.app.stocktrackerpro
+adb -s emulator-5554 shell pm clear com.omnishop.app
 $D launch
 $D tap 720 1661            # Allow notifications
 $D shot onboarding-step1

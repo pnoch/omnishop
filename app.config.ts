@@ -54,12 +54,12 @@ export function getIosAssociatedDomains(webHost?: string): string[] {
   return host ? [`applinks:${host}`] : [];
 }
 
-const bundleId = "com.app.stocktrackerpro";
+const bundleId = "com.omnishop.app";
 
 const env = {
   appName: "OmniShop",
-  appSlug: "product-stock-finder",
-  scheme: "productstockfinder",
+  appSlug: "omnishop",
+  scheme: "omnishop",
   iosBundleId: bundleId,
   androidPackage: bundleId,
   webUrl:
@@ -123,7 +123,9 @@ const config: ExpoConfig = {
     // blocks it by default, silently failing every fetch in release builds.
     ["./plugins/with-android-cleartext-traffic", {
       apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
-      allowHttpApi: process.env.PSF_ANDROID_HTTP_TEST_API === "1",
+      allowHttpApi:
+        process.env.OMNISHOP_ANDROID_HTTP_TEST_API === "1" ||
+        process.env.PSF_ANDROID_HTTP_TEST_API === "1",
     }],
     // Drops the RN-overlay SYSTEM_ALERT_WINDOW permission from release, scopes
     // the legacy storage permissions, and disables adb/cloud backup.

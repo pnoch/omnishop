@@ -11,16 +11,16 @@
 #   drive.sh ui                     # dump the accessibility tree (uiautomator)
 #   drive.sh stop                   # force-stop the app
 #
-# Screenshots land in $PSF_EVIDENCE (default /tmp/opencode/psf-evidence).
+# Screenshots land in $OMNISHOP_EVIDENCE (default /tmp/opencode/omnishop-evidence).
 # Coordinates are PHYSICAL pixels. The emulator reports its size via `wm size`;
 # screenshots are scaled, so multiply screenshot coords by (physical/scale).
 set -euo pipefail
 
-SERIAL="${PSF_SERIAL:-emulator-5554}"
-PKG="com.app.stocktrackerpro"
+SERIAL="${OMNISHOP_SERIAL:-emulator-5554}"
+PKG="com.omnishop.app"
 ACTIVITY="$PKG/.MainActivity"
-EVIDENCE="${PSF_EVIDENCE:-/tmp/opencode/psf-evidence}"
-APK="${PSF_APK:-android/app/build/outputs/apk/release/app-release.apk}"
+EVIDENCE="${OMNISHOP_EVIDENCE:-/tmp/opencode/omnishop-evidence}"
+APK="${OMNISHOP_APK:-android/app/build/outputs/apk/release/app-release.apk}"
 
 adb_() { adb -s "$SERIAL" "$@"; }
 
