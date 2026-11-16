@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   RefreshControl,
   Platform,
-  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
@@ -23,6 +22,7 @@ import { useMonitoringHealth } from "@/hooks/use-monitoring-health";
 import { useHomeData } from "@/hooks/use-home-data";
 import { HomeHeader } from "@/components/home/home-header";
 import { HomeFeed } from "@/components/home/home-feed";
+import { HomeLoadingSkeleton } from "@/components/home/home-loading-skeleton";
 import { HomeStats } from "@/components/home/home-stats";
 import { HomeWatchlistPreview } from "@/components/home/home-watchlist-preview";
 import { showAlert } from "@/lib/alert";
@@ -117,10 +117,7 @@ export default function HomeScreen() {
         />
 
         {!loaded ? (
-          <View style={{ alignItems: "center", paddingVertical: 32 }}>
-            <ActivityIndicator color={colors.primary} />
-            <Text style={{ color: colors.muted, fontSize: 12, marginTop: 8 }}>Loading watchlist…</Text>
-          </View>
+          <HomeLoadingSkeleton />
         ) : loadError ? (
           <View className="px-5">
             <View className="bg-surface rounded-2xl p-6 items-center border border-border">

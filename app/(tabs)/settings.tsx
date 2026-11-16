@@ -205,7 +205,15 @@ export default function SettingsScreen() {
 
   return (
     <ScreenContainer>
-      <ScrollView showsVerticalScrollIndicator={true} contentContainerStyle={{ paddingBottom: 24 + insets.bottom }}>
+      <ScrollView
+        showsVerticalScrollIndicator={true}
+        contentContainerStyle={{
+          paddingBottom: 24 + insets.bottom,
+          width: "100%",
+          maxWidth: 860,
+          alignSelf: "center",
+        }}
+      >
         <View className="px-4 pt-4 pb-2">
           <Text className="text-2xl font-bold text-foreground">Settings</Text>
         </View>

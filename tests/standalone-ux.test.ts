@@ -9,7 +9,7 @@ describe("standalone / local-mode UX", () => {
       "components/settings/connection-section.tsx",
       "utf8",
     );
-    expect(src).toContain("Local mode");
+    expect(src).toContain("Local only");
     expect(src).toContain('connection.status === "local"');
     expect(src).toMatch(/disabled=\{[^}]*connection\.status === "local"/);
   });
