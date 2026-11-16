@@ -11,12 +11,13 @@ export const imagesRouter = router({
         // sourceUrl is the older single-URL shape; keep it for cached clients.
         sourceUrl: z.string().max(2048).optional(),
         sourceUrls: z.array(z.string().max(2048)).max(8).optional(),
+        thumbWidth: z.number().int().min(16).max(256).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       checkRateLimit(ctx, "images.get", 30, 60_000);
       const sources =
         input.sourceUrls ?? (input.sourceUrl ? [input.sourceUrl] : undefined);
-      return getProductImage(input.productId, sources);
+      return getProductImage(input.productId, sources, input.thumbWidth);
     }),
 });

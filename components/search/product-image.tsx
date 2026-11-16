@@ -93,7 +93,8 @@ export function ProductImage({
 }) {
   const colors = useColors();
   const sourceKey = sourceUrls?.join("|") ?? "";
-  const cacheKey = sourceKey ? `${productId}|${sourceKey}` : productId;
+  const thumbWidth = size <= 64 ? 96 : undefined;
+  const cacheKey = `${productId}|${sourceKey}|w${thumbWidth ?? 0}`;
   const [image, setImage] = useState<{ key: string; url: string | null } | null>(
     null,
   );
@@ -126,9 +127,10 @@ export function ProductImage({
       }
       fetchProductImage(productId, {
         sourceUrls: sourceKey ? sourceKey.split("|") : undefined,
+        thumbWidth,
       })
         .then((res) => {
-          const url = res?.imageUrl ?? null;
+          const url = res?.thumbnailUrl ?? res?.imageUrl ?? null;
           setImageCache(cacheKey, url);
           if (active) setImage({ key: cacheKey, url });
         })
@@ -155,7 +157,7 @@ export function ProductImage({
         if (idx !== -1) imageQueue.splice(idx, 1);
       }
     };
-  }, [cacheKey, productId, sourceKey, opacity]);
+  }, [cacheKey, productId, sourceKey, thumbWidth, opacity]);
 
   const handleLoad = useCallback(() => {
     setLoadedFor(cacheKey);

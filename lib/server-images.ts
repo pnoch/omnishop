@@ -4,11 +4,17 @@ import { withTimeout } from "./with-timeout";
 
 export interface ProductImage {
   imageUrl: string;
+  thumbnailUrl?: string;
 }
 
 export async function fetchProductImage(
   productId: string,
-  opts?: { timeoutMs?: number; sourceUrl?: string; sourceUrls?: string[] },
+  opts?: {
+    timeoutMs?: number;
+    sourceUrl?: string;
+    sourceUrls?: string[];
+    thumbWidth?: number;
+  },
 ): Promise<ProductImage | null> {
   if (!isServerConfigured()) return null;
   try {
@@ -20,6 +26,7 @@ export async function fetchProductImage(
       client.images.get.query({
         productId,
         ...(sources?.length ? { sourceUrls: sources } : {}),
+        ...(opts?.thumbWidth ? { thumbWidth: opts.thumbWidth } : {}),
       }),
       timeoutMs,
     );

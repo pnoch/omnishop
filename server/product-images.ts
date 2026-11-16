@@ -6,6 +6,7 @@ import { DISTRIBUTORS } from "../shared/src/distributors.js";
 import { PRODUCT_IMAGE_SOURCES } from "../shared/src/product-image-sources.js";
 import { getDb } from "./db";
 import { fetchWithTimeout } from "./fetch-timeout";
+import { getImageThumbnailDataUrl } from "./image-thumbnail";
 import { generateImage } from "./_core/imageGeneration";
 import { tryConsumeBudget } from "./spend-budget";
 
@@ -16,17 +17,19 @@ const inFlight = new Map<string, Promise<ProductImage | null>>();
 
 export interface ProductImage {
   imageUrl: string;
+  thumbnailUrl?: string;
 }
 
 export async function getProductImage(
   productId: string,
   sourceUrls?: string[],
+  thumbWidth?: number,
 ): Promise<ProductImage | null> {
-  const key = `${productId}|${sourceUrls?.join("|") ?? ""}`;
+  const key = `${productId}|${sourceUrls?.join("|") ?? ""}|${thumbWidth ?? 0}`;
   const existing = inFlight.get(key);
   if (existing) return existing;
 
-  const promise = getProductImageInner(productId, sourceUrls);
+  const promise = getProductImageInner(productId, sourceUrls, thumbWidth);
   inFlight.set(key, promise);
   try {
     return await promise;
@@ -38,41 +41,40 @@ export async function getProductImage(
 async function getProductImageInner(
   productId: string,
   sourceUrls?: string[],
+  thumbWidth?: number,
 ): Promise<ProductImage | null> {
-  const cached = await readCached(productId);
-  if (cached) return { imageUrl: cached };
+  let imageUrl = await readCached(productId);
 
-  const product = PRODUCT_CATALOG.find((p) => p.id === productId);
+  if (!imageUrl) {
+    const product = PRODUCT_CATALOG.find((p) => p.id === productId);
 
-  // Reviewed manufacturer pages first: they remain valid when distributor
-  // links rot or return search/404 pages.
-  const curated = PRODUCT_IMAGE_SOURCES[productId];
-  if (curated?.length) {
-    const real = await resolveDistributorImages(curated, product, true);
-    if (real) {
-      await writeCached(productId, real);
-      return { imageUrl: real };
+    // Reviewed manufacturer pages first: they remain valid when distributor
+    // links rot or return search/404 pages.
+    const curated = PRODUCT_IMAGE_SOURCES[productId];
+    if (curated?.length) {
+      imageUrl = await resolveDistributorImages(curated, product, true);
     }
+
+    // Then the product pages supplied by the client (validated against the
+    // distributor allowlist and the page title).
+    if (!imageUrl && sourceUrls?.length) {
+      imageUrl = await resolveDistributorImages(sourceUrls, product);
+    }
+
+    if (!imageUrl && product) {
+      // Budget is checked only on the billable generation path.
+      if (tryConsumeBudget("images.get")) {
+        imageUrl = await generateImageForProduct(product);
+      }
+    }
+
+    if (imageUrl) await writeCached(productId, imageUrl);
   }
 
-  // Then the product pages supplied by the client (validated against the
-  // distributor allowlist and the page title).
-  if (sourceUrls?.length) {
-    const real = await resolveDistributorImages(sourceUrls, product);
-    if (real) {
-      await writeCached(productId, real);
-      return { imageUrl: real };
-    }
-  }
-
-  if (!product) return null;
-  // Budget is checked only on the billable path (cache/page hits returned
-  // earlier).
-  if (!tryConsumeBudget("images.get")) return null;
-  const url = await generateImageForProduct(product);
-  if (!url) return null;
-  await writeCached(productId, url);
-  return { imageUrl: url };
+  if (!imageUrl) return null;
+  if (!thumbWidth) return { imageUrl };
+  const thumbnailUrl = await getImageThumbnailDataUrl(imageUrl, thumbWidth);
+  return { imageUrl, ...(thumbnailUrl ? { thumbnailUrl } : {}) };
 }
 
 const DISTRIBUTOR_HOSTS = new Set(

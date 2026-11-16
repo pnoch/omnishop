@@ -41,6 +41,7 @@ describe("images router", () => {
     expect(mockedGetProductImage).toHaveBeenCalledWith(
       "mikrotik-crs804-4ddq-hrm",
       undefined,
+      undefined,
     );
   });
 
@@ -54,6 +55,21 @@ describe("images router", () => {
     expect(mockedGetProductImage).toHaveBeenCalledWith(
       "mikrotik-crs804-4ddq-hrm",
       ["https://server2u.com/shop/crs804"],
+      undefined,
+    );
+  });
+
+  it("passes a thumbnail width through", async () => {
+    mockedGetProductImage.mockResolvedValue({ imageUrl: "x" });
+    const caller = appRouter.createCaller(createPublicContext());
+    await caller.images.get({
+      productId: "mikrotik-crs804-4ddq-hrm",
+      thumbWidth: 96,
+    });
+    expect(mockedGetProductImage).toHaveBeenCalledWith(
+      "mikrotik-crs804-4ddq-hrm",
+      undefined,
+      96,
     );
   });
 
