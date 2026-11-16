@@ -228,9 +228,13 @@ The command returns the DNS target Railway expects:
 www.siamcreations.app  CNAME  <target returned by Railway>
 ```
 
-Add that CNAME in IONOS DNS, then configure the apex (`siamcreations.app`) as a
-redirect to `https://www.siamcreations.app` in IONOS **Domains & SSL → Redirect**.
-Do not point the apex MX at Railway; `support@siamcreations.app` stays on IONOS.
+Add that CNAME in IONOS DNS. Railway may also return a `verificationDnsHost` /
+`verificationToken` (`_railway-verify.www` → `railway-verify=…`); add that TXT
+record too, otherwise the certificate stays in `VALIDATING_OWNERSHIP`.
+
+Then configure the apex (`siamcreations.app`) as a redirect to
+`https://www.siamcreations.app` in IONOS **Domains & SSL → Redirect**. Do not
+point the apex MX at Railway; `support@siamcreations.app` stays on IONOS.
 Wait for Railway to show the domain as verified and serving TLS, then check:
 
 ```bash
