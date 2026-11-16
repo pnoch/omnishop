@@ -77,6 +77,31 @@ export function validateServerEnv(env: NodeJS.ProcessEnv): EnvIssue[] {
     const issue = partialGroupIssue(env, group);
     if (issue) issues.push(issue);
   }
+
+  // The desktop app is shipped from tauri:// origins, not the web origin. A
+  // CORS list that only covers the website looks configured but leaves the
+  // desktop client permanently "Offline".
+  const cors = (env.CORS_ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const desktopOrigins = [
+    "http://tauri.localhost",
+    "https://tauri.localhost",
+    "tauri://localhost",
+  ];
+  if (
+    isProduction &&
+    cors.length > 0 &&
+    !desktopOrigins.some((origin) => cors.includes(origin))
+  ) {
+    issues.push({
+      level: "warn",
+      message:
+        "CORS_ALLOWED_ORIGINS does not include a desktop Tauri origin; the desktop app will report Offline. Add http://tauri.localhost, https://tauri.localhost, and tauri://localhost",
+    });
+  }
+
   return issues;
 }
 

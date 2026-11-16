@@ -60,7 +60,8 @@ describe("validateServerEnv", () => {
       validateServerEnv({
         NODE_ENV: "production",
         DATABASE_URL: "mysql://x",
-        CORS_ALLOWED_ORIGINS: "https://app.example.com",
+        CORS_ALLOWED_ORIGINS:
+          "https://app.example.com,http://tauri.localhost,tauri://localhost",
         GOOGLE_CLIENT_ID: "a",
         GOOGLE_CLIENT_SECRET: "b",
         VAPID_SUBJECT: "mailto:x@y",
@@ -70,6 +71,17 @@ describe("validateServerEnv", () => {
         EMAIL_FROM: "a@b.c",
       }),
     ).toEqual([]);
+  });
+
+  it("warns when production CORS omits the desktop origins", () => {
+    const issues = validateServerEnv({
+      NODE_ENV: "production",
+      DATABASE_URL: "mysql://x",
+      CORS_ALLOWED_ORIGINS: "https://app.example.com",
+    });
+    expect(
+      issues.some((i) => i.message.includes("desktop Tauri origin")),
+    ).toBe(true);
   });
 
   it("treats a whitespace-only value as missing", () => {
