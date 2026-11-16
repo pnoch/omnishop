@@ -8,8 +8,8 @@ Copy for App Store Connect and Google Play Console. Keep this in sync with
 | Field | Value |
 | --- | --- |
 | App name | OmniShop |
-| iOS bundle id | `com.omnishop.app` |
-| Android package | `com.omnishop.app` |
+| iOS bundle id | `app.siamcreations.omnishop` |
+| Android package | `app.siamcreations.omnishop` |
 | Version | `5.17.0` (EAS `appVersionSource: remote` manages build numbers) |
 | Category | Utilities |
 | Price | Free |

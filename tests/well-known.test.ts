@@ -47,7 +47,7 @@ describe("apple-app-site-association", () => {
       };
     };
     expect(doc.applinks.details[0]!.appIDs[0]).toBe(
-      "TEAM123456.com.omnishop.app",
+      "TEAM123456.app.siamcreations.omnishop",
     );
     const paths = doc.applinks.details[0]!.components.map((c) => c["/"]);
     expect(paths).toContain("/product/*");
@@ -59,7 +59,7 @@ describe("apple-app-site-association", () => {
     const links = assetLinks() as {
       target: { package_name: string; sha256_cert_fingerprints: string[] };
     }[];
-    expect(links[0]!.target.package_name).toBe("com.omnishop.app");
+    expect(links[0]!.target.package_name).toBe("app.siamcreations.omnishop");
     // Fingerprints are normalized to uppercase.
     expect(links[0]!.target.sha256_cert_fingerprints).toEqual([
       "AA:BB:CC",
@@ -91,7 +91,7 @@ describe("well-known routes", () => {
         applinks: { details: { appIDs: string[] }[] };
       };
       expect(aasaBody.applinks.details[0]!.appIDs[0]).toContain(
-        "com.omnishop.app",
+        "app.siamcreations.omnishop",
       );
 
       const links = await fetch(`${base}/.well-known/assetlinks.json`);
@@ -99,7 +99,7 @@ describe("well-known routes", () => {
       const linksBody = (await links.json()) as {
         target: { package_name: string };
       }[];
-      expect(linksBody[0]!.target.package_name).toBe("com.omnishop.app");
+      expect(linksBody[0]!.target.package_name).toBe("app.siamcreations.omnishop");
     } finally {
       await close();
     }

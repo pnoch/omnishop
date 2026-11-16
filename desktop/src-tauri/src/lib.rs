@@ -849,7 +849,11 @@ fn migrate_legacy_app_data_at(current: &std::path::Path) {
         return;
     };
     let _ = std::fs::create_dir_all(current);
-    for legacy_id in ["com.app.stocktrackerpro", "com.app.stockfinder"] {
+    for legacy_id in [
+        "com.omnishop.desktop",
+        "com.app.stocktrackerpro",
+        "com.app.stockfinder",
+    ] {
         let legacy = parent.join(legacy_id);
         if legacy == current {
             continue;
@@ -2901,7 +2905,7 @@ mod tests {
                 .unwrap()
                 .as_nanos()
         ));
-        let current = root.join("com.omnishop.desktop");
+        let current = root.join("app.siamcreations.omnishop.desktop");
         let legacy = root.join("com.app.stocktrackerpro");
         std::fs::create_dir_all(&current).unwrap();
         std::fs::create_dir_all(&legacy).unwrap();

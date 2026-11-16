@@ -54,8 +54,8 @@ export function AboutSection({ onDataCleared }: { onDataCleared?: () => void } =
 
   const handleRateApp = async () => {
     if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    const androidUrl = "market://details?id=com.omnishop.app";
-    const androidWebUrl = "https://play.google.com/store/apps/details?id=com.omnishop.app";
+    const androidUrl = "market://details?id=app.siamcreations.omnishop";
+    const androidWebUrl = "https://play.google.com/store/apps/details?id=app.siamcreations.omnishop";
     // iOS requires a numeric App Store id, not the bundle id. Set
     // EXPO_PUBLIC_IOS_APP_ID once the app is on the store; until then fall back
     // to a store search rather than a malformed itms-apps URL.

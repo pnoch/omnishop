@@ -54,7 +54,7 @@ export function getIosAssociatedDomains(webHost?: string): string[] {
   return host ? [`applinks:${host}`] : [];
 }
 
-const bundleId = "com.omnishop.app";
+const bundleId = "app.siamcreations.omnishop";
 
 const env = {
   appName: "OmniShop",

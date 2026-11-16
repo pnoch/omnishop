@@ -17,7 +17,7 @@
 set -euo pipefail
 
 SERIAL="${OMNISHOP_SERIAL:-emulator-5554}"
-PKG="com.omnishop.app"
+PKG="app.siamcreations.omnishop"
 ACTIVITY="$PKG/.MainActivity"
 EVIDENCE="${OMNISHOP_EVIDENCE:-/tmp/opencode/omnishop-evidence}"
 APK="${OMNISHOP_APK:-android/app/build/outputs/apk/release/app-release.apk}"

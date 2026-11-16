@@ -132,7 +132,7 @@ Verify before uploading:
 APK=android/app/build/outputs/apk/release/app-release.apk
 # Existing key: CN=Product Stock Finder. A regenerated key (scripts/android-keystore.sh): CN=OmniShop.
 "$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "$APK"
-"$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK" | grep "package: name='com.omnishop.app'"
+"$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK" | grep "package: name='app.siamcreations.omnishop'"
 ```
 
 Upload to Play Console (internal track). `versionCode` is whatever
@@ -271,7 +271,7 @@ transactional mail uses Resend:
 
 - [ ] `pnpm verify` green on the release commit.
 - [ ] `CHANGELOG.md` has the version; version lockstep test passes.
-- [ ] Android APK package `com.omnishop.app`, signed by the release key (existing cert `CN=Product Stock Finder`); `versionCode` increased.
+- [ ] Android APK package `app.siamcreations.omnishop`, signed by the release key (existing cert `CN=Product Stock Finder`); `versionCode` increased.
 - [ ] `assetlinks.json` returns 200 and lists the release SHA-256.
 - [ ] Desktop `latest.json` published (not draft) and the app's update check finds it.
 - [ ] Tag pushed; `main` pushed.
