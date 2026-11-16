@@ -12,6 +12,7 @@ import { getSettings } from "@/lib/storage";
 import { fetchAvailable } from "@/lib/server-catalog";
 import { ensureWatchlistProduct } from "@/lib/ensure-watchlist-product";
 import type { AvailableProduct } from "@/lib/types";
+import { Heading } from "@/components/ui/heading";
 
 const AvailableRow = memo(function AvailableRow({
   product,
@@ -125,12 +126,11 @@ export const AvailableSection = memo(function AvailableSection() {
           marginBottom: 4,
         }}
       >
-        <Text
-          accessibilityRole="header"
+        <Heading level={2}
           style={{ fontSize: 18, fontWeight: "700", color: colors.foreground }}
         >
           Available Now
-        </Text>
+        </Heading>
         <Pressable
           onPress={() => router.push("/available")}
           accessibilityLabel="See all available products"

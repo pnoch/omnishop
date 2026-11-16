@@ -25,6 +25,7 @@ import {
 import { useMonitoringHealth } from "@/hooks/use-monitoring-health";
 
 import { ConnectionSection } from "@/components/settings/connection-section";
+import { Heading } from "@/components/ui/heading";
 import { AccountSection } from "@/components/settings/account-section";
 import { DeviceManagementSection } from "@/components/settings/device-management-section";
 import { DataSection } from "@/components/settings/data-section";
@@ -215,7 +216,9 @@ export default function SettingsScreen() {
         }}
       >
         <View className="px-4 pt-4 pb-2">
-          <Text className="text-2xl font-bold text-foreground">Settings</Text>
+          <Heading level={1} className="text-2xl font-bold text-foreground">
+            Settings
+          </Heading>
         </View>
 
         <ConnectionSection />

@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/toast";
 import { TagPickerSheet } from "@/components/tag-picker-sheet";
 import { TrendingProductRow } from "./trending-product-row";
 import { TrendingSkeletonCard } from "./trending-skeleton-card";
+import { Heading } from "@/components/ui/heading";
 
 export const TrendingSection = memo(function TrendingSection({
   query = "",
@@ -137,8 +138,7 @@ export const TrendingSection = memo(function TrendingSection({
   if (isLoading) {
     return (
       <View style={{ marginBottom: 16 }}>
-        <Text
-          accessibilityRole="header"
+        <Heading level={2}
           style={{
             fontSize: 18,
             fontWeight: "700",
@@ -147,7 +147,7 @@ export const TrendingSection = memo(function TrendingSection({
           }}
         >
           Trending Now
-        </Text>
+        </Heading>
         <Text style={{ fontSize: 13, color: colors.muted, marginBottom: 12 }}>
           Hard-to-find products from the community
         </Text>
@@ -173,8 +173,7 @@ export const TrendingSection = memo(function TrendingSection({
   if (isError && !products) {
     return (
       <View style={{ marginBottom: 16 }}>
-        <Text
-          accessibilityRole="header"
+        <Heading level={2}
           style={{
             fontSize: 18,
             fontWeight: "700",
@@ -183,7 +182,7 @@ export const TrendingSection = memo(function TrendingSection({
           }}
         >
           Trending Now
-        </Text>
+        </Heading>
         <Text style={{ fontSize: 13, color: colors.muted, marginBottom: 12 }}>
           Hard-to-find products from the community
         </Text>
@@ -209,8 +208,7 @@ export const TrendingSection = memo(function TrendingSection({
 
   return (
     <View style={{ marginBottom: 16 }}>
-      <Text
-        accessibilityRole="header"
+      <Heading level={2}
         style={{
           fontSize: 18,
           fontWeight: "700",
@@ -219,7 +217,7 @@ export const TrendingSection = memo(function TrendingSection({
         }}
       >
         {query.trim().length > 0 ? "Trending matches" : "Trending Now"}
-      </Text>
+      </Heading>
       <Text style={{ fontSize: 13, color: colors.muted, marginBottom: 12 }}>
         {query.trim().length > 0
           ? "Hard-to-find products matching your search"

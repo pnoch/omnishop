@@ -3,6 +3,7 @@ import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { ConnectionBadge } from "@/components/connection-badge";
+import { Heading } from "@/components/ui/heading";
 import type { ConnectionStatus } from "@/lib/live-prices";
 
 type Monitoring = { status: string };
@@ -31,7 +32,9 @@ export function HomeHeader({
     <>
       <View className="px-5 pt-4 pb-2 flex-row items-center justify-between">
         <View>
-          <Text className="text-2xl font-bold text-foreground">{greeting}</Text>
+          <Heading level={1} className="text-2xl font-bold text-foreground">
+            {greeting}
+          </Heading>
           <Text className="text-muted text-sm">
             Here&apos;s what needs your attention.
           </Text>

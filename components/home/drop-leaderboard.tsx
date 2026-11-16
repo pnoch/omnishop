@@ -8,6 +8,7 @@ import { getWatchlist, getSettings } from "@/lib/storage";
 import { useColors } from "@/hooks/use-colors";
 import { formatPrice } from "@shared/currency";
 import type { Product } from "@/lib/types";
+import { Heading } from "@/components/ui/heading";
 
 const WINDOWS: DropWindow[] = ["24h", "7d", "30d"];
 const SORTS: { key: DropSortBy; label: string }[] = [
@@ -122,12 +123,11 @@ export const DropLeaderboard = memo(function DropLeaderboard() {
     <View style={{ marginBottom: 16 }}>
       {/* Header */}
       <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <Text
-          accessibilityRole="header"
+        <Heading level={2}
           style={{ fontSize: 18, fontWeight: "700", color: colors.foreground }}
         >
           Biggest Drops
-        </Text>
+        </Heading>
         <View style={{ flexDirection: "row", gap: 4 }}>
           {WINDOWS.map((w) => (
             <TouchableOpacity

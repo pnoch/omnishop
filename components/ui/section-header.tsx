@@ -1,11 +1,11 @@
-import { Text } from "react-native";
 import { useColors } from "@/hooks/use-colors";
+import { Heading } from "@/components/ui/heading";
 
 export function SectionHeader({ title }: { title: string }) {
   const colors = useColors();
   return (
-    <Text
-      accessibilityRole="header"
+    <Heading
+      level={2}
       style={{
         color: colors.muted,
         fontSize: 12,
@@ -18,6 +18,6 @@ export function SectionHeader({ title }: { title: string }) {
       }}
     >
       {title}
-    </Text>
+    </Heading>
   );
 }

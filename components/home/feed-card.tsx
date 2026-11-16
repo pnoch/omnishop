@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { formatPrice } from "@shared/currency";
 import type { PriceAlert } from "@/lib/types";
 import { formatDropPct, type PriceDrop } from "@/lib/price-leaderboard";
+import { Heading } from "@/components/ui/heading";
 
 function CardTitle({
   icon,
@@ -21,12 +22,11 @@ function CardTitle({
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
       <IconSymbol name={icon} size={20} color={iconColor} />
-      <Text
-        accessibilityRole="header"
+      <Heading level={2}
         style={{ fontSize: 16, fontWeight: "700", color: colors.foreground }}
       >
         {title}
-      </Text>
+      </Heading>
     </View>
   );
 }

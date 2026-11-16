@@ -5,6 +5,7 @@ import type { AwaySummary } from "@/lib/away-summary";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Heading } from "@/components/ui/heading";
 
 function formatPct(pct: number): string {
   const rounded = Math.round(pct);
@@ -55,12 +56,11 @@ export function AwaySummaryCard({
           alignItems: "center",
         }}
       >
-        <Text
-          accessibilityRole="header"
+        <Heading level={2}
           style={{ fontSize: 16, fontWeight: "700", color: colors.foreground }}
         >
           While you were away
-        </Text>
+        </Heading>
         <Pressable
           onPress={onDismiss}
           accessibilityLabel="Dismiss"

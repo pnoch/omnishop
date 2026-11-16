@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Heading } from "@/components/ui/heading";
 
 export function AlertsHeader({
   tabCount,
@@ -19,8 +20,8 @@ export function AlertsHeader({
           alignItems: "center",
         }}
       >
-        <Text
-          accessibilityRole="header"
+        <Heading
+          level={1}
           style={{
             color: colors.foreground,
             fontSize: 28,
@@ -28,7 +29,7 @@ export function AlertsHeader({
           }}
         >
           Alerts & Reminders
-        </Text>
+        </Heading>
         <TouchableOpacity
           activeOpacity={0.85}
           accessibilityLabel="Restock Watches"

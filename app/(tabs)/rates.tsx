@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollView, Text, RefreshControl, Platform, TouchableOpacity, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
+import { Heading } from "@/components/ui/heading";
 import { useColors } from "@/hooks/use-colors";
 import { FxRateGrid } from "@/components/rates/fx-rate-grid";
 import { EXCHANGE_RATES } from "@shared/currency";
@@ -102,7 +103,8 @@ export default function RatesScreen() {
           />
         }
       >
-        <Text
+        <Heading
+          level={1}
           style={{
             color: colors.foreground,
             fontSize: 24,
@@ -111,7 +113,7 @@ export default function RatesScreen() {
           }}
         >
           Exchange Rates
-        </Text>
+        </Heading>
         <Text
           style={{ color: colors.muted, fontSize: 13, marginBottom: 12 }}
         >

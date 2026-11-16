@@ -1,7 +1,8 @@
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Heading } from "@/components/ui/heading";
 
 export function SearchHeader({
   mode,
@@ -38,7 +39,8 @@ export function SearchHeader({
           <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
         </TouchableOpacity>
       )}
-      <Text
+      <Heading
+        level={1}
         style={{
           color: colors.foreground,
           fontSize: mode === "discover" ? 28 : 20,
@@ -47,7 +49,7 @@ export function SearchHeader({
         }}
       >
         {mode === "discover" ? "Discover" : "Add Product"}
-      </Text>
+      </Heading>
       <TouchableOpacity
         activeOpacity={0.7}
         accessibilityLabel="Add product manually or import marketplace link"
