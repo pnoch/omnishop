@@ -31,6 +31,10 @@ export function useProductDetailData({
   const [insight, setInsight] = useState<string | null>(null);
   const [insightLoading, setInsightLoading] = useState(true);
   const [productImage, setProductImage] = useState<string | null>(null);
+  const imageSourceUrl =
+    (product?.listings ?? []).find(
+      (listing) => listing.stockStatus === "in_stock" && listing.url,
+    )?.url ?? (product?.listings ?? []).find((listing) => listing.url)?.url;
   const [stockWatches, setStockWatches] = useState<Record<string, boolean>>({});
   const [alerts, setAlerts] = useState<PriceAlert[]>([]);
   const [alternatives, setAlternatives] = useState<Alternative[]>([]);
@@ -66,14 +70,14 @@ export function useProductDetailData({
         .catch(() => {
           if (!signal?.cancelled) setInsightLoading(false);
         });
-      void fetchProductImage(id)
+      void fetchProductImage(id, { sourceUrl: imageSourceUrl })
         .then((data) => {
           if (signal?.cancelled) return;
           if (data) setProductImage(data.imageUrl);
         })
         .catch(() => {});
     },
-    [id],
+    [id, imageSourceUrl],
   );
 
   useEffect(() => {

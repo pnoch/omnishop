@@ -36,6 +36,24 @@ describe("fetchProductImage", () => {
     expect(result).toEqual({ imageUrl: "https://img.example.com/crs804.png" });
   });
 
+  it("passes a distributor page URL when one is available", async () => {
+    const query = vi.fn(async () => ({
+      imageUrl: "https://img.example.com/real.png",
+    }));
+    mockedCreateClient.mockReturnValue({
+      images: { get: { query } },
+    } as unknown as ReturnType<typeof createTRPCClient>);
+
+    await fetchProductImage("mikrotik-crs804-4ddq-hrm", {
+      sourceUrl: "https://server2u.com/product",
+    });
+
+    expect(query).toHaveBeenCalledWith({
+      productId: "mikrotik-crs804-4ddq-hrm",
+      sourceUrl: "https://server2u.com/product",
+    });
+  });
+
   it("returns null when there is no image", async () => {
     mockImagesGet(async () => null);
     const result = await fetchProductImage("unknown");

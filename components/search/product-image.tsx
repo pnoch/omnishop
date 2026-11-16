@@ -81,24 +81,30 @@ function ImagePlaceholder({
 
 export function ProductImage({
   productId,
+  sourceUrl,
   size = 48,
   marginRight = 12,
 }: {
   productId: string;
+  /** A distributor product page to resolve a real photo from, if available. */
+  sourceUrl?: string;
   size?: number;
   marginRight?: number;
 }) {
   const colors = useColors();
-  const [image, setImage] = useState<{ productId: string; url: string | null } | null>(null);
+  const cacheKey = sourceUrl ? `${productId}|${sourceUrl}` : productId;
+  const [image, setImage] = useState<{ key: string; url: string | null } | null>(
+    null,
+  );
   const imageUrl =
-    image?.productId === productId
+    image?.key === cacheKey
       ? image.url
-      : (imageCache.get(productId) ?? null);
+      : (imageCache.get(cacheKey) ?? null);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
-  const loaded = loadedFor === productId;
+  const loaded = loadedFor === cacheKey;
   const [errorFor, setErrorFor] = useState<string | null>(null);
   const reduceMotion = useReduceMotion();
-  const imageError = errorFor === productId;
+  const imageError = errorFor === cacheKey;
   const opacity = useState(() => new Animated.Value(0))[0];
 
   useEffect(() => {
@@ -106,7 +112,7 @@ export function ProductImage({
     let queued = false;
     let taskRef: QueuedTask | null = null;
     opacity.setValue(0);
-    if (imageCache.has(productId)) {
+    if (imageCache.has(cacheKey)) {
       return () => {
         active = false;
       };
@@ -117,14 +123,14 @@ export function ProductImage({
         dequeueImageFetchOnComplete();
         return;
       }
-      fetchProductImage(productId)
+      fetchProductImage(productId, { sourceUrl })
         .then((res) => {
           const url = res?.imageUrl ?? null;
-          setImageCache(productId, url);
-          if (active) setImage({ productId, url });
+          setImageCache(cacheKey, url);
+          if (active) setImage({ key: cacheKey, url });
         })
         .catch(() => {
-          if (active) setImageCache(productId, null);
+          if (active) setImageCache(cacheKey, null);
         })
         .finally(() => {
           dequeueImageFetchOnComplete();
@@ -146,21 +152,21 @@ export function ProductImage({
         if (idx !== -1) imageQueue.splice(idx, 1);
       }
     };
-  }, [productId, opacity]);
+  }, [cacheKey, productId, sourceUrl, opacity]);
 
   const handleLoad = useCallback(() => {
-    setLoadedFor(productId);
+    setLoadedFor(cacheKey);
     if (reduceMotion) {
       opacity.setValue(1);
       return;
     }
     Animated.timing(opacity, { toValue: 1, duration: 220, useNativeDriver: true }).start();
-  }, [opacity, productId, reduceMotion]);
+  }, [opacity, cacheKey, reduceMotion]);
 
   const handleError = useCallback(() => {
-    setImageCache(productId, null);
-    setErrorFor(productId);
-  }, [productId]);
+    setImageCache(cacheKey, null);
+    setErrorFor(cacheKey);
+  }, [cacheKey]);
 
   if (!imageUrl || imageError) {
     if (size !== PLACEHOLDER_SIZE) {

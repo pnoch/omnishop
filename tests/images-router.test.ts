@@ -40,6 +40,7 @@ describe("images router", () => {
     expect(result).toEqual({ imageUrl: "https://img.example.com/crs804.png" });
     expect(mockedGetProductImage).toHaveBeenCalledWith(
       "mikrotik-crs804-4ddq-hrm",
+      undefined,
     );
   });
 

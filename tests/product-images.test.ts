@@ -8,16 +8,24 @@ vi.mock("../server/db", () => ({
   getDb: vi.fn(),
 }));
 
+vi.mock("../server/fetch-timeout", () => ({
+  fetchWithTimeout: vi.fn(),
+}));
+
 import { generateImage } from "../server/_core/imageGeneration";
 import { getDb } from "../server/db";
+import { fetchWithTimeout } from "../server/fetch-timeout";
 import {
   getProductImage,
   listProductsMissingImage,
   clearImagesForTests,
+  extractProductImageUrl,
+  isAllowedImageSource,
 } from "../server/product-images";
 
 const mockedGenerateImage = vi.mocked(generateImage);
 const mockedGetDb = vi.mocked(getDb);
+const mockedFetch = vi.mocked(fetchWithTimeout);
 
 describe("getProductImage", () => {
   beforeEach(async () => {
@@ -61,6 +69,72 @@ describe("getProductImage", () => {
     mockedGenerateImage.mockRejectedValue(new Error("gen failed"));
     const result = await getProductImage("mikrotik-crs804-4ddq-hrm");
     expect(result).toBeNull();
+  });
+});
+
+describe("real product images from distributor pages", () => {
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    await clearImagesForTests();
+    mockedGenerateImage.mockResolvedValue({
+      url: "https://img.example.com/generated.png",
+    });
+  });
+
+  it("extracts and resolves og:image URLs", () => {
+    const html = [
+      '<html><head>',
+      '<meta property="og:image" content="/media/crs804.png">',
+      "</head></html>",
+    ].join("");
+    expect(
+      extractProductImageUrl(html, "https://server2u.com/shop/crs804"),
+    ).toBe("https://server2u.com/media/crs804.png");
+  });
+
+  it("rejects site logos and placeholders", () => {
+    const html =
+      '<meta property="og:image" content="/media/logo/Header-Logo.png">';
+    expect(
+      extractProductImageUrl(html, "https://server2u.com/shop/crs804"),
+    ).toBeNull();
+  });
+
+  it("only accepts distributor hosts", () => {
+    expect(isAllowedImageSource("https://server2u.com/shop/crs804")).toBe(true);
+    expect(isAllowedImageSource("https://evil.example/crs804")).toBe(false);
+  });
+
+  it("uses a real page image before generated images", async () => {
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      headers: { get: () => "text/html; charset=utf-8" },
+      text: async () =>
+        '<meta property="og:image" content="/media/crs804.png">',
+      url: "https://server2u.com/shop/crs804",
+    } as never);
+
+    const result = await getProductImage(
+      "mikrotik-crs804-4ddq-hrm",
+      "https://server2u.com/shop/crs804",
+    );
+
+    expect(result).toEqual({
+      imageUrl: "https://server2u.com/media/crs804.png",
+    });
+    expect(mockedGenerateImage).not.toHaveBeenCalled();
+  });
+
+  it("does not fetch non-distributor pages", async () => {
+    const result = await getProductImage(
+      "mikrotik-crs804-4ddq-hrm",
+      "https://evil.example/crs804",
+    );
+
+    expect(mockedFetch).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      imageUrl: "https://img.example.com/generated.png",
+    });
   });
 });
 

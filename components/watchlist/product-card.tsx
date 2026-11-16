@@ -261,7 +261,17 @@ export const ProductCard = memo(function ProductCard({
             </Animated.View>
           </Animated.View>
         )}
-        <ProductImage productId={product.id} size={48} marginRight={10} />
+        <ProductImage
+          productId={product.id}
+          sourceUrl={
+            (product.listings ?? []).find(
+              (listing) => listing.stockStatus === "in_stock" && listing.url,
+            )?.url ??
+            (product.listings ?? []).find((listing) => listing.url)?.url
+          }
+          size={48}
+          marginRight={10}
+        />
         <View style={{ flex: 1, marginRight: 10 }}>
           <Pressable
             onPress={onPress}
