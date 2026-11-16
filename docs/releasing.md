@@ -141,7 +141,14 @@ APK=android/app/build/outputs/apk/release/app-release.apk
 Upload to Play Console (internal track). `versionCode` is whatever
 `android/app/build.gradle` has after prebuild; Play requires it to increase per
 upload. **EAS alternative:** `eas build -p android --profile production`
-(`eas.json` has `autoIncrement: true`) + `eas submit -p android`.
+(`eas.json` has `autoIncrement: true` and production `EXPO_PUBLIC_*` env) +
+`eas submit -p android`.
+
+> Native push needs an EAS project: `registerPushToken` reads
+> `extra.expoProjectId` and skips registration when it is empty. Run
+> `eas init`/`eas login` once (or set `EXPO_PUBLIC_EXPO_PROJECT_ID`) before
+> building the store binaries, otherwise price alerts only fire while the app
+> is open.
 
 > Standalone behaviour: a release build with a loopback `EXPO_PUBLIC_API_BASE_URL`
 > (e.g. the dev `http://localhost:3000`) runs local-only on-device; prices come
