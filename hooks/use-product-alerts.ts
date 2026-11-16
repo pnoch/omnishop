@@ -77,17 +77,6 @@ export function useProductAlerts({
           currency: listing.currency,
           distributorId: listing.distributorId,
         });
-        if (result.reason === "permission") {
-          if (Platform.OS !== "web")
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          showAlert(
-            "Permission Denied",
-            Platform.OS === "web"
-              ? "Please allow notifications in your browser to receive price alerts."
-              : "Please enable notifications in your device settings to receive price alerts.",
-          );
-          return;
-        }
         if (result.reason === "duplicate") {
           showToast("That alert already exists", "info");
           return;
@@ -148,17 +137,6 @@ export function useProductAlerts({
         distributorId: alertDistributorId ?? undefined,
         direction: alertDirection,
       });
-      if (result.reason === "permission") {
-        if (Platform.OS !== "web")
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        showAlert(
-          "Permission Denied",
-          Platform.OS === "web"
-            ? "Please allow notifications in your browser to receive price alerts."
-            : "Please enable notifications in your device settings to receive price alerts.",
-        );
-        return;
-      }
       if (result.reason === "duplicate") {
         showToast("That alert already exists", "info");
         return;

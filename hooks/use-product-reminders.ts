@@ -51,17 +51,6 @@ export function useProductReminders({
   const createAnyWatchRecord = useCallback(async () => {
     if (!id) return;
     const granted = await ensureNotificationPermission();
-    if (!granted) {
-      if (Platform.OS !== "web")
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      showAlert(
-        "Permission Denied",
-        Platform.OS === "web"
-          ? "Please allow notifications in your browser to watch for restocks."
-          : "Please enable notifications to watch for restocks.",
-      );
-      return;
-    }
     await toggleAnyWatchRecord({
       isWatching: false,
       productId: id,
@@ -74,8 +63,10 @@ export function useProductReminders({
     if (Platform.OS !== "web")
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     showToast(
-      "Watching all distributors — you'll be notified when it's back in stock",
-      "success",
+      granted
+        ? "Watching all distributors — you'll be notified when it's back in stock"
+        : "Watching all distributors — enable notifications to get alerted",
+      granted ? "success" : "info",
     );
   }, [id, product, listings, setStockWatches, showToast]);
 
@@ -154,27 +145,17 @@ export function useProductReminders({
       }
 
       const granted = await ensureNotificationPermission();
-      if (!granted) {
-        if (Platform.OS !== "web")
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        showAlert(
-          "Permission Denied",
-          Platform.OS === "web"
-            ? "Please allow notifications in your browser to watch for restocks."
-            : "Please enable notifications to watch for restocks.",
-        );
-        setTogglingWatch(false);
-        return;
-      }
 
       const createDistributorWatch = async () => {
         setTogglingWatch(true);
         try {
           const distributor = getDistributorById(listing.distributorId);
-          const notificationId = await scheduleStockWatchConfirmation(
-            product?.name ?? "Product",
-            distributor?.name ?? listing.distributorId,
-          );
+          const notificationId = granted
+            ? await scheduleStockWatchConfirmation(
+                product?.name ?? "Product",
+                distributor?.name ?? listing.distributorId,
+              )
+            : null;
           await addStockWatch({
             id: `${id}-${listing.distributorId}`,
             productId: id,
@@ -197,8 +178,10 @@ export function useProductReminders({
               Haptics.NotificationFeedbackType.Success,
             );
           showToast(
-            "Reminder set — you'll be notified when back in stock",
-            "success",
+            granted
+              ? "Reminder set — you'll be notified when back in stock"
+              : "Restock watch saved — enable notifications to get alerted",
+            granted ? "success" : "info",
           );
         } catch {
           if (Platform.OS !== "web")
@@ -267,25 +250,15 @@ export function useProductReminders({
     const listing = reminderListing;
     if (!id || !listing) return;
     const granted = await ensureNotificationPermission();
-    if (!granted) {
-      if (Platform.OS !== "web")
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      showAlert(
-        "Permission Denied",
-        Platform.OS === "web"
-          ? "Please allow notifications in your browser to set reminders."
-          : "Please enable notifications in your device settings to set reminders.",
-      );
-      return;
-    }
     try {
       const distributor = getDistributorById(listing.distributorId);
-      const notifId = await scheduleBackOrderReminder(
+      const notifId = granted ? await scheduleBackOrderReminder(
         product?.name ?? "Product",
-        distributor?.name ?? listing.distributorId,
-        reminderDate,
-        id,
-      );
+          distributor?.name ?? listing.distributorId,
+          reminderDate,
+          id,
+        )
+        : null;
       const { replacedNotificationId } = await addBackOrderReminder({
         id: `reminder-${id}-${listing.distributorId}-${Date.now()}`,
         productId: id,
@@ -307,12 +280,14 @@ export function useProductReminders({
       if (Platform.OS !== "web")
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       showToast(
-        `Reminder set for ${reminderDate.toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })}`,
-        "success",
+        granted
+          ? `Reminder set for ${reminderDate.toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            })}`
+          : "Reminder saved — enable notifications to get reminded",
+        granted ? "success" : "info",
       );
     } catch {
       if (Platform.OS !== "web")

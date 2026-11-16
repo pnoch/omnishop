@@ -34,19 +34,17 @@ function alertIdFor(input: CreatePriceAlertInput): string {
 
 /**
  * Saves the alert first, then schedules the local notification. Saving first
- * means a scheduling failure leaves a usable in-app alert instead of an orphan
- * notification; the caller can report `saved && !scheduled` and still keep the
- * alert. Permission is checked before either write so a denied prompt does not
- * create a row that can never notify.
+ * means a denied permission or scheduling failure still leaves a usable
+ * in-app alert; callers report `saved && !scheduled` as "saved, notifications
+ * off" instead of throwing the alert away.
  */
 export async function createPriceAlert(
   input: CreatePriceAlertInput,
 ): Promise<CreatePriceAlertResult> {
   const { ensureNotificationPermission } = await import("@/lib/notifications");
+  // Ask before the write so the browser still has the user gesture. A denied
+  // prompt is not fatal; the in-app alert remains usable.
   const granted = await ensureNotificationPermission();
-  if (!granted) {
-    return { saved: false, scheduled: false, reason: "permission" };
-  }
 
   const alert: PriceAlert = {
     id: alertIdFor(input),
@@ -70,17 +68,24 @@ export async function createPriceAlert(
   }
 
   let scheduled = false;
-  try {
-    scheduled =
-      (await schedulePriceAlert(
-        input.productName,
-        input.targetPrice,
-        input.currency,
-        input.productId,
-      )) !== null;
-  } catch {
-    scheduled = false;
+  if (granted) {
+    try {
+      scheduled =
+        (await schedulePriceAlert(
+          input.productName,
+          input.targetPrice,
+          input.currency,
+          input.productId,
+        )) !== null;
+    } catch {
+      scheduled = false;
+    }
   }
 
-  return { saved, scheduled, alert };
+  return {
+    saved,
+    scheduled,
+    alert,
+    ...(granted ? {} : { reason: "permission" as const }),
+  };
 }

@@ -55,15 +55,14 @@ describe("createPriceAlert", () => {
     expect(state.added).toHaveLength(1);
   });
 
-  it("does not write an alert when permission is denied", async () => {
+  it("saves an alert without scheduling when permission is denied", async () => {
     state.permission = false;
     const result = await createPriceAlert(input);
-    expect(result).toEqual({
-      saved: false,
-      scheduled: false,
-      reason: "permission",
-    });
-    expect(state.added).toHaveLength(0);
+    expect(result.saved).toBe(true);
+    expect(result.scheduled).toBe(false);
+    expect(result.reason).toBe("permission");
+    expect(result.alert?.id).toBe("alert-p1-dist-1-drop-100-USD");
+    expect(state.added).toHaveLength(1);
   });
 
   it("keeps the saved alert when scheduling fails", async () => {

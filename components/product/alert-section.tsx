@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Keyboard, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { addAlert } from "@/lib/storage";
-import { ensureNotificationPermission, schedulePriceAlert } from "@/lib/notifications";
+import { createPriceAlert } from "@/lib/create-price-alert";
 import { showAlert } from "@/lib/alert";
 import { useToast } from "@/components/ui/toast";
 import { useColors } from "@/hooks/use-colors";
@@ -27,33 +26,36 @@ export function AlertSection({ productId, productName, displayCurrency = "USD", 
     try {
       const targetPrice = parseFloat(price);
       if (!Number.isFinite(targetPrice) || targetPrice <= 0) { showAlert("Invalid price", "Please enter a valid target price."); return; }
-      // Same gate as every other alert-creation path (product detail, compare,
-      // desktop): without notification permission the alert saves but can never
-      // notify, yet the toast below promises it will.
-      const granted = await ensureNotificationPermission();
-      if (!granted) {
-        if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        showAlert(
-          "Permission Denied",
-          Platform.OS === "web"
-            ? "Please allow notifications in your browser to receive price alerts."
-            : "Please enable notifications in your device settings to receive price alerts.",
-        );
-        return;
-      }
-      const alert = { id: `alert-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, productId, targetPrice, currency, isActive: true, createdAt: new Date().toISOString(), direction: "drop" as const };
-      const added = await addAlert(alert);
-      if (!added) {
+      // The alert is saved even when notifications are denied; scheduling is
+      // best-effort and the toast tells the user how to turn alerts on.
+      const result = await createPriceAlert({
+        productId,
+        productName: productName ?? "Product",
+        targetPrice,
+        currency,
+      });
+      if (result.reason === "duplicate") {
         setPrice("");
         showToast("That alert already exists", "info");
         return;
       }
+      if (!result.saved || !result.alert) {
+        showAlert(
+          "Couldn't create alert",
+          "We couldn't save your price alert. Please try again.",
+        );
+        return;
+      }
       // Let the parent refresh its alerts state so the Distributor Targets
       // table reflects this product-wide target immediately.
-      onAdded?.(alert);
-      await schedulePriceAlert(productName ?? "Product", targetPrice, currency, productId).catch(() => {});
+      onAdded?.(result.alert);
       if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      showToast(`Alert created — watching for ${formatPrice(targetPrice, currency)}`, "success");
+      showToast(
+        result.scheduled
+          ? `Alert created — watching for ${formatPrice(targetPrice, currency)}`
+          : "Alert saved — enable notifications to get alerted",
+        result.scheduled ? "success" : "info",
+      );
       setPrice("");
     } catch {
       if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

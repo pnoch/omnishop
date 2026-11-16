@@ -160,15 +160,6 @@ export function useCompareScreen() {
         targetPrice,
         currency: displayCurrency,
       });
-      if (result.reason === "permission") {
-        showAlert(
-          "Permission Denied",
-          Platform.OS === "web"
-            ? "Please allow notifications in your browser to receive price alerts."
-            : "Please enable notifications in your device settings to receive price alerts.",
-        );
-        return;
-      }
       if (result.reason === "duplicate") {
         showToast("That alert already exists", "info");
         return;

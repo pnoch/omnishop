@@ -1137,7 +1137,7 @@ describe("desktop chart guard", () => {
   it("guards alert and reminder creation against double-submit", async () => {
     const alert = await readFile("components/product/alert-section.tsx", "utf8");
     const alertGuard = alert.indexOf("setAdding(true);");
-    const alertAwait = alert.indexOf("await ensureNotificationPermission()");
+    const alertAwait = alert.indexOf("await createPriceAlert(");
     expect(alertGuard).toBeGreaterThan(-1);
     expect(alertAwait).toBeGreaterThan(-1);
     expect(alertGuard).toBeLessThan(alertAwait);
@@ -1150,15 +1150,11 @@ describe("desktop chart guard", () => {
     expect(reminderGuard).toBeLessThan(reminderAwait);
   });
 
-  it("gates AlertSection on notification permission", async () => {
+  it("saves AlertSection alerts even when permission is denied", async () => {
     const text = await readFile("components/product/alert-section.tsx", "utf8");
-    const parseAt = text.indexOf("parseFloat(price)");
-    const gateAt = text.indexOf("await ensureNotificationPermission();");
-    const addAlertAt = text.indexOf("await addAlert(alert);");
-    expect(parseAt).toBeGreaterThan(-1);
-    expect(gateAt).toBeGreaterThan(parseAt);
-    expect(gateAt).toBeLessThan(addAlertAt);
-    expect(text).toContain('"Permission Denied"');
+    expect(text).toContain("await createPriceAlert(");
+    expect(text).toContain("Alert saved — enable notifications");
+    expect(text).not.toContain('"Permission Denied"');
   });
 
   // QA round 285: mobile's logout clears the previous account's synced

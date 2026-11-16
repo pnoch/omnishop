@@ -44,19 +44,21 @@ export function ReminderSection({
     setSaving(true);
     try {
       const granted = await ensureNotificationPermission();
-      if (!granted) {
-        if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        showAlert("Permission Denied", "Please enable notifications in your device settings to set reminders.");
-        return;
-      }
       const d = new Date(Date.now() + 7 * 86400000);
-      const notifId = await scheduleBackOrderReminder(productName ?? "", distributorName ?? "", d, productId).catch(() => null);
+      const notifId = granted
+        ? await scheduleBackOrderReminder(productName ?? "", distributorName ?? "", d, productId).catch(() => null)
+        : null;
       const { replacedNotificationId } = await addBackOrderReminder({ id: `reminder-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`, productId, productName: productName ?? "", distributorId, distributorName: distributorName ?? "", reminderDate: d.toISOString(), notificationId: notifId ?? undefined, createdAt: new Date().toISOString(), reminderType: "date" });
       if (replacedNotificationId) {
         await cancelNotification(replacedNotificationId).catch(() => {});
       }
       if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      showToast(`Reminder set for ${d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`, "success");
+      showToast(
+        granted
+          ? `Reminder set for ${d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`
+          : "Reminder saved — enable notifications to get reminded",
+        granted ? "success" : "info",
+      );
     } catch {
       if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       showAlert("Couldn't set reminder", "We couldn't save your reminder. Please try again.");
