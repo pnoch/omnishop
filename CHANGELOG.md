@@ -1,8 +1,33 @@
 # Changelog
 
-Notable changes to Product Stock Finder. The version is kept in lockstep across
+Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
+
+## [5.29.0] - 2026-11-16
+
+### Changed
+
+- Rebranded the project from Product Stock Finder to OmniShop across the repo,
+  npm package, Expo slug, URL scheme, native module names, cache directories,
+  backup format, documentation, and release tooling.
+- New store identities: Android `app.siamcreations.omnishop`, iOS
+  `app.siamcreations.omnishop`, desktop `app.siamcreations.omnishop.desktop`.
+  Android `versionCode` is now 4. Existing installs under the old bundle id do
+  not upgrade in place.
+- Web/API now run at `https://omnishop.siamcreations.app`; support mail is
+  `support@siamcreations.app` and transactional mail uses
+  `no-reply@siamcreations.app` via Resend.
+- Legacy backups (`product-stock-finder-backup`), the old OAuth scheme,
+  `PSF_*` env vars, cookie jars, and desktop data directories are still
+  accepted or migrated on first use.
+
+### Security
+
+- Cleared production audit advisories: `node-forge` 1.4.3, `qs` 6.16.1,
+  `decode-uri-component` 0.5.1, `glob` 14.0.2, `minimatch` 11.0.1. The
+  obsolete node-forge patch was removed; `deepmerge` remains a documented
+  no-fix ignore.
 
 ## [Unreleased]
 
