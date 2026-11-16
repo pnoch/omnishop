@@ -42,9 +42,15 @@ export function getApiBaseUrl(): string {
     typeof window !== "undefined" &&
     window.location
   ) {
-    const { protocol, hostname } = window.location;
+    const { protocol, hostname, origin } = window.location;
     const apiHostname = hostname.replace(/^8081-/, "3000-");
     if (apiHostname !== hostname) return `${protocol}//${apiHostname}`;
+    // The production web export is hosted by the API server itself, so the
+    // same origin IS the API. Without this the app silently ran in local mode
+    // on every custom domain.
+    if (!/^(localhost|127\.0\.0\.1|\[::1\]|::1)$/i.test(hostname)) {
+      return origin;
+    }
   }
 
   return "";

@@ -24,6 +24,7 @@ vi.mock("react-native", async () => {
     TouchableOpacity: ({ children, onPress, accessibilityLabel, ...r }: any) =>
       React.createElement("button", { ...r, "aria-label": accessibilityLabel, onClick: onPress }, children),
     ScrollView: ({ children, ...r }: any) => React.createElement("div", r, children),
+    useWindowDimensions: () => ({ width: 1024, height: 768, scale: 1, fontScale: 1 }),
     Platform: { OS: "ios" },
   };
 });

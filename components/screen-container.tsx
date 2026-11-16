@@ -1,4 +1,4 @@
-import { View, type ViewProps } from "react-native";
+import { Platform, useWindowDimensions, View, type ViewProps } from "react-native";
 import { SafeAreaView, type Edge } from "react-native-safe-area-context";
 
 import { cn } from "@/lib/utils";
@@ -47,6 +47,9 @@ export function ScreenContainer({
   style,
   ...props
 }: ScreenContainerProps) {
+  const { width } = useWindowDimensions();
+  const isWideWeb = Platform.OS === "web" && width >= 900;
+
   return (
     <View
       className={cn("flex-1", "bg-background", containerClassName)}
@@ -54,7 +57,16 @@ export function ScreenContainer({
       {...props}
     >
       <SafeAreaView edges={edges} className={cn("flex-1", safeAreaClassName)}>
-        <View className={cn("flex-1", className)}>{children}</View>
+        <View
+          className={cn("flex-1", className)}
+          style={
+            isWideWeb
+              ? { width: "100%", maxWidth: 1080, alignSelf: "center" }
+              : undefined
+          }
+        >
+          {children}
+        </View>
       </SafeAreaView>
     </View>
   );
