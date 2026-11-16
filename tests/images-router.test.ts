@@ -44,6 +44,19 @@ describe("images router", () => {
     );
   });
 
+  it("passes product-page candidates through to the resolver", async () => {
+    mockedGetProductImage.mockResolvedValue({ imageUrl: "x" });
+    const caller = appRouter.createCaller(createPublicContext());
+    await caller.images.get({
+      productId: "mikrotik-crs804-4ddq-hrm",
+      sourceUrls: ["https://server2u.com/shop/crs804"],
+    });
+    expect(mockedGetProductImage).toHaveBeenCalledWith(
+      "mikrotik-crs804-4ddq-hrm",
+      ["https://server2u.com/shop/crs804"],
+    );
+  });
+
   it("returns null when there is no image", async () => {
     mockedGetProductImage.mockResolvedValue(null);
     const caller = appRouter.createCaller(createPublicContext());

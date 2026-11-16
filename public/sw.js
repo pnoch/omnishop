@@ -1,4 +1,4 @@
-const PRECACHE = "precache-v3";
+const PRECACHE = "precache-v4";
 // Stable URLs only. Hashed /_expo/static/* bundles change on every `expo export`
 // and would break cache.addAll (it rejects if any URL 404s), so they are served
 // by the runtime cache-first handler below instead of being precached here.
@@ -28,6 +28,13 @@ self.addEventListener("activate", (event) => {
 });
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  // Only manage the app shell and its own static assets. Intercepting
+  // cross-origin product photos and /api/ calls turned them into browser
+  // ERR_FAILED responses inside the cache-then-fetch handler.
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) {
+    return;
+  }
   // Navigation requests: network-first, fallback to cached index.html (SPA fallback)
   if (event.request.mode === "navigate") {
     event.respondWith(

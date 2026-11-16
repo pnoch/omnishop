@@ -8,16 +8,18 @@ export interface ProductImage {
 
 export async function fetchProductImage(
   productId: string,
-  opts?: { timeoutMs?: number; sourceUrl?: string },
+  opts?: { timeoutMs?: number; sourceUrl?: string; sourceUrls?: string[] },
 ): Promise<ProductImage | null> {
   if (!isServerConfigured()) return null;
   try {
     const client = createTRPCClient();
-    const timeoutMs = opts?.timeoutMs ?? 4000;
+    const timeoutMs = opts?.timeoutMs ?? 6000;
+    const sources =
+      opts?.sourceUrls ?? (opts?.sourceUrl ? [opts.sourceUrl] : undefined);
     const result = await withTimeout(
       client.images.get.query({
         productId,
-        ...(opts?.sourceUrl ? { sourceUrl: opts.sourceUrl } : {}),
+        ...(sources?.length ? { sourceUrls: sources } : {}),
       }),
       timeoutMs,
     );

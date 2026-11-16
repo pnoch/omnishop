@@ -19,13 +19,13 @@ export interface ProductImage {
 
 export async function getProductImage(
   productId: string,
-  sourceUrl?: string,
+  sourceUrls?: string[],
 ): Promise<ProductImage | null> {
-  const key = `${productId}|${sourceUrl ?? ""}`;
+  const key = `${productId}|${sourceUrls?.join("|") ?? ""}`;
   const existing = inFlight.get(key);
   if (existing) return existing;
 
-  const promise = getProductImageInner(productId, sourceUrl);
+  const promise = getProductImageInner(productId, sourceUrls);
   inFlight.set(key, promise);
   try {
     return await promise;
@@ -36,22 +36,23 @@ export async function getProductImage(
 
 async function getProductImageInner(
   productId: string,
-  sourceUrl?: string,
+  sourceUrls?: string[],
 ): Promise<ProductImage | null> {
   const cached = await readCached(productId);
   if (cached) return { imageUrl: cached };
 
+  const product = PRODUCT_CATALOG.find((p) => p.id === productId);
+
   // Prefer the real product page image. This works for discovered products
   // too, even when they are not in the static catalog.
-  if (sourceUrl) {
-    const real = await resolveDistributorImage(sourceUrl);
+  if (sourceUrls?.length) {
+    const real = await resolveDistributorImages(sourceUrls, product);
     if (real) {
       await writeCached(productId, real);
       return { imageUrl: real };
     }
   }
 
-  const product = PRODUCT_CATALOG.find((p) => p.id === productId);
   if (!product) return null;
   // Budget is checked only on the billable path (cache/page hits returned
   // earlier).
@@ -121,33 +122,66 @@ export function extractProductImageUrl(
   }
 }
 
-async function resolveDistributorImage(
-  sourceUrl: string,
-): Promise<string | null> {
-  if (!isAllowedImageSource(sourceUrl)) return null;
+function pageMatchesProduct(
+  html: string,
+  product: CatalogProduct | undefined,
+): boolean {
+  if (!product) return true;
   try {
-    const response = await fetchWithTimeout(
-      sourceUrl,
-      {
-        headers: {
-          accept: "text/html,application/xhtml+xml",
-          "user-agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-        },
-        redirect: "follow",
-      },
-      15_000,
-    );
-    if (!response.ok) return null;
-    const contentType = response.headers.get("content-type") ?? "";
-    if (!contentType.includes("text/html") && !contentType.includes("xhtml")) {
-      return null;
-    }
-    const html = await response.text();
-    return extractProductImageUrl(html, response.url || sourceUrl);
+    const $ = cheerio.load(html);
+    const heading = [
+      $("title").first().text(),
+      $('meta[property="og:title"]').attr("content"),
+      $("h1").first().text(),
+    ]
+      .filter(Boolean)
+      .join(" ");
+    const normalize = (value: string) =>
+      value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    const haystack = normalize(heading);
+    return [product.modelNumber, product.name]
+      .filter(Boolean)
+      .map(normalize)
+      .filter((needle) => needle.length >= 4)
+      .some((needle) => haystack.includes(needle));
   } catch {
-    return null;
+    return false;
   }
+}
+
+async function resolveDistributorImages(
+  sourceUrls: string[],
+  product: CatalogProduct | undefined,
+): Promise<string | null> {
+  for (const sourceUrl of sourceUrls) {
+    if (!isAllowedImageSource(sourceUrl)) continue;
+    try {
+      const response = await fetchWithTimeout(
+        sourceUrl,
+        {
+          headers: {
+            accept: "text/html,application/xhtml+xml",
+            "user-agent":
+              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+          },
+          redirect: "follow",
+        },
+        15_000,
+      );
+      if (!response.ok) continue;
+      const contentType = response.headers.get("content-type") ?? "";
+      if (!contentType.includes("text/html") && !contentType.includes("xhtml")) {
+        continue;
+      }
+      const html = await response.text();
+      if (!pageMatchesProduct(html, product)) continue;
+      const image = extractProductImageUrl(html, response.url || sourceUrl);
+      if (image) return image;
+    } catch {
+      // Try the next product page.
+    }
+  }
+  return null;
 }
 
 async function readCached(productId: string): Promise<string | null> {

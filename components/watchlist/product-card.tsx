@@ -19,6 +19,7 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { ProductImage } from "@/components/search/product-image";
 import { openListingUrl } from "@/lib/listing-utils";
 import { isAcquired } from "@/lib/acquired";
+import { pickImageSourceUrls } from "@/lib/product-stock";
 import { useProductCardDerived } from "@/hooks/use-product-card-derived";
 import { ProductCardTags } from "./product-card-tags";
 import { ProductCardInsights } from "./product-card-insights";
@@ -263,12 +264,7 @@ export const ProductCard = memo(function ProductCard({
         )}
         <ProductImage
           productId={product.id}
-          sourceUrl={
-            (product.listings ?? []).find(
-              (listing) => listing.stockStatus === "in_stock" && listing.url,
-            )?.url ??
-            (product.listings ?? []).find((listing) => listing.url)?.url
-          }
+          sourceUrls={pickImageSourceUrls(product.listings)}
           size={48}
           marginRight={10}
         />

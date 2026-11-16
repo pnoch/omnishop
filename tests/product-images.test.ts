@@ -110,14 +110,13 @@ describe("real product images from distributor pages", () => {
       ok: true,
       headers: { get: () => "text/html; charset=utf-8" },
       text: async () =>
-        '<meta property="og:image" content="/media/crs804.png">',
+        '<title>MikroTik CRS804-4DDQ-hRM</title><meta property="og:image" content="/media/crs804.png">',
       url: "https://server2u.com/shop/crs804",
     } as never);
 
-    const result = await getProductImage(
-      "mikrotik-crs804-4ddq-hrm",
+    const result = await getProductImage("mikrotik-crs804-4ddq-hrm", [
       "https://server2u.com/shop/crs804",
-    );
+    ]);
 
     expect(result).toEqual({
       imageUrl: "https://server2u.com/media/crs804.png",
@@ -125,11 +124,29 @@ describe("real product images from distributor pages", () => {
     expect(mockedGenerateImage).not.toHaveBeenCalled();
   });
 
+  it("rejects a page about a different product", async () => {
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      headers: { get: () => "text/html; charset=utf-8" },
+      text: async () =>
+        '<title>Ubiquiti UniFi Access Intercom Viewer</title><meta property="og:image" content="/media/wrong.png">',
+      url: "https://linitx.com/product/wrong",
+    } as never);
+
+    const result = await getProductImage("mikrotik-crs804-4ddq-hrm", [
+      "https://linitx.com/product/wrong",
+    ]);
+
+    expect(result).toEqual({
+      imageUrl: "https://img.example.com/generated.png",
+    });
+    expect(mockedGenerateImage).toHaveBeenCalled();
+  });
+
   it("does not fetch non-distributor pages", async () => {
-    const result = await getProductImage(
-      "mikrotik-crs804-4ddq-hrm",
+    const result = await getProductImage("mikrotik-crs804-4ddq-hrm", [
       "https://evil.example/crs804",
-    );
+    ]);
 
     expect(mockedFetch).not.toHaveBeenCalled();
     expect(result).toEqual({

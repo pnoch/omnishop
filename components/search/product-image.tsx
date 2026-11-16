@@ -81,18 +81,19 @@ function ImagePlaceholder({
 
 export function ProductImage({
   productId,
-  sourceUrl,
+  sourceUrls,
   size = 48,
   marginRight = 12,
 }: {
   productId: string;
-  /** A distributor product page to resolve a real photo from, if available. */
-  sourceUrl?: string;
+  /** Distributor product pages to try for a real photo, in order. */
+  sourceUrls?: string[];
   size?: number;
   marginRight?: number;
 }) {
   const colors = useColors();
-  const cacheKey = sourceUrl ? `${productId}|${sourceUrl}` : productId;
+  const sourceKey = sourceUrls?.join("|") ?? "";
+  const cacheKey = sourceKey ? `${productId}|${sourceKey}` : productId;
   const [image, setImage] = useState<{ key: string; url: string | null } | null>(
     null,
   );
@@ -123,7 +124,9 @@ export function ProductImage({
         dequeueImageFetchOnComplete();
         return;
       }
-      fetchProductImage(productId, { sourceUrl })
+      fetchProductImage(productId, {
+        sourceUrls: sourceKey ? sourceKey.split("|") : undefined,
+      })
         .then((res) => {
           const url = res?.imageUrl ?? null;
           setImageCache(cacheKey, url);
@@ -152,7 +155,7 @@ export function ProductImage({
         if (idx !== -1) imageQueue.splice(idx, 1);
       }
     };
-  }, [cacheKey, productId, sourceUrl, opacity]);
+  }, [cacheKey, productId, sourceKey, opacity]);
 
   const handleLoad = useCallback(() => {
     setLoadedFor(cacheKey);

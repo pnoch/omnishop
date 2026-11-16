@@ -45,12 +45,12 @@ describe("fetchProductImage", () => {
     } as unknown as ReturnType<typeof createTRPCClient>);
 
     await fetchProductImage("mikrotik-crs804-4ddq-hrm", {
-      sourceUrl: "https://server2u.com/product",
+      sourceUrls: ["https://server2u.com/product"],
     });
 
     expect(query).toHaveBeenCalledWith({
       productId: "mikrotik-crs804-4ddq-hrm",
-      sourceUrl: "https://server2u.com/product",
+      sourceUrls: ["https://server2u.com/product"],
     });
   });
 

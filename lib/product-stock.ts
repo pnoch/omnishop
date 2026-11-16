@@ -1,4 +1,7 @@
-import type { Product, StockStatus } from "./types";
+import type { DistributorListing, Product, StockStatus } from "./types";
+
+const SEARCH_URL_PATTERN =
+  /(?:\/search\b|[?&](?:q|s|search|keywords)=|search\.php)/i;
 
 const STOCK_ORDER: Record<StockStatus, number> = {
   in_stock: 0,
@@ -14,6 +17,26 @@ export function getBestStatus(product: Product): StockStatus {
   return [...listings].sort(
     (a, b) => STOCK_ORDER[a.stockStatus] - STOCK_ORDER[b.stockStatus],
   )[0]!.stockStatus;
+}
+
+/**
+ * Product-page URLs to try for a real product photo. Search/result URLs are
+ * skipped: their social image is usually the store logo or an unrelated item.
+ */
+export function pickImageSourceUrls(
+  listings: DistributorListing[] | undefined,
+  limit = 5,
+): string[] {
+  const pages = (listings ?? []).filter(
+    (listing) => !!listing.url && !SEARCH_URL_PATTERN.test(listing.url),
+  );
+  const ordered = [
+    ...pages.filter((listing) => listing.stockStatus === "in_stock"),
+    ...pages.filter((listing) => listing.stockStatus !== "in_stock"),
+  ];
+  return [
+    ...new Set(ordered.map((listing) => listing.url as string)),
+  ].slice(0, limit);
 }
 
 export interface StockCounts {
