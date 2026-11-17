@@ -7,6 +7,7 @@ import { setOnboardingSeen } from "@/lib/onboarding";
 import { showAlert } from "@/lib/alert";
 import { CountryPicker } from "@/components/ui/country-picker";
 import { ConciergeStepProducts } from "./concierge-step-products";
+import { ConciergeWelcome } from "./concierge-welcome";
 import { ConciergeStepRegion } from "./concierge-step-region";
 import { ConciergeStepNotifications } from "./concierge-step-notifications";
 import { ConciergeStepSummary } from "./concierge-step-summary";
@@ -51,6 +52,7 @@ export function ConciergeScreen({ onComplete }: { onComplete: () => void }) {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState(0);
+  const [showWelcome, setShowWelcome] = useState(true);
   const [query, setQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [country, setCountry] = useState<string | null>(null);
@@ -99,6 +101,24 @@ export function ConciergeScreen({ onComplete }: { onComplete: () => void }) {
     await setOnboardingSeen();
     onComplete();
   };
+
+  if (showWelcome) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background, paddingTop: insets.top }}>
+        <ConciergeWelcome
+          colors={colors}
+          onStart={() => {
+            tap();
+            setShowWelcome(false);
+          }}
+          onExplore={() => {
+            tap();
+            void skip();
+          }}
+        />
+      </View>
+    );
+  }
 
   const toggleSelect = (id: string) => {
     tap();

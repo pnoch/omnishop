@@ -100,4 +100,14 @@ describe("UX/UI Phase 1 guards", () => {
     expect(screen).toContain('accessibilityRole="progressbar"');
     expect(screen).toContain("step + 1) / 3");
   });
+
+  it("onboarding starts with a value-prop welcome before product selection", async () => {
+    const screen = await read("components/onboarding/concierge-screen.tsx");
+    const welcome = await read("components/onboarding/concierge-welcome.tsx");
+    expect(screen).toContain("showWelcome");
+    expect(screen).toContain("ConciergeWelcome");
+    expect(welcome).toContain("Pick products to track");
+    expect(welcome).toContain("Explore first");
+    expect(welcome).toContain("Find it. Price it. Get alerted.");
+  });
 });

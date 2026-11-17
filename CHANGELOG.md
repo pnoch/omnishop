@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.30.2] - 2026-11-17
+
+### Changed
+
+- First-run now opens on a short value-prop welcome (“Find it. Price it. Get
+  alerted.”) with “Pick products to track” and “Explore first” before the
+  product picker. The picker remains the first step of the guided setup, but no
+  longer acts as the app’s front door.
+
 ## [5.30.1] - 2026-11-17
 
 ### Fixed
