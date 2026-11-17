@@ -272,7 +272,7 @@ export function WatchlistHeader({
             <Text
               style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}
             >
-              Refresh all
+              Refresh
             </Text>
           )}
         </TouchableOpacity>
@@ -304,7 +304,7 @@ export function WatchlistHeader({
             <Text style={{ color: "#fff", fontWeight: "600", fontSize: 13 }}>
               {checkProgress
                 ? `Checking ${checkProgress.current}/${checkProgress.total}`
-                : "Check Now"}
+                : "Check"}
             </Text>
           )}
         </TouchableOpacity>

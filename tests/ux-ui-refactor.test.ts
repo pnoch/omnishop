@@ -54,4 +54,14 @@ describe("UX/UI Phase 1 guards", () => {
     expect(footer).toContain("No distributor prices yet");
     expect(preview).toContain("No prices yet");
   });
+
+  it("watchlist actions keep one mobile row without losing full labels", async () => {
+    const header = await read("components/watchlist/watchlist-header.tsx");
+    expect(header).toContain('accessibilityLabel="Refresh all prices"');
+    expect(header).toContain('accessibilityLabel="Check now"');
+    expect(header).toMatch(/>\s*Refresh\s*</);
+    expect(header).toContain('"Check"}');
+    expect(header).not.toMatch(/>\s*Refresh all\s*</);
+    expect(header).not.toContain("Check Now");
+  });
 });
