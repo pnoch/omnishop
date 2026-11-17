@@ -10,7 +10,7 @@ Copy for App Store Connect and Google Play Console. Keep this in sync with
 | App name | OmniShop |
 | iOS bundle id | `app.siamcreations.omnishop` |
 | Android package | `app.siamcreations.omnishop` |
-| Version | `5.31.0` (EAS `appVersionSource: remote` manages build numbers) |
+| Version | `5.32.0` (EAS `appVersionSource: remote` manages build numbers) |
 | Category | Utilities |
 | Price | Free |
 

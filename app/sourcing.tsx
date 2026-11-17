@@ -9,6 +9,7 @@ import {
 import { Stack, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { SourcingSheet } from "@/components/sourcing/sourcing-sheet";
@@ -199,38 +200,11 @@ export default function SourcingScreen() {
   return (
     <ScreenContainer>
       <Stack.Screen options={{ title: "Sourcing sheet" }} />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 4,
-          gap: 12,
-        }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => goBackOrHome(router)}
-          style={{ padding: 4 }}
-        >
-          <IconSymbol name="chevron.left" size={22} color={colors.foreground} />
-        </TouchableOpacity>
-      </View>
+      <PageHeader
+        title="Sourcing sheet"
+        onBack={() => goBackOrHome(router)}
+      />
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
-        <Text
-          style={{
-            color: colors.foreground,
-            fontSize: 22,
-            fontWeight: "700",
-            marginBottom: 12,
-          }}
-        >
-          Sourcing sheet
-        </Text>
-
         {loaded && !destination ? (
           <Card title="Set where you ship to">
             <Text style={{ color: colors.muted, fontSize: 13, marginBottom: 12 }}>

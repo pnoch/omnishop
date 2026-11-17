@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.0] - 2026-11-17
+
+### Changed
+
+- UX/UI Phase 2B:
+  - Added the shared `PageHeader` and migrated Statistics, Health, Sourcing,
+    Build Order, Diagnostics, Restock Watches, Distributor Analysis, Available
+    Now, and Privacy.
+  - Stock-watch and reminder cards now use the compact horizontal action row
+    (Stop watching / Reschedule / Delete).
+  - Health no longer renders two “Test All Distributors” buttons in the empty
+    state.
+
 ## [5.31.0] - 2026-11-17
 
 ### Changed

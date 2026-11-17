@@ -4,25 +4,20 @@ import { describe, expect, it } from "vitest";
 
 const ROOT = join(__dirname, "..");
 
-const STACKED_ACTION_CARDS = [
+// Active, triggered, stock-watch, and reminder cards now use horizontal action
+// rows instead of stacked icon columns. Each action keeps a real 44px target.
+const COMPACT_ACTION_CARDS = [
+  "components/alerts/alert-card.tsx",
+  "components/alerts/triggered-alert-card.tsx",
   "components/alerts/stock-watch-card.tsx",
   "components/alerts/reminder-card.tsx",
 ];
 
-// `hitSlop` is measured in dp, so a 44dp slop on a 36dp icon expands ~115px at
-// 420dpi — far past the 8dp gap between stacked edit/snooze/delete buttons. The
-// last-rendered button then owns the whole column and the earlier ones become
-// untappable (verified on device: tapping Edit's centre opened Snooze). The fix
-// is a real 44x44 target, so these cards must not reintroduce `hitSlop`.
-describe("stacked alert-card actions use real touch targets", () => {
-  it.each(STACKED_ACTION_CARDS)("%s does not use hitSlop", (rel) => {
+describe("compact alert-card actions use real touch targets", () => {
+  it.each(COMPACT_ACTION_CARDS)("%s has 44px actions and no hitSlop", (rel) => {
     const src = readFileSync(join(ROOT, rel), "utf8");
+    expect(src).toMatch(/minHeight:\s*44/);
     expect(src).not.toMatch(/hitSlop\s*=/);
-  });
-
-  it.each(STACKED_ACTION_CARDS)("%s uses IconActionButton", (rel) => {
-    const src = readFileSync(join(ROOT, rel), "utf8");
-    expect(src).toContain("IconActionButton");
   });
 });
 

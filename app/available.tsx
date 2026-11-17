@@ -9,6 +9,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { Stack, useRouter } from "expo-router";
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { getAllBrands, getAllCategories } from "@shared/catalog";
@@ -97,37 +98,7 @@ export default function AvailableScreen() {
   return (
     <ScreenContainer>
       <Stack.Screen options={{ title: "Available Now" }} />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 12,
-          gap: 12,
-        }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => goBackOrHome(router)}
-          style={{ padding: 4 }}
-          hitSlop={12}
-        >
-          <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.foreground,
-            fontSize: 20,
-            fontWeight: "700",
-            flex: 1,
-          }}
-        >
-          Available Now
-        </Text>
-      </View>
+      <PageHeader title="Available Now" onBack={() => goBackOrHome(router)} />
 
       {!configured && (
         <View

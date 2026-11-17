@@ -11,6 +11,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { getStockWatches, removeStockWatch } from "@/lib/storage";
 import { getDistributorById } from "@shared/distributors";
@@ -78,27 +79,14 @@ export default function RestockWatchesScreen() {
 
   return (
     <ScreenContainer>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 16 }}>
-        <TouchableOpacity activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            // A deep-linked cold start has no history, where a bare back()
-            // silently does nothing; fall back to a safe route.
-            goBackOrHome(router, "/(tabs)/alerts");
-          }}
-          style={{ marginRight: 12 }}
-          hitSlop={12}
-        >
-          <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
-        </TouchableOpacity>
-        <Text
-          style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}
-        >
-          Restock Watches
-        </Text>
-      </View>
+      <PageHeader
+        title="Restock Watches"
+        onBack={() => {
+          if (Platform.OS !== "web")
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          goBackOrHome(router, "/(tabs)/alerts");
+        }}
+      />
 
       {loading ? (
         <SkeletonList count={3} />

@@ -10,6 +10,7 @@ import * as Haptics from "expo-haptics";
 import { useFocusEffect, useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { getWatchlist, getSettings } from "@/lib/storage";
 import { getDistributorById } from "@shared/distributors";
@@ -82,40 +83,36 @@ export default function DistributorAnalysisScreen() {
 
   return (
     <ScreenContainer>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 16, justifyContent: "space-between" }}>
-        <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
-        <TouchableOpacity activeOpacity={0.85}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            // A deep-linked cold start has no history, where a bare back()
-            // silently does nothing; fall back to a safe route.
-            goBackOrHome(router, "/(tabs)/watchlist");
-          }}
-          style={{ marginRight: 12 }}
-          hitSlop={12}
-        >
-          <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
-        </TouchableOpacity>
-        <Text
-          style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}
-        >
-          Distributor Analysis
-        </Text>
-        </View>
-        {analysis.length > 0 && (
-          <TouchableOpacity activeOpacity={0.85}
-            onPress={handleExport}
-            hitSlop={8}
-            style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 }}
-            accessibilityLabel="Export CSV"
-            accessibilityRole="button"
-          >
-            <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>Export CSV</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      <PageHeader
+        title="Distributor Analysis"
+        onBack={() => {
+          if (Platform.OS !== "web")
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          goBackOrHome(router, "/(tabs)/watchlist");
+        }}
+        actions={
+          analysis.length > 0 ? (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={handleExport}
+              style={{
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
+                borderRadius: 20,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+              }}
+              accessibilityLabel="Export CSV"
+              accessibilityRole="button"
+            >
+              <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+                Export CSV
+              </Text>
+            </TouchableOpacity>
+          ) : undefined
+        }
+      />
 
       {loading ? (
         <SkeletonList count={4} />

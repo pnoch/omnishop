@@ -12,6 +12,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { goBackOrHome } from "@/lib/navigation";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
@@ -196,48 +197,28 @@ export default function StatsScreen() {
 
   return (
     <ScreenContainer>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 12,
-          gap: 12,
+      <PageHeader
+        title="Statistics"
+        onBack={() => {
+          if (Platform.OS !== "web")
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          goBackOrHome(router);
         }}
-      >
-        <TouchableOpacity activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS !== "web")
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            goBackOrHome(router);
-          }}
-          style={{ padding: 4 }}
-          hitSlop={12}
-        >
-          <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.foreground,
-            fontSize: 20,
-            fontWeight: "700",
-            flex: 1,
-          }}
-        >
-          Statistics
-        </Text>
-        {refreshing && <ActivityIndicator size="small" color={colors.primary} />}
-        <TouchableOpacity activeOpacity={0.7} accessibilityLabel="Share statistics" accessibilityRole="button" onPress={handleShare} style={{ padding: 4 }} hitSlop={12}>
-          <IconSymbol
-            name="square.and.arrow.up"
-            size={22}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-      </View>
+        actions={
+          <>
+            {refreshing && <ActivityIndicator size="small" color={colors.primary} />}
+            <TouchableOpacity
+              activeOpacity={0.7}
+              accessibilityLabel="Share statistics"
+              accessibilityRole="button"
+              onPress={handleShare}
+              style={{ padding: 4 }}
+            >
+              <IconSymbol name="square.and.arrow.up" size={22} color={colors.primary} />
+            </TouchableOpacity>
+          </>
+        }
+      />
 
       {!loaded ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 60 }}>

@@ -12,6 +12,7 @@ import { useRouter } from "expo-router";
 import { goBackOrHome } from "@/lib/navigation";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { sanitizeResponseTimeMs } from "@/lib/scrapers/health";
 import { getDistributorById } from "@shared/distributors";
 import { formatLastRefreshed } from "@/lib/last-refreshed";
@@ -44,25 +45,14 @@ export default function HealthScreen() {
 
   return (
     <ScreenContainer>
-      <View style={{ flexDirection: "row", alignItems: "center", padding: 16 }}>
-        <TouchableOpacity activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            goBackOrHome(router);
-          }}
-          style={{ marginRight: 12 }}
-          hitSlop={12}
-        >
-          <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
-        </TouchableOpacity>
-        <Text
-          style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}
-        >
-          Distributor Health
-        </Text>
-      </View>
+      <PageHeader
+        title="Distributor Health"
+        onBack={() => {
+          if (Platform.OS !== "web")
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          goBackOrHome(router);
+        }}
+      />
 
       <View
         style={{
@@ -105,33 +95,35 @@ export default function HealthScreen() {
         ))}
       </View>
 
-      <TouchableOpacity activeOpacity={0.85}
-        accessibilityLabel="Test All Distributors"
-        accessibilityRole="button"
-        accessibilityState={{ disabled: testing }}
-        onPress={() => {
-          if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          void runTest();
-        }}
-        disabled={testing}
-        style={{
-          marginHorizontal: 16,
-          marginBottom: 12,
-          paddingVertical: 12,
-          borderRadius: 12,
-          backgroundColor: colors.primary,
-          alignItems: "center",
-          opacity: testing ? 0.5 : 1,
-        }}
-      >
-        {testing ? (
-          <ActivityIndicator size="small" color="#fff" />
-        ) : (
-          <Text style={{ color: "#fff", fontWeight: "700" }}>
-            Test All Distributors
-          </Text>
-        )}
-      </TouchableOpacity>
+      {health.length > 0 && (
+        <TouchableOpacity activeOpacity={0.85}
+          accessibilityLabel="Test All Distributors"
+          accessibilityRole="button"
+          accessibilityState={{ disabled: testing }}
+          onPress={() => {
+            if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            void runTest();
+          }}
+          disabled={testing}
+          style={{
+            marginHorizontal: 16,
+            marginBottom: 12,
+            paddingVertical: 12,
+            borderRadius: 12,
+            backgroundColor: colors.primary,
+            alignItems: "center",
+            opacity: testing ? 0.5 : 1,
+          }}
+        >
+          {testing ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={{ color: "#fff", fontWeight: "700" }}>
+              Test All Distributors
+            </Text>
+          )}
+        </TouchableOpacity>
+      )}
 
       {testing && (
         <View style={{ marginHorizontal: 16, marginBottom: 12 }}>

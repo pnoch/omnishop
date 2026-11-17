@@ -1,8 +1,8 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
 import { ScreenContainer } from "@/components/screen-container";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { PageHeader } from "@/components/ui/page-header";
 import { goBackOrHome } from "@/lib/navigation";
 import { getSupportEmail } from "@/lib/legal-links";
 
@@ -37,20 +37,7 @@ export default function PrivacyPolicyScreen() {
   return (
     <ScreenContainer>
       <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => goBackOrHome(router)}
-            style={{ width: 36, height: 36, alignItems: "center", justifyContent: "center", marginLeft: -8 }}
-            accessibilityLabel="Back"
-            accessibilityRole="button"
-          >
-            <IconSymbol name="chevron.left" size={22} color={colors.primary} />
-          </TouchableOpacity>
-          <Text accessibilityRole="header" style={{ color: colors.foreground, fontSize: 24, fontWeight: "800" }}>
-            Privacy Policy
-          </Text>
-        </View>
+        <PageHeader title="Privacy Policy" onBack={() => goBackOrHome(router)} />
         <Text style={{ color: colors.muted, fontSize: 13, marginTop: 4 }}>
           Last updated {updated}
         </Text>

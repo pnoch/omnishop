@@ -7,7 +7,43 @@ describe("UX/UI Phase 2A guards", () => {
   it("privacy has a visible back control", async () => {
     const privacy = await read("app/privacy.tsx");
     expect(privacy).toContain("goBackOrHome(router)");
-    expect(privacy).toContain('accessibilityLabel="Back"');
+    expect(privacy).toContain('title="Privacy Policy"');
+    expect(privacy).toContain("<PageHeader");
+  });
+
+  it("standalone screens share the page header", async () => {
+    for (const path of [
+      "app/stats.tsx",
+      "app/health.tsx",
+      "app/sourcing.tsx",
+      "app/build-order.tsx",
+      "app/diagnostics.tsx",
+      "app/restock-watches.tsx",
+      "app/distributor-analysis.tsx",
+      "app/available.tsx",
+    ]) {
+      const src = await read(path);
+      expect(src).toContain("<PageHeader");
+      expect(src).toContain('from "@/components/ui/page-header"');
+    }
+  });
+
+  it("stock-watch and reminder cards use compact horizontal actions", async () => {
+    const stock = await read("components/alerts/stock-watch-card.tsx");
+    const reminder = await read("components/alerts/reminder-card.tsx");
+    for (const card of [stock, reminder]) {
+      expect(card).toContain("padding: 10");
+      expect(card).toContain("minHeight: 44");
+      expect(card).not.toContain("IconActionButton");
+    }
+    expect(stock).toContain("Stop watching");
+    expect(reminder).toContain("Reschedule");
+    expect(reminder).toContain("Delete");
+  });
+
+  it("health does not duplicate the empty-state CTA", async () => {
+    const health = await read("app/health.tsx");
+    expect(health).toContain("{health.length > 0 && (");
   });
 
   it("triggered alerts use the compact horizontal action row", async () => {

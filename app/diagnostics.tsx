@@ -11,6 +11,7 @@ import {
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { useToast } from "@/components/ui/toast";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -242,56 +243,30 @@ export default function DiagnosticsScreen() {
 
   return (
     <ScreenContainer>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 12,
-          gap: 12,
+      <PageHeader
+        title="Push Diagnostics"
+        onBack={() => {
+          if (Platform.OS !== "web") {
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+          }
+          goBackOrHome(router);
         }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          onPress={() => {
-            if (Platform.OS !== "web") {
-              void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-            }
-            goBackOrHome(router);
-          }}
-          style={{ padding: 4 }}
-          hitSlop={12}
-        >
-          <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: colors.foreground,
-            fontSize: 20,
-            fontWeight: "700",
-            flex: 1,
-          }}
-        >
-          Push Diagnostics
-        </Text>
-        {refreshing ? (
-          <ActivityIndicator size="small" color={colors.primary} />
-        ) : (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            accessibilityLabel="Refresh diagnostics"
-            accessibilityRole="button"
-            onPress={() => void onRefresh()}
-            style={{ padding: 4 }}
-            hitSlop={12}
-          >
-            <IconSymbol name="arrow.clockwise" size={22} color={colors.primary} />
-          </TouchableOpacity>
-        )}
-      </View>
+        actions={
+          refreshing ? (
+            <ActivityIndicator size="small" color={colors.primary} />
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              accessibilityLabel="Refresh diagnostics"
+              accessibilityRole="button"
+              onPress={() => void onRefresh()}
+              style={{ padding: 4 }}
+            >
+              <IconSymbol name="arrow.clockwise" size={22} color={colors.primary} />
+            </TouchableOpacity>
+          )
+        }
+      />
 
       {devices === null && !loadError ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 60 }}>
