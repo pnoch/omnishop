@@ -229,6 +229,7 @@ export function ConciergeScreen({ onComplete }: { onComplete: () => void }) {
           <View
             accessibilityLabel={`Onboarding progress: step ${step + 1} of 3`}
             accessibilityRole="progressbar"
+            accessibilityValue={{ min: 1, max: 3, now: step + 1 }}
             style={{
               width: 180,
               height: 4,

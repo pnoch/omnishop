@@ -32,14 +32,9 @@ export const TrendingSection = memo(function TrendingSection({
   const colors = useColors();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const columns =
-    Platform.OS === "web" && width >= 1100
-      ? 3
-      : Platform.OS === "web" && width >= 900
-        ? 2
-        : 1;
+  const columns = width >= 1100 ? 3 : width >= 900 ? 2 : 1;
   const isWide = columns > 1;
-  const cardWidth = columns === 3 ? "32%" : columns === 2 ? "48.5%" : "100%";
+  const cardWidth = columns === 3 ? "32.5%" : columns === 2 ? "48.5%" : "100%";
   const { showToast } = useToast();
   const { isPro } = useEntitlements();
   const [paywallVisible, setPaywallVisible] = React.useState(false);

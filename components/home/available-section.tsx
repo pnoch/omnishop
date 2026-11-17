@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { View, Text, Pressable, Platform, useWindowDimensions } from "react-native";
+import { View, Text, Pressable, useWindowDimensions } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
@@ -77,7 +77,7 @@ export const AvailableSection = memo(function AvailableSection() {
   const colors = useColors();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const isWide = Platform.OS === "web" && width >= 1100;
+  const isWide = width >= 1100;
   const { isPro } = useEntitlements();
   const { showToast } = useToast();
   const [currency, setCurrency] = useState("USD");
@@ -149,7 +149,7 @@ export const AvailableSection = memo(function AvailableSection() {
       <Text style={{ fontSize: 13, color: colors.muted, marginBottom: 12 }}>
         In stock right now across distributors
       </Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+      <View style={{ flexDirection: "row", flexWrap: "wrap", columnGap: 8 }}>
         {rows.map((product) => (
           <View key={product.id} style={{ width: isWide ? "49.3%" : "100%" }}>
             <AvailableRow

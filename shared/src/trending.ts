@@ -7,10 +7,21 @@ function getApiBase(): string {
   const expoBase = process.env.EXPO_PUBLIC_API_BASE_URL;
   if (expoBase) return expoBase.replace(/\/$/, "");
   // The web build normally has no build-time URL: the API is same-origin.
-  // Falling through to localhost made the browser CSP-block every request and
-  // silently serve static fallback data.
-  if (typeof window !== "undefined" && window.location?.origin) {
-    return window.location.origin.replace(/\/$/, "");
+  // Dev Metro runs on :8081 while the API runs on :3000; an Expo tunnel host
+  // has the port embedded as a 8081- prefix. Falling through to localhost made
+  // the browser CSP-block every production request and silently serve static
+  // fallback data.
+  if (typeof window !== "undefined" && window.location) {
+    const { protocol, hostname, origin } = window.location;
+    const apiHostname = hostname.replace(/^8081-/, "3000-");
+    if (apiHostname !== hostname) return `${protocol}//${apiHostname}`;
+    if (
+      origin &&
+      origin !== "null" &&
+      !/^(localhost|127\.0\.0\.1|\[::1\]|::1)$/i.test(hostname)
+    ) {
+      return origin.replace(/\/$/, "");
+    }
   }
   return "http://localhost:3000";
 }

@@ -4,6 +4,24 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.30.1] - 2026-11-17
+
+### Fixed
+
+- Alert tabs hide their icons below 430px so all three labels and counts fit at
+  390px; counts are also announced by screen readers.
+- Alert cards keep three lines of information plus a 44px action row within the
+  compact target by folding distributor/snooze/triggered state into the target
+  line.
+- A lone onboarding result keeps half-width instead of stretching across the
+  full desktop grid.
+- Trending keeps the API on port 3000 during local Metro development while
+  still using the page origin in production.
+- The product-detail stock badge counts any visible in-stock listing, including
+  quote-only or unconvertible-price listings, and shows “No data” when empty.
+- Watchlist’s checking progress uses a compact count so the action row stays on
+  one line.
+
 ## [5.30.0] - 2026-11-17
 
 ### Changed

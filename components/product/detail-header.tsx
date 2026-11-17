@@ -3,7 +3,7 @@ import { StockBadge } from "@/components/stock-badge";
 import { getDistributorById } from "@shared/distributors";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import type { Product } from "@/lib/types";
+import type { Product, StockStatus } from "@/lib/types";
 import type { BestDeal } from "@/lib/best-deal";
 
 export function DetailHeader({
@@ -31,7 +31,7 @@ export function DetailHeader({
   addingToWatchlist?: boolean;
   onAddToWatchlist?: () => void;
   onBack: () => void;
-  stockStatus?: string;
+  stockStatus?: StockStatus;
 }) {
   const colors = useColors();
   const region = bestDeal
@@ -141,7 +141,7 @@ export function DetailHeader({
         </>
       )}
       </View>
-      {stockStatus !== "unknown" ? <View style={{ marginTop: 8 }}><StockBadge status={stockStatus} /></View> : null}
+      <View style={{ marginTop: 8 }}><StockBadge status={stockStatus} /></View>
     </View>
   );
   if (!scrollY) return content;

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { afterEach, describe, it, expect, vi, beforeEach } from "vitest";
 import { fetchTrending, filterTrending } from "@shared/trending";
 
 describe("filterTrending", () => {
@@ -26,6 +26,10 @@ describe("filterTrending", () => {
 describe("fetchTrending", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("returns trending products from API", async () => {
@@ -72,7 +76,13 @@ describe("fetchTrending", () => {
   });
 
   it("uses the page origin when no build-time API URL is inlined", async () => {
-    vi.stubGlobal("window", { location: { origin: "https://shop.example.com" } });
+    vi.stubGlobal("window", {
+      location: {
+        protocol: "https:",
+        hostname: "shop.example.com",
+        origin: "https://shop.example.com",
+      },
+    });
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ result: { data: { json: [] } } }),
@@ -83,6 +93,25 @@ describe("fetchTrending", () => {
       "https://shop.example.com/api/trpc/trending.get",
       expect.anything(),
     );
-    vi.unstubAllGlobals();
+  });
+
+  it("keeps local development on the API port", async () => {
+    vi.stubGlobal("window", {
+      location: {
+        protocol: "http:",
+        hostname: "localhost",
+        origin: "http://localhost:8081",
+      },
+    });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ result: { data: { json: [] } } }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await fetchTrending();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:3000/api/trpc/trending.get",
+      expect.anything(),
+    );
   });
 });

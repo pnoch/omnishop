@@ -77,7 +77,7 @@ export const AlertCard = memo(function AlertCard({
     <Card
       style={{
         marginBottom: 10,
-        padding: 12,
+        padding: 10,
         opacity: snoozed ? 0.7 : 1,
         borderColor: alert.triggeredAt ? colors.success + "44" : colors.border,
       }}
@@ -101,20 +101,6 @@ export const AlertCard = memo(function AlertCard({
           >
             {productName}
           </Text>
-          {distributorLabel && (
-            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
-              {distributorLabel}
-            </Text>
-          )}
-          {snoozed && (
-            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 1 }}>
-              Snoozed until{" "}
-              {new Date(alert.snoozedUntil!).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })}
-            </Text>
-          )}
           <View
             style={{
               flexDirection: "row",
@@ -128,18 +114,26 @@ export const AlertCard = memo(function AlertCard({
               size={13}
               color={alert.direction === "rise" ? colors.error : colors.success}
             />
-            <Text style={{ color: colors.muted, fontSize: 13 }}>
+            <Text
+              style={{ color: colors.muted, fontSize: 12, flexShrink: 1 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
               Target: {formatPrice(alert.targetPrice, alert.currency)}
+              {distributorLabel ? ` · ${distributorLabel}` : ""}
+              {snoozed
+                ? ` · snoozed until ${new Date(alert.snoozedUntil!).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}`
+                : ""}
+              {alert.triggeredAt
+                ? ` · triggered ${new Date(alert.triggeredAt).toLocaleDateString(undefined, {
+                    month: "short",
+                    day: "numeric",
+                  })}`
+                : ""}
             </Text>
-            {alert.triggeredAt && (
-              <Text style={{ color: colors.success, fontSize: 11 }}>
-                · triggered{" "}
-                {new Date(alert.triggeredAt).toLocaleDateString(undefined, {
-                  month: "short",
-                  day: "numeric",
-                })}
-              </Text>
-            )}
           </View>
         </View>
         {!alert.triggeredAt && (
@@ -162,8 +156,7 @@ export const AlertCard = memo(function AlertCard({
           flexDirection: "row",
           alignItems: "center",
           gap: 8,
-          marginTop: 8,
-          paddingTop: 8,
+          marginTop: 4,
           borderTopWidth: 1,
           borderTopColor: colors.border,
         }}

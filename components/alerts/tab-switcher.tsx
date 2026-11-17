@@ -1,4 +1,4 @@
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -27,6 +27,8 @@ const TAB_LABELS: Record<ActiveTab, string> = {
 
 export function TabSwitcher({ active, counts, onChange }: TabSwitcherProps) {
   const colors = useColors();
+  const { width } = useWindowDimensions();
+  const hideIcons = width < 430;
 
   return (
     <View
@@ -57,26 +59,28 @@ export function TabSwitcher({ active, counts, onChange }: TabSwitcherProps) {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
-            gap: 6,
+            gap: 4,
             backgroundColor:
               active === tab ? colors.primary : "transparent",
           }}
-          accessibilityLabel={`${TAB_LABELS[tab]} tab${active === tab ? ', selected' : ''}`}
+          accessibilityLabel={`${TAB_LABELS[tab]} tab${counts[tab] > 0 ? `, ${counts[tab]}` : ""}${active === tab ? ", selected" : ""}`}
           accessibilityRole="tab"
           accessibilityState={{ selected: active === tab }}
         >
-          <IconSymbol
-            name={TAB_ICONS[tab]}
-            size={15}
-            color={active === tab ? "#fff" : colors.foreground}
-            style={active === tab ? undefined : { opacity: 0.55 }}
-          />
+          {!hideIcons && (
+            <IconSymbol
+              name={TAB_ICONS[tab]}
+              size={15}
+              color={active === tab ? "#fff" : colors.foreground}
+              style={active === tab ? undefined : { opacity: 0.55 }}
+            />
+          )}
           <Text
             style={{
               color: active === tab ? "#fff" : colors.foreground,
               opacity: active === tab ? 1 : 0.7,
               fontWeight: "600",
-              fontSize: 13,
+              fontSize: hideIcons ? 12 : 13,
             }}
             numberOfLines={1}
           >

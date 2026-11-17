@@ -1,5 +1,7 @@
 import { Stack, router } from "expo-router";
 import { goBackOrHome } from "@/lib/navigation";
+import { deriveHeaderStockStatus } from "@/lib/product-header-status";
+import type { StockStatus } from "@/lib/types";
 import { ScrollView, View, Animated } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { DetailHeader } from "@/components/product/detail-header";
@@ -138,13 +140,7 @@ export default function ProductDetailScreen() {
     );
   }
 
-  const headerStockStatus = bestInStockListing
-    ? "in_stock"
-    : visibleListings.some((listing) => listing.stockStatus === "back_order")
-      ? "back_order"
-      : visibleListings.length > 0
-        ? "out_of_stock"
-        : "unknown";
+  const headerStockStatus: StockStatus = deriveHeaderStockStatus(visibleListings);
 
   return (
     <ScreenContainer>

@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { FlatList, Pressable, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { CatalogSearchBar } from "@/components/search/catalog-search-bar";
 import type { useColors } from "@/hooks/use-colors";
@@ -26,7 +26,7 @@ export function ConciergeStepProducts({
   maxSelection: number;
 }) {
   const { width } = useWindowDimensions();
-  const columns = Platform.OS === "web" && width >= 900 ? 2 : 1;
+  const columns = width >= 900 ? 2 : 1;
   return (
     <View style={{ flex: 1 }}>
       <View style={{ width: "100%", maxWidth: 760, alignSelf: "center" }}>
@@ -72,7 +72,8 @@ export function ConciergeStepProducts({
             <Pressable
               onPress={() => onToggleSelect(item.id)}
               style={{
-                flex: columns > 1 ? 1 : undefined,
+                width: columns > 1 ? "48.5%" : "100%",
+                flexGrow: 0,
                 flexDirection: "row",
                 alignItems: "center",
                 marginHorizontal: columns > 1 ? 0 : 16,

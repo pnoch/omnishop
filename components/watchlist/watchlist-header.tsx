@@ -289,7 +289,7 @@ export function WatchlistHeader({
           }}
           onPress={onCheckNow}
           disabled={checking || watchlistLength === 0}
-          accessibilityLabel="Check now"
+          accessibilityLabel={checkProgress ? `Checking ${checkProgress.current} of ${checkProgress.total}` : "Check now"}
           accessibilityRole="button"
           accessibilityState={{ disabled: checking || watchlistLength === 0 }}
         >
@@ -303,7 +303,7 @@ export function WatchlistHeader({
           {!isCompact && (
             <Text style={{ color: "#fff", fontWeight: "600", fontSize: 13 }}>
               {checkProgress
-                ? `Checking ${checkProgress.current}/${checkProgress.total}`
+                ? `${checkProgress.current}/${checkProgress.total}`
                 : "Check"}
             </Text>
           )}

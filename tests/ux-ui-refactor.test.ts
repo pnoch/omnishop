@@ -13,7 +13,7 @@ describe("UX/UI Phase 1 guards", () => {
     expect(header).toContain("stockStatus");
     expect(sticky).toContain("onBack");
     expect(screen).toContain("goBackOrHome(router)");
-    expect(screen).toContain("headerStockStatus");
+    expect(screen).toContain("deriveHeaderStockStatus(visibleListings)");
   });
 
   it("product detail image is contained instead of cropped", async () => {
@@ -27,7 +27,8 @@ describe("UX/UI Phase 1 guards", () => {
     expect(card).toContain('label="Edit"');
     expect(card).toContain('label="Snooze"');
     expect(card).toContain('label="Delete"');
-    expect(card).toContain("padding: 12");
+    expect(card).toContain("padding: 10");
+    expect(card).toContain("minHeight: 44");
     expect(card).not.toContain("IconActionButton");
   });
 
@@ -35,6 +36,8 @@ describe("UX/UI Phase 1 guards", () => {
     const tabs = await read("components/alerts/tab-switcher.tsx");
     expect(tabs).toContain("{counts[tab]}");
     expect(tabs).not.toContain("` (${counts[tab]})`");
+    expect(tabs).toContain("width < 430");
+    expect(tabs).toContain("!hideIcons &&");
   });
 
   it("settings clears the mobile tab bar", async () => {
@@ -60,8 +63,8 @@ describe("UX/UI Phase 1 guards", () => {
 
   it("watchlist actions keep one mobile row without losing full labels", async () => {
     const header = await read("components/watchlist/watchlist-header.tsx");
-    expect(header).toContain('accessibilityLabel="Refresh all prices"');
-    expect(header).toContain('accessibilityLabel="Check now"');
+    expect(header).toContain("Refresh all prices");
+    expect(header).toContain("Check now");
     expect(header).toMatch(/>\s*Refresh\s*</);
     expect(header).toContain('"Check"}');
     expect(header).not.toMatch(/>\s*Refresh all\s*</);
@@ -72,7 +75,7 @@ describe("UX/UI Phase 1 guards", () => {
     const trending = await read("components/home/trending-section.tsx");
     const available = await read("components/home/available-section.tsx");
     expect(trending).toContain("width >= 1100");
-    expect(trending).toContain('columns === 3 ? "32%"');
+    expect(trending).toContain('columns === 3 ? "32.5%"');
     expect(available).toContain('width >= 1100');
     expect(available).toContain('"49.3%"');
     expect(available).toContain("ProductImage");
@@ -88,6 +91,8 @@ describe("UX/UI Phase 1 guards", () => {
     expect(step).toContain("maxWidth: 760");
     expect(step).toContain("numColumns={columns}");
     expect(step).toContain("width >= 900");
+    expect(step).toContain('width: columns > 1 ? "48.5%" : "100%"');
+    expect(step).toContain("flexGrow: 0");
   });
 
   it("onboarding shows a visible progress bar", async () => {
