@@ -4,6 +4,26 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.30.0] - 2026-11-17
+
+### Changed
+
+- App-wide UX/UI Phase 1: product detail now has a visible back control, an
+  honest stock badge derived from the region-filtered listings, and an
+  uncropped product image.
+- Alert cards are compact rows with horizontal Edit/Snooze/Delete actions;
+  alert tabs use count badges and stay on one line at 390px.
+- Signed-out users see “Signed out” instead of “Local only”; empty watchlist
+  rows say “No prices yet” instead of “0 distributors”.
+- Watchlist actions stay on one mobile row. Settings content clears the mobile
+  tab bar.
+- Discover uses a 3-column trending grid and a 2-column Available Now grid on
+  wide screens, with product thumbnails.
+- Onboarding is constrained to a readable width, uses a 2-column product picker
+  on desktop, and has a visible 3-step progress bar.
+- Fixed web Trending requests using `localhost:3000` instead of the page origin,
+  which the CSP blocked.
+
 ## [5.29.1] - 2026-11-16
 
 ### Fixed
