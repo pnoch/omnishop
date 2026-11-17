@@ -209,7 +209,7 @@ export default function SettingsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={true}
         contentContainerStyle={{
-          paddingBottom: 24 + insets.bottom,
+          paddingBottom: 96 + insets.bottom,
           width: "100%",
           maxWidth: 860,
           alignSelf: "center",

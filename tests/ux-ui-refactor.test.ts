@@ -21,4 +21,24 @@ describe("UX/UI Phase 1 guards", () => {
     expect(card).toContain('resizeMode="contain"');
     expect(card).toContain("aspectRatio: 16 / 9");
   });
+
+  it("alerts are compact rows with horizontal actions", async () => {
+    const card = await read("components/alerts/alert-card.tsx");
+    expect(card).toContain('label="Edit"');
+    expect(card).toContain('label="Snooze"');
+    expect(card).toContain('label="Delete"');
+    expect(card).toContain("padding: 12");
+    expect(card).not.toContain("IconActionButton");
+  });
+
+  it("alert tabs use count badges instead of parenthetical labels", async () => {
+    const tabs = await read("components/alerts/tab-switcher.tsx");
+    expect(tabs).toContain("{counts[tab]}");
+    expect(tabs).not.toContain("` (${counts[tab]})`");
+  });
+
+  it("settings clears the mobile tab bar", async () => {
+    const settings = await read("app/(tabs)/settings.tsx");
+    expect(settings).toContain("paddingBottom: 96 + insets.bottom");
+  });
 });

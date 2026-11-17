@@ -76,12 +76,36 @@ export function TabSwitcher({ active, counts, onChange }: TabSwitcherProps) {
               color: active === tab ? "#fff" : colors.foreground,
               opacity: active === tab ? 1 : 0.7,
               fontWeight: "600",
-              fontSize: 14,
+              fontSize: 13,
             }}
+            numberOfLines={1}
           >
             {TAB_LABELS[tab]}
-            {counts[tab] > 0 ? ` (${counts[tab]})` : ""}
           </Text>
+          {counts[tab] > 0 && (
+            <View
+              style={{
+                minWidth: 18,
+                height: 18,
+                paddingHorizontal: 4,
+                borderRadius: 9,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor:
+                  active === tab ? "#ffffff33" : colors.primary + "18",
+              }}
+            >
+              <Text
+                style={{
+                  color: active === tab ? "#fff" : colors.primary,
+                  fontSize: 10,
+                  fontWeight: "700",
+                }}
+              >
+                {counts[tab]}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       ))}
     </View>

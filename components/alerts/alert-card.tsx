@@ -1,11 +1,10 @@
 import { memo, useMemo, useCallback } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, TouchableOpacity, View, Switch } from "react-native";
 import { PriceAlert } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { IconActionButton } from "@/components/ui/icon-action-button";
 import { getDistributorById } from "@shared/distributors";
 
 type AlertCardProps = {
@@ -16,6 +15,40 @@ type AlertCardProps = {
   onSnooze?: (id: string) => void;
   onEdit?: (id: string) => void;
 };
+
+function AlertAction({
+  icon,
+  label,
+  color,
+  onPress,
+  accessibilityLabel,
+}: {
+  icon: Parameters<typeof IconSymbol>[0]["name"];
+  label: string;
+  color: string;
+  onPress: () => void;
+  accessibilityLabel: string;
+}) {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        minHeight: 44,
+        paddingHorizontal: 6,
+        borderRadius: 8,
+      }}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+    >
+      <IconSymbol name={icon} size={14} color={color} />
+      <Text style={{ color, fontSize: 12, fontWeight: "600" }}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
 
 export const AlertCard = memo(function AlertCard({
   alert,
@@ -43,11 +76,10 @@ export const AlertCard = memo(function AlertCard({
   return (
     <Card
       style={{
-        marginBottom: 12,
+        marginBottom: 10,
+        padding: 12,
         opacity: snoozed ? 0.7 : 1,
-        borderColor: alert.triggeredAt
-          ? colors.success + "44"
-          : colors.border,
+        borderColor: alert.triggeredAt ? colors.success + "44" : colors.border,
       }}
     >
       <View
@@ -64,18 +96,18 @@ export const AlertCard = memo(function AlertCard({
               fontWeight: "600",
               fontSize: 14,
             }}
-            numberOfLines={2}
+            numberOfLines={1}
             ellipsizeMode="tail"
           >
             {productName}
           </Text>
           {distributorLabel && (
-            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 2 }} numberOfLines={1} ellipsizeMode="tail">
+            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
               {distributorLabel}
             </Text>
           )}
           {snoozed && (
-            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 2 }}>
+            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 1 }}>
               Snoozed until{" "}
               {new Date(alert.snoozedUntil!).toLocaleDateString(undefined, {
                 month: "short",
@@ -87,83 +119,80 @@ export const AlertCard = memo(function AlertCard({
             style={{
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 6,
+              marginTop: 4,
               gap: 6,
             }}
           >
             <IconSymbol
               name={alert.direction === "rise" ? "arrow.up" : "arrow.down"}
               size={13}
-              color={
-                alert.direction === "rise" ? colors.error : colors.success
-              }
+              color={alert.direction === "rise" ? colors.error : colors.success}
             />
             <Text style={{ color: colors.muted, fontSize: 13 }}>
               Target: {formatPrice(alert.targetPrice, alert.currency)}
             </Text>
-          </View>
-          {alert.triggeredAt && (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 4,
-                gap: 6,
-              }}
-            >
-              <IconSymbol
-                name="checkmark.circle.fill"
-                size={14}
-                color={colors.success}
-              />
-              <Text style={{ color: colors.success, fontSize: 12 }}>
-                Triggered{" "}
-                {new Date(alert.triggeredAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+            {alert.triggeredAt && (
+              <Text style={{ color: colors.success, fontSize: 11 }}>
+                · triggered{" "}
+                {new Date(alert.triggeredAt).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                })}
               </Text>
-            </View>
-          )}
+            )}
+          </View>
         </View>
-        <View style={{ alignItems: "flex-end", gap: 8 }}>
-          {!alert.triggeredAt && (
-            <Switch
-              value={alert.isActive}
-              onValueChange={handleToggle}
-              trackColor={{
-                false: colors.border,
-                true: colors.primary + "88",
-              }}
-              thumbColor={alert.isActive ? colors.primary : colors.muted}
-              accessibilityLabel={`Toggle alert for ${productName}`}
-              accessibilityRole="switch"
-            />
-          )}
-          {onEdit && (
-            <IconActionButton
-              name="pencil"
-              size={16}
-              color={colors.primary}
-              onPress={handleEdit}
-              accessibilityLabel={`Edit alert for ${productName}`}
-            />
-          )}
-          {onSnooze && !alert.triggeredAt && (
-            <IconActionButton
-              name="moon.zzz.fill"
-              size={16}
-              color={colors.muted}
-              onPress={handleSnooze}
-              accessibilityLabel={`Snooze alert for ${productName}`}
-            />
-          )}
-          <IconActionButton
-            name="trash.fill"
-            size={16}
-            color={colors.error}
-            onPress={handleDelete}
-            accessibilityLabel={`Delete alert for ${productName}`}
-            accessibilityHint="Double tap to delete"
+        {!alert.triggeredAt && (
+          <Switch
+            value={alert.isActive}
+            onValueChange={handleToggle}
+            trackColor={{
+              false: colors.border,
+              true: colors.primary + "88",
+            }}
+            thumbColor={alert.isActive ? colors.primary : colors.muted}
+            accessibilityLabel={`Toggle alert for ${productName}`}
+            accessibilityRole="switch"
           />
-        </View>
+        )}
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+          marginTop: 8,
+          paddingTop: 8,
+          borderTopWidth: 1,
+          borderTopColor: colors.border,
+        }}
+      >
+        {onEdit && (
+          <AlertAction
+            icon="pencil"
+            label="Edit"
+            color={colors.primary}
+            onPress={handleEdit}
+            accessibilityLabel={`Edit alert for ${productName}`}
+          />
+        )}
+        {onSnooze && !alert.triggeredAt && (
+          <AlertAction
+            icon="moon.zzz.fill"
+            label="Snooze"
+            color={colors.muted}
+            onPress={handleSnooze}
+            accessibilityLabel={`Snooze alert for ${productName}`}
+          />
+        )}
+        <AlertAction
+          icon="trash.fill"
+          label="Delete"
+          color={colors.error}
+          onPress={handleDelete}
+          accessibilityLabel={`Delete alert for ${productName}`}
+        />
       </View>
     </Card>
   );

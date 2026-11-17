@@ -5,7 +5,6 @@ import { describe, expect, it } from "vitest";
 const ROOT = join(__dirname, "..");
 
 const STACKED_ACTION_CARDS = [
-  "components/alerts/alert-card.tsx",
   "components/alerts/triggered-alert-card.tsx",
   "components/alerts/stock-watch-card.tsx",
   "components/alerts/reminder-card.tsx",
@@ -37,6 +36,18 @@ describe("IconActionButton renders a 44x44 target", () => {
     expect(src).toMatch(/minHeight:\s*44/);
     expect(src).toMatch(/minWidth:\s*44/);
     expect(src).not.toMatch(/hitSlop\s*=/);
+  });
+});
+
+describe("compact alert actions keep real touch targets", () => {
+  const src = readFileSync(join(ROOT, "components/alerts/alert-card.tsx"), "utf8");
+
+  it("lays actions out horizontally with 44px height and no hitSlop", () => {
+    expect(src).toMatch(/minHeight:\s*44/);
+    expect(src).not.toMatch(/hitSlop\s*=/);
+    expect(src).toContain('label="Edit"');
+    expect(src).toContain('label="Snooze"');
+    expect(src).toContain('label="Delete"');
   });
 });
 
