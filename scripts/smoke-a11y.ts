@@ -84,9 +84,15 @@ async function main() {
   await page.goto(BASE_URL, { waitUntil: "domcontentloaded", timeout: 120_000 });
   await page.waitForTimeout(2_500);
 
-  // Fresh contexts land on onboarding. Skip it so the shell routes are audited.
-  const skip = page.getByText("Skip", { exact: true }).first();
-  if (await skip.count()) await skip.click();
+  // Fresh contexts land on the welcome screen. "Explore first" dismisses it
+  // and marks onboarding seen; older layouts use "Skip".
+  const explore = page.getByText("Explore first", { exact: true }).first();
+  if (await explore.count()) {
+    await explore.click();
+  } else {
+    const skip = page.getByText("Skip", { exact: true }).first();
+    if (await skip.count()) await skip.click();
+  }
   await page.waitForTimeout(1_500);
 
   const audits: PageAudit[] = [];

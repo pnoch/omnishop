@@ -12,6 +12,8 @@ Notable changes to OmniShop. The version is kept in lockstep across
   alerted.”) with “Pick products to track” and “Explore first” before the
   product picker. The picker remains the first step of the guided setup, but no
   longer acts as the app’s front door.
+- Web onboarding now injects the shared focus-visible styles, and the
+  accessibility smoke run dismisses the welcome via “Explore first”.
 
 ## [5.30.1] - 2026-11-17
 

@@ -221,6 +221,7 @@ export default function RootLayout() {
     return (
       <ThemeProvider>
         <SettingsProvider>
+          <WebPolish />
           <ConciergeScreen onComplete={() => setOnboardingState("app")} />
         </SettingsProvider>
       </ThemeProvider>
