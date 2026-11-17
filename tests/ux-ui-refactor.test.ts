@@ -89,4 +89,10 @@ describe("UX/UI Phase 1 guards", () => {
     expect(step).toContain("numColumns={columns}");
     expect(step).toContain("width >= 900");
   });
+
+  it("onboarding shows a visible progress bar", async () => {
+    const screen = await read("components/onboarding/concierge-screen.tsx");
+    expect(screen).toContain('accessibilityRole="progressbar"');
+    expect(screen).toContain("step + 1) / 3");
+  });
 });

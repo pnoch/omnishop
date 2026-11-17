@@ -225,6 +225,29 @@ export function ConciergeScreen({ onComplete }: { onComplete: () => void }) {
         >
           {step < 3 ? `Step ${step + 1} of 3` : "All set"}
         </Text>
+        {step < 3 && (
+          <View
+            accessibilityLabel={`Onboarding progress: step ${step + 1} of 3`}
+            accessibilityRole="progressbar"
+            style={{
+              width: 180,
+              height: 4,
+              borderRadius: 2,
+              backgroundColor: colors.border,
+              alignSelf: "center",
+              marginTop: 8,
+              overflow: "hidden",
+            }}
+          >
+            <View
+              style={{
+                width: `${((step + 1) / 3) * 100}%`,
+                height: "100%",
+                backgroundColor: colors.primary,
+              }}
+            />
+          </View>
+        )}
 
         {step === 0 && (
           <ConciergeStepProducts
