@@ -23,7 +23,7 @@ describe("redesign navigation wiring", () => {
   });
 
   it("drops tab re-exports the drops screen", () => {
-    expect(read("app/(tabs)/drops.tsx")).toContain("../drops");
+    expect(read("app/(tabs)/drops.tsx")).toContain("@/components/drops/drops-screen");
   });
 
   it("discover screen composes search + trending + available", () => {
