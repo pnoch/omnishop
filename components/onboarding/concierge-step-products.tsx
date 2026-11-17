@@ -1,4 +1,4 @@
-import { FlatList, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Platform, Pressable, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { CatalogSearchBar } from "@/components/search/catalog-search-bar";
 import type { useColors } from "@/hooks/use-colors";
@@ -25,8 +25,11 @@ export function ConciergeStepProducts({
   onNext: () => void;
   maxSelection: number;
 }) {
+  const { width } = useWindowDimensions();
+  const columns = Platform.OS === "web" && width >= 900 ? 2 : 1;
   return (
     <View style={{ flex: 1 }}>
+      <View style={{ width: "100%", maxWidth: 760, alignSelf: "center" }}>
       <Text
         accessibilityRole="header"
         style={{
@@ -54,20 +57,25 @@ export function ConciergeStepProducts({
       <View style={{ marginTop: 16 }}>
         <CatalogSearchBar query={query} onQueryChange={onQueryChange} />
       </View>
+      </View>
       <FlatList
+        key={columns}
         style={{ flex: 1 }}
         data={results}
+        numColumns={columns}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        columnWrapperStyle={columns > 1 ? { gap: 8, paddingHorizontal: 16 } : undefined}
+        contentContainerStyle={{ paddingBottom: 24, maxWidth: 760, width: "100%", alignSelf: "center" }}
         renderItem={({ item }) => {
           const selected = selectedIds.includes(item.id);
           return (
             <Pressable
               onPress={() => onToggleSelect(item.id)}
               style={{
+                flex: columns > 1 ? 1 : undefined,
                 flexDirection: "row",
                 alignItems: "center",
-                marginHorizontal: 16,
+                marginHorizontal: columns > 1 ? 0 : 16,
                 marginBottom: 8,
                 paddingVertical: 12,
                 paddingHorizontal: 14,

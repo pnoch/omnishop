@@ -70,4 +70,19 @@ describe("fetchTrending", () => {
     expect(result.length).toBeGreaterThan(0);
     expect(result[0].id).toBe("nvidia-dgx-spark");
   });
+
+  it("uses the page origin when no build-time API URL is inlined", async () => {
+    vi.stubGlobal("window", { location: { origin: "https://shop.example.com" } });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ result: { data: { json: [] } } }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await fetchTrending();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://shop.example.com/api/trpc/trending.get",
+      expect.anything(),
+    );
+    vi.unstubAllGlobals();
+  });
 });

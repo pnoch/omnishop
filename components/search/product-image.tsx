@@ -191,9 +191,11 @@ export function ProductImage({
           accessibilityLabel="Product image unavailable"
         >
           <IconSymbol name="photo" size={Math.max(14, size * 0.42)} color={colors.primary} />
-          <Text style={{ color: colors.muted, fontSize: 7, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
-            No image
-          </Text>
+          {size >= 64 && (
+            <Text style={{ color: colors.muted, fontSize: 7, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
+              No image
+            </Text>
+          )}
         </View>
       );
     }

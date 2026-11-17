@@ -64,4 +64,26 @@ describe("UX/UI Phase 1 guards", () => {
     expect(header).not.toMatch(/>\s*Refresh all\s*</);
     expect(header).not.toContain("Check Now");
   });
+
+  it("discover uses a 3-column trending grid and 2-column available grid on wide screens", async () => {
+    const trending = await read("components/home/trending-section.tsx");
+    const available = await read("components/home/available-section.tsx");
+    expect(trending).toContain("width >= 1100");
+    expect(trending).toContain('columns === 3 ? "32%"');
+    expect(available).toContain('width >= 1100');
+    expect(available).toContain('"49.3%"');
+    expect(available).toContain("ProductImage");
+  });
+
+  it("small image placeholders are icon-only", async () => {
+    const image = await read("components/search/product-image.tsx");
+    expect(image).toContain("size >= 64 &&");
+  });
+
+  it("onboarding step 1 is constrained and two-column on desktop", async () => {
+    const step = await read("components/onboarding/concierge-step-products.tsx");
+    expect(step).toContain("maxWidth: 760");
+    expect(step).toContain("numColumns={columns}");
+    expect(step).toContain("width >= 900");
+  });
 });

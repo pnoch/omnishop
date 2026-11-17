@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Platform, useWindowDimensions } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
@@ -13,6 +13,7 @@ import { fetchAvailable } from "@/lib/server-catalog";
 import { ensureWatchlistProduct } from "@/lib/ensure-watchlist-product";
 import type { AvailableProduct } from "@/lib/types";
 import { Heading } from "@/components/ui/heading";
+import { ProductImage } from "@/components/search/product-image";
 
 const AvailableRow = memo(function AvailableRow({
   product,
@@ -41,9 +42,10 @@ const AvailableRow = memo(function AvailableRow({
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "flex-start",
+          alignItems: "center",
         }}
       >
+        <ProductImage productId={product.id} size={44} />
         <View style={{ flex: 1, marginRight: 12 }}>
           <Text
             numberOfLines={1}
@@ -74,6 +76,8 @@ AvailableRow.displayName = "AvailableRow";
 export const AvailableSection = memo(function AvailableSection() {
   const colors = useColors();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isWide = Platform.OS === "web" && width >= 1100;
   const { isPro } = useEntitlements();
   const { showToast } = useToast();
   const [currency, setCurrency] = useState("USD");
@@ -145,13 +149,16 @@ export const AvailableSection = memo(function AvailableSection() {
       <Text style={{ fontSize: 13, color: colors.muted, marginBottom: 12 }}>
         In stock right now across distributors
       </Text>
-      {rows.map((product) => (
-        <AvailableRow
-          key={product.id}
-          product={product}
-          onPress={() => void handlePress(product)}
-        />
-      ))}
+      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+        {rows.map((product) => (
+          <View key={product.id} style={{ width: isWide ? "49.3%" : "100%" }}>
+            <AvailableRow
+              product={product}
+              onPress={() => void handlePress(product)}
+            />
+          </View>
+        ))}
+      </View>
       <PaywallScreen
         visible={paywallVisible}
         onClose={() => setPaywallVisible(false)}

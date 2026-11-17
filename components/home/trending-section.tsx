@@ -32,7 +32,14 @@ export const TrendingSection = memo(function TrendingSection({
   const colors = useColors();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const isWide = Platform.OS === "web" && width >= 900;
+  const columns =
+    Platform.OS === "web" && width >= 1100
+      ? 3
+      : Platform.OS === "web" && width >= 900
+        ? 2
+        : 1;
+  const isWide = columns > 1;
+  const cardWidth = columns === 3 ? "32%" : columns === 2 ? "48.5%" : "100%";
   const { showToast } = useToast();
   const { isPro } = useEntitlements();
   const [paywallVisible, setPaywallVisible] = React.useState(false);
@@ -234,7 +241,7 @@ export const TrendingSection = memo(function TrendingSection({
           <Animated.View
             key={product.id}
             style={[
-              { width: isWide ? "48.5%" : "100%" },
+              { width: cardWidth },
               {
                 opacity: entryAnims[idx],
                 transform: [

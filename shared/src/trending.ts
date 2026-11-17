@@ -6,6 +6,12 @@ function getApiBase(): string {
   // classic-script web bundle. The desktop build provides its own base URL.
   const expoBase = process.env.EXPO_PUBLIC_API_BASE_URL;
   if (expoBase) return expoBase.replace(/\/$/, "");
+  // The web build normally has no build-time URL: the API is same-origin.
+  // Falling through to localhost made the browser CSP-block every request and
+  // silently serve static fallback data.
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return window.location.origin.replace(/\/$/, "");
+  }
   return "http://localhost:3000";
 }
 
