@@ -104,7 +104,7 @@ export const DropCard = memo(function DropCard({
   const router = useRouter();
   return (
     <Card accent={colors.success} style={{ marginBottom: 12 }}>
-      <CardTitle icon="chart.line.downtrend.xyaxis" iconColor={colors.success} title="Biggest drops" />
+      <CardTitle icon="chart.line.downtrend.xyaxis" iconColor={colors.success} title="Biggest drops · 7D" />
       <View style={{ marginTop: 8 }}>
         {drops.map((drop, index) => (
           <TouchableOpacity

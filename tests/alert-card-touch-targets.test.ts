@@ -5,7 +5,6 @@ import { describe, expect, it } from "vitest";
 const ROOT = join(__dirname, "..");
 
 const STACKED_ACTION_CARDS = [
-  "components/alerts/triggered-alert-card.tsx",
   "components/alerts/stock-watch-card.tsx",
   "components/alerts/reminder-card.tsx",
 ];

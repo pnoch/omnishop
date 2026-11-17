@@ -79,8 +79,8 @@ export function StatsSummaryCards({
           </div>
         ) : (
           <div className="mt-2">
-            <p className="text-sm text-gray-400">No movers yet</p>
-            <p className="text-xs text-gray-400">Not enough price history yet.</p>
+            <p className="text-sm text-gray-400">No in-stock moves</p>
+            <p className="text-xs text-gray-400">Try 7D or All — out-of-stock clearance drops are excluded.</p>
           </div>
         )}
       </div>
@@ -103,8 +103,8 @@ export function StatsSummaryCards({
           </div>
         ) : (
           <div className="mt-2">
-            <p className="text-sm text-gray-400">No movers yet</p>
-            <p className="text-xs text-gray-400">Not enough price history yet.</p>
+            <p className="text-sm text-gray-400">No in-stock moves</p>
+            <p className="text-xs text-gray-400">Try 7D or All — out-of-stock clearance drops are excluded.</p>
           </div>
         )}
       </div>

@@ -370,7 +370,7 @@ describe("desktop chart guard", () => {
       "desktop/src/components/stats/StatsSummaryCards.tsx",
       "utf8",
     );
-    expect(text).toContain("Not enough price history yet.");
+    expect(text).toContain("Try 7D or All");
   });
 
   // QA round 236: mobile's product card has an "Edit tags" action per product;

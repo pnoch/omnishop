@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.31.0] - 2026-11-17
+
+### Changed
+
+- UX/UI Phase 2A:
+  - Privacy now has a visible back control.
+  - Triggered alert history uses the same compact horizontal action row as
+    active alerts.
+  - Home labels its drop window as 7D, and Stats explains that its Movers card
+    excludes out-of-stock clearance drops instead of claiming no history.
+  - Onboarding steps 2 and 3 now share the same constrained width as step 1.
+
 ## [5.30.3] - 2026-11-17
 
 ### Added

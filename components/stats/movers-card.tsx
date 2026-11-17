@@ -126,8 +126,8 @@ export const MoversCard = memo(function MoversCard({
         <EmptyStateView
           compact
           icon="chart.line.downtrend.xyaxis"
-          title="No movers yet"
-          subtitle="Not enough price history yet."
+          title="No in-stock moves"
+          subtitle="Try 7D or All — out-of-stock clearance drops are excluded."
         />
       ) : (
         <>

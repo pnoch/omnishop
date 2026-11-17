@@ -25,7 +25,7 @@ export function ConciergeStepNotifications({
   onNext: () => void;
 }) {
   return (
-    <View style={{ flex: 1, paddingHorizontal: 32 }}>
+    <View style={{ flex: 1, width: "100%", maxWidth: 640, alignSelf: "center", paddingHorizontal: 32 }}>
       <Text
         accessibilityRole="header"
         style={{

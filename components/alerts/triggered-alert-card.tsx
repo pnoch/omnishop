@@ -1,11 +1,10 @@
 import { memo, useMemo, useCallback } from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { PriceAlert } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import { IconActionButton } from "@/components/ui/icon-action-button";
 import { getDistributorById } from "@shared/distributors";
 
 interface TriggeredAlertCardProps {
@@ -13,6 +12,43 @@ interface TriggeredAlertCardProps {
   productName: string;
   onRearm: (id: string) => void;
   onDelete: (id: string) => void;
+}
+
+function Action({
+  icon,
+  label,
+  color,
+  onPress,
+  accessibilityLabel,
+  filled = false,
+}: {
+  icon: Parameters<typeof IconSymbol>[0]["name"];
+  label: string;
+  color: string;
+  onPress: () => void;
+  accessibilityLabel: string;
+  filled?: boolean;
+}) {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={onPress}
+      style={{
+        minHeight: 44,
+        paddingHorizontal: 10,
+        borderRadius: 8,
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        backgroundColor: filled ? color + "18" : "transparent",
+      }}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+    >
+      <IconSymbol name={icon} size={14} color={color} />
+      <Text style={{ color, fontSize: 12, fontWeight: "600" }}>{label}</Text>
+    </TouchableOpacity>
+  );
 }
 
 export const TriggeredAlertCard = memo(function TriggeredAlertCard({
@@ -33,130 +69,77 @@ export const TriggeredAlertCard = memo(function TriggeredAlertCard({
   return (
     <Card
       style={{
-        padding: 14,
+        padding: 10,
         marginBottom: 10,
         borderColor: colors.success + "44",
       }}
     >
+      <Text
+        style={{
+          color: colors.foreground,
+          fontWeight: "600",
+          fontSize: 14,
+        }}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        {productName}
+      </Text>
       <View
         style={{
           flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
+          alignItems: "center",
+          marginTop: 4,
+          gap: 5,
         }}
       >
-        <View style={{ flex: 1, marginRight: 10 }}>
-          <Text
-            style={{
-              color: colors.foreground,
-              fontWeight: "600",
-              fontSize: 14,
-            }}
-            numberOfLines={2}
-            ellipsizeMode="tail"
-          >
-            {productName}
-          </Text>
-          {distributorLabel && (
-            <Text style={{ color: colors.muted, fontSize: 11, marginTop: 2 }} numberOfLines={1} ellipsizeMode="tail">
-              {distributorLabel}
-            </Text>
-          )}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 5,
-              gap: 5,
-            }}
-          >
-            <IconSymbol
-              name={alert.direction === "rise" ? "arrow.up" : "arrow.down"}
-              size={13}
-              color={
-                alert.direction === "rise" ? colors.error : colors.success
-              }
-            />
-            <Text style={{ color: colors.muted, fontSize: 13 }}>
-              Target: {formatPrice(alert.targetPrice, alert.currency)}
-            </Text>
-            {/* A server-detected trigger can store triggeredPrice 0, which
-                would render as "→ $0.00" (the digest already guards > 0). */}
-            {alert.triggeredPrice != null && alert.triggeredPrice > 0 && (
-              <Text
-                style={{
-                  color: colors.success,
-                  fontSize: 13,
-                  fontWeight: "600",
-                }}
-              >
-                → {formatPrice(alert.triggeredPrice, alert.currency)}
-              </Text>
-            )}
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 4,
-              gap: 5,
-            }}
-          >
-            <IconSymbol
-              name="checkmark.circle.fill"
-              size={13}
-              color={colors.success}
-            />
-            <Text style={{ color: colors.success, fontSize: 12 }}>
-              Triggered{" "}
-              {new Date(alert.triggeredAt!).toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </Text>
-          </View>
-        </View>
-        <View style={{ alignItems: "flex-end", gap: 8 }}>
-          <TouchableOpacity activeOpacity={0.85}
-            onPress={handleRearm}
-            style={{
-              backgroundColor: colors.primary + "18",
-              borderRadius: 8,
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              minHeight: 44,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 4,
-            }}
-            accessibilityLabel={`Watch again for ${productName}`}
-            accessibilityRole="button"
-          >
-            <IconSymbol
-              name="arrow.clockwise"
-              size={12}
-              color={colors.primary}
-            />
-            <Text
-              style={{
-                color: colors.primary,
-                fontSize: 12,
-                fontWeight: "600",
-              }}
-            >
-              Watch Again
-            </Text>
-          </TouchableOpacity>
-          <IconActionButton
-            name="trash.fill"
-            size={15}
-            color={colors.muted}
-            onPress={handleDelete}
-            accessibilityLabel={`Delete triggered alert for ${productName}`}
-            accessibilityHint="Double tap to delete"
-          />
-        </View>
+        <IconSymbol
+          name={alert.direction === "rise" ? "arrow.up" : "arrow.down"}
+          size={13}
+          color={alert.direction === "rise" ? colors.error : colors.success}
+        />
+        <Text
+          style={{ color: colors.muted, fontSize: 12, flexShrink: 1 }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          Target: {formatPrice(alert.targetPrice, alert.currency)}
+          {alert.triggeredPrice != null && alert.triggeredPrice > 0
+            ? ` → ${formatPrice(alert.triggeredPrice, alert.currency)}`
+            : ""}
+          {distributorLabel ? ` · ${distributorLabel}` : ""}
+          {` · triggered ${new Date(alert.triggeredAt!).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          })}`}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+          marginTop: 4,
+          borderTopWidth: 1,
+          borderTopColor: colors.border,
+        }}
+      >
+        <Action
+          icon="arrow.clockwise"
+          label="Watch again"
+          color={colors.primary}
+          onPress={handleRearm}
+          accessibilityLabel={`Watch again for ${productName}`}
+          filled
+        />
+        <Action
+          icon="trash.fill"
+          label="Delete"
+          color={colors.error}
+          onPress={handleDelete}
+          accessibilityLabel={`Delete triggered alert for ${productName}`}
+        />
       </View>
     </Card>
   );
