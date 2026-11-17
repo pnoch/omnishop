@@ -69,7 +69,7 @@ export const TrendingProductRow = memo(function TrendingProductRow({
               color: colors.muted,
               marginTop: 2,
             }}
-            numberOfLines={1}
+            numberOfLines={2}
             ellipsizeMode="tail"
           >
             {product.category} · {product.brand} ·{" "}

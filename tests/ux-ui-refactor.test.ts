@@ -44,8 +44,11 @@ describe("UX/UI Phase 1 guards", () => {
 
   it("signed-out users are not labelled local-only", async () => {
     const badge = await read("components/connection-badge.tsx");
+    const section = await read("components/settings/connection-section.tsx");
     expect(badge).toContain('"signed-out": { label: "Signed out"');
     expect(badge).toContain('local: { label: "Local only"');
+    expect(section).toContain("Signed out — sign in to sync");
+    expect(section).not.toContain("Local only — sign in to sync");
   });
 
   it("empty price states do not claim zero distributors", async () => {

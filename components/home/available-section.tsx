@@ -48,7 +48,7 @@ const AvailableRow = memo(function AvailableRow({
         <ProductImage productId={product.id} size={44} />
         <View style={{ flex: 1, marginRight: 12 }}>
           <Text
-            numberOfLines={1}
+            numberOfLines={2}
             ellipsizeMode="tail"
             style={{ color: colors.foreground, fontSize: 15, fontWeight: "600" }}
           >

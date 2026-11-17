@@ -110,7 +110,9 @@ export function ConciergeStepProducts({
         onPress={onNext}
         disabled={selectedIds.length === 0}
         style={{
-          marginHorizontal: 32,
+          width: "90%",
+          maxWidth: 696,
+          alignSelf: "center",
           marginBottom: 32,
           paddingVertical: 15,
           borderRadius: 14,

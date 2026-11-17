@@ -68,7 +68,7 @@ export function ConnectionSection() {
           {connection.status === "connected"
             ? "Live price checks are active."
             : connection.status === "signed-out"
-              ? "Local only — sign in to sync prices, alerts and devices."
+              ? "Signed out — sign in to sync prices, alerts and devices."
               : connection.status === "local"
                 ? "Local only — prices are checked on this device. Add a server URL to enable sync, push and shared watchlists."
                 : "Backend unreachable. Showing saved prices."}
