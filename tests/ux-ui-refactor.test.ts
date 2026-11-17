@@ -41,4 +41,17 @@ describe("UX/UI Phase 1 guards", () => {
     const settings = await read("app/(tabs)/settings.tsx");
     expect(settings).toContain("paddingBottom: 96 + insets.bottom");
   });
+
+  it("signed-out users are not labelled local-only", async () => {
+    const badge = await read("components/connection-badge.tsx");
+    expect(badge).toContain('"signed-out": { label: "Signed out"');
+    expect(badge).toContain('local: { label: "Local only"');
+  });
+
+  it("empty price states do not claim zero distributors", async () => {
+    const footer = await read("components/watchlist/product-card-footer.tsx");
+    const preview = await read("components/home/home-watchlist-preview.tsx");
+    expect(footer).toContain("No distributor prices yet");
+    expect(preview).toContain("No prices yet");
+  });
 });

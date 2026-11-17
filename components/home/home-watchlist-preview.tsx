@@ -73,8 +73,9 @@ export function HomeWatchlistPreview({
                 ellipsizeMode="tail"
               >
                 {product.brand} · {product.category} ·{" "}
-                {(product.listings ?? []).length} distributor
-                {(product.listings ?? []).length === 1 ? "" : "s"}
+                {(product.listings ?? []).length > 0
+                  ? `${(product.listings ?? []).length} distributor${(product.listings ?? []).length === 1 ? "" : "s"}`
+                  : "No prices yet"}
               </Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>

@@ -46,7 +46,9 @@ export function ProductCardFooter({
       }}
     >
       <Text style={{ color: colors.muted, fontSize: 12 }}>
-        {distributorCount} distributor{distributorCount !== 1 ? "s" : ""} tracked
+        {distributorCount > 0
+          ? `${distributorCount} distributor${distributorCount !== 1 ? "s" : ""} tracked`
+          : "No distributor prices yet"}
       </Text>
       <Text style={{ color: colorMap[refreshColorKey], fontSize: 11 }}>
         Updated {formatLastRefreshed(product.lastRefreshed)}

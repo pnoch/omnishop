@@ -7,7 +7,7 @@ const CONFIG: Record<
   { label: string; color: "success" | "warning" | "error" | "muted" }
 > = {
   connected: { label: "Connected", color: "success" },
-  "signed-out": { label: "Local only", color: "muted" },
+  "signed-out": { label: "Signed out", color: "muted" },
   offline: { label: "Offline", color: "error" },
   local: { label: "Local only", color: "muted" },
 };
