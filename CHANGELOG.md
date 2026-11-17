@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.30.3] - 2026-11-17
+
+### Added
+
+- Home’s empty state now offers **Pick popular products**, reopening the guided
+  welcome and product picker without re-showing it automatically.
+- Settings → About has **Show welcome again** for anyone who dismissed the
+  first-run flow.
+
 ## [5.30.2] - 2026-11-17
 
 ### Changed

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity, Linking, ActivityIndicator, Platform } from "react-native";
 import Constants from "expo-constants";
+import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -21,6 +22,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 export function AboutSection({ onDataCleared }: { onDataCleared?: () => void } = {}) {
   const colors = useColors();
+  const router = useRouter();
   const { isAuthenticated, logout } = useAuth();
   const [deleting, setDeleting] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -220,6 +222,24 @@ export function AboutSection({ onDataCleared }: { onDataCleared?: () => void } =
             icon="star.fill"
             label="Rate the App"
             description="Love the app? Leave a review"
+            right={
+              <IconSymbol
+                name="chevron.right"
+                size={16}
+                color={colors.muted}
+              />
+            }
+          />
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7}
+          onPress={() => router.push("/welcome")}
+          accessibilityLabel="Show welcome again"
+          accessibilityRole="button"
+        >
+          <SettingRow
+            icon="sparkles"
+            label="Show welcome again"
+            description="Revisit the intro and product suggestions"
             right={
               <IconSymbol
                 name="chevron.right"

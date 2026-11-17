@@ -110,4 +110,15 @@ describe("UX/UI Phase 1 guards", () => {
     expect(welcome).toContain("Explore first");
     expect(welcome).toContain("Find it. Price it. Get alerted.");
   });
+
+  it("keeps the welcome reachable after Explore first", async () => {
+    const route = await read("app/welcome.tsx");
+    const home = await read("app/(tabs)/index.tsx");
+    const about = await read("components/settings/about-section.tsx");
+    expect(route).toContain("ConciergeScreen");
+    expect(home).toContain("Pick popular products");
+    expect(home).toContain('router.push("/welcome")');
+    expect(about).toContain("Show welcome again");
+    expect(about).toContain('router.push("/welcome")');
+  });
 });

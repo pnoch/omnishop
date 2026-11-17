@@ -224,6 +224,27 @@ export default function HomeScreen() {
                   Add Product
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.7}
+                accessibilityLabel="Pick popular products to track"
+                accessibilityRole="button"
+                style={{
+                  borderWidth: 1,
+                  borderColor: colors.primary + "44",
+                  borderRadius: 20,
+                  paddingHorizontal: 20,
+                  paddingVertical: 10,
+                  marginTop: 10,
+                }}
+                onPress={() => {
+                  if (Platform.OS !== "web")
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  router.push("/welcome");
+                }}
+              >
+                <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}>
+                  Pick popular products
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         ) : (
