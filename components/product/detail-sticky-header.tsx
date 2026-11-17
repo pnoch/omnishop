@@ -6,6 +6,7 @@ export function DetailStickyHeader({
   productName,
   opacity,
   topInset,
+  onBack,
   onEdit,
   onShare,
   onExportCsv,
@@ -13,6 +14,7 @@ export function DetailStickyHeader({
   productName: string;
   opacity: Animated.AnimatedInterpolation<number>;
   topInset: number;
+  onBack: () => void;
   onEdit: () => void;
   onShare: () => void;
   onExportCsv: () => void;
@@ -39,6 +41,16 @@ export function DetailStickyHeader({
         opacity,
       }}
     >
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={onBack}
+        style={{ padding: 4, marginRight: 4 }}
+        accessibilityLabel="Back"
+        accessibilityRole="button"
+        hitSlop={10}
+      >
+        <IconSymbol name="chevron.left" size={20} color={colors.primary} />
+      </TouchableOpacity>
       <Text
         style={{
           color: colors.foreground,

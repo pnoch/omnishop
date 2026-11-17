@@ -10,6 +10,8 @@ vi.mock("react-native", async () => {
     Text: ({ children, ...r }: any) => React.createElement("span", r, children),
     Pressable: ({ children, onPress, accessibilityLabel, ...r }: any) =>
       React.createElement("button", { ...r, "aria-label": accessibilityLabel, onClick: onPress }, children),
+    TouchableOpacity: ({ children, onPress, accessibilityLabel, ...r }: any) =>
+      React.createElement("button", { ...r, "aria-label": accessibilityLabel, onClick: onPress }, children),
     Animated: { View: ({ children, ...r }: any) => React.createElement("div", r, children) },
   };
 });
@@ -28,13 +30,13 @@ afterEach(cleanup);
 describe("DetailHeader watch button", () => {
   it("shows Watch for restock when not watching and calls onToggleWatch", () => {
     const onToggleWatch = vi.fn();
-    render(<DetailHeader product={product} bestDeal={null} watchingAny={false} onToggleWatch={onToggleWatch} acquired={false} onToggleAcquired={() => {}} />);
+    render(<DetailHeader product={product} bestDeal={null} watchingAny={false} onToggleWatch={onToggleWatch} acquired={false} onToggleAcquired={() => {}} onBack={() => {}} />);
     fireEvent.click(screen.getByText(/Watch for restock/i));
     expect(onToggleWatch).toHaveBeenCalledTimes(1);
   });
 
   it("shows Watching when watchingAny is true", () => {
-    render(<DetailHeader product={product} bestDeal={null} watchingAny={true} onToggleWatch={() => {}} acquired={false} onToggleAcquired={() => {}} />);
+    render(<DetailHeader product={product} bestDeal={null} watchingAny={true} onToggleWatch={() => {}} acquired={false} onToggleAcquired={() => {}} onBack={() => {}} />);
     expect(screen.getByText(/Watching/i)).toBeTruthy();
   });
 });

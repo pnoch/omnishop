@@ -1,4 +1,4 @@
-import { Animated, Pressable, Text, View } from "react-native";
+import { Animated, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { StockBadge } from "@/components/stock-badge";
 import { getDistributorById } from "@shared/distributors";
 import { useColors } from "@/hooks/use-colors";
@@ -17,6 +17,8 @@ export function DetailHeader({
   isTracked = true,
   addingToWatchlist = false,
   onAddToWatchlist,
+  onBack,
+  stockStatus = "unknown",
 }: {
   product: Product;
   bestDeal: BestDeal | null;
@@ -28,6 +30,8 @@ export function DetailHeader({
   isTracked?: boolean;
   addingToWatchlist?: boolean;
   onAddToWatchlist?: () => void;
+  onBack: () => void;
+  stockStatus?: string;
 }) {
   const colors = useColors();
   const region = bestDeal
@@ -50,7 +54,18 @@ export function DetailHeader({
     : undefined;
   const content = (
     <View style={{ padding: 16 }}>
-      <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}>{product.name}</Text>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 4 }}>
+        <TouchableOpacity
+          onPress={onBack}
+          accessibilityLabel="Back"
+          accessibilityRole="button"
+          hitSlop={10}
+          style={{ width: 32, height: 32, alignItems: "center", justifyContent: "center", marginLeft: -8 }}
+        >
+          <IconSymbol name="chevron.left" size={22} color={colors.primary} />
+        </TouchableOpacity>
+        <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "700", flex: 1 }}>{product.name}</Text>
+      </View>
       <Text style={{ color: colors.muted, fontSize: 13, marginTop: 4 }}>{product.brand} · {product.category} · {product.modelNumber}</Text>
       {region ? <Text style={{ color: colors.muted, fontSize: 12, marginTop: 4 }}>{region}</Text> : null}
       <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8, marginTop: 10 }}>
@@ -126,7 +141,7 @@ export function DetailHeader({
         </>
       )}
       </View>
-      {bestDeal ? <View style={{ marginTop: 8 }}><StockBadge status="in_stock" /></View> : null}
+      {stockStatus !== "unknown" ? <View style={{ marginTop: 8 }}><StockBadge status={stockStatus} /></View> : null}
     </View>
   );
   if (!scrollY) return content;

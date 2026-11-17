@@ -129,10 +129,11 @@ export function ProductInfoCard({
             onError={handleImageError}
             style={{
               width: "100%",
-              height: 190,
-              backgroundColor: colors.border,
+              aspectRatio: 16 / 9,
+              maxHeight: 360,
+              backgroundColor: colors.border + "33",
             }}
-            resizeMode="cover"
+            resizeMode="contain"
           />
         </Animated.View>
       ) : (

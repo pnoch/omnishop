@@ -138,6 +138,14 @@ export default function ProductDetailScreen() {
     );
   }
 
+  const headerStockStatus = bestInStockListing
+    ? "in_stock"
+    : visibleListings.some((listing) => listing.stockStatus === "back_order")
+      ? "back_order"
+      : visibleListings.length > 0
+        ? "out_of_stock"
+        : "unknown";
+
   return (
     <ScreenContainer>
       {/* The screen renders its own sticky header below (with the back/share
@@ -150,6 +158,7 @@ export default function ProductDetailScreen() {
         productName={product.name}
         opacity={stickyOpacity}
         topInset={insets.top}
+        onBack={() => goBackOrHome(router)}
         onEdit={() => setEditingProduct(true)}
         onShare={handleShare}
         onExportCsv={handleExportCsv}
@@ -159,7 +168,7 @@ export default function ProductDetailScreen() {
         scrollEventThrottle={16}
         contentContainerStyle={{ paddingBottom: 40 + insets.bottom }}
       >
-        <DetailHeader product={product} bestDeal={bestDeal} scrollY={scrollY} watchingAny={!!stockWatches["*"]} onToggleWatch={() => void toggleAnyWatch()} acquired={isAcquired(product)} onToggleAcquired={() => void handleToggleAcquired()} isTracked={isTracked} addingToWatchlist={addingToWatchlist} onAddToWatchlist={() => void handleAddToWatchlist()} />
+        <DetailHeader product={product} bestDeal={bestDeal} scrollY={scrollY} watchingAny={!!stockWatches["*"]} onToggleWatch={() => void toggleAnyWatch()} acquired={isAcquired(product)} onToggleAcquired={() => void handleToggleAcquired()} isTracked={isTracked} addingToWatchlist={addingToWatchlist} onAddToWatchlist={() => void handleAddToWatchlist()} onBack={() => goBackOrHome(router)} stockStatus={headerStockStatus} />
         <View ref={shareRef} collapsable={false}>
           {product.marketplace ? <MarketplaceCard product={product} onUpdated={refresh} /> : <ProductInfoCard product={product} listings={listings} visibleListings={visibleListings} lastUpdatedAt={lastUpdatedAt ? new Date(lastUpdatedAt).toISOString() : undefined} displayCurrency={effectiveCurrency} productImage={productImage} />}
           {!product.marketplace && <>
