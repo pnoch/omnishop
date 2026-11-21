@@ -9,6 +9,8 @@ const state = vi.hoisted(() => ({
   testDistributorResult: null as DistributorHealth | null,
   markedUnlocked: [] as string[],
   progress: [] as number[],
+  calls: 0,
+  wait: null as Promise<void> | null,
 }));
 
 vi.mock("@react-native-async-storage/async-storage", () => ({
@@ -20,6 +22,8 @@ vi.mock("@/lib/scrapers/health", () => ({
     getDistributorHealth: async () => state.health,
     getHealthHistory: async () => ({}),
     testAllDistributors: async (onProgress?: (c: number, t: number) => void) => {
+      state.calls++;
+      if (state.wait) await state.wait;
       onProgress?.(1, 2);
       onProgress?.(2, 2);
       return state.testResults;
@@ -61,6 +65,8 @@ describe("useHealthScreen", () => {
     state.testDistributorResult = health("d2", "working");
     state.markedUnlocked = [];
     state.progress = [];
+    state.calls = 0;
+    state.wait = null;
   });
 
   it("loads health and stats", async () => {
@@ -89,6 +95,22 @@ describe("useHealthScreen", () => {
     expect(result.current.health).toHaveLength(2);
     expect(result.current.testing).toBe(false);
     expect(result.current.progress).toBe(100);
+  });
+
+  it("does not start another full test while one is running", async () => {
+    let finish!: () => void;
+    state.wait = new Promise<void>((resolve) => { finish = resolve; });
+    const { result } = renderHook(() => useHealthScreen());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    let first!: Promise<void>;
+    act(() => {
+      first = result.current.runTest();
+      void result.current.runTest();
+    });
+    expect(state.calls).toBe(1);
+    await act(async () => { finish(); await first; });
+    await act(async () => { await result.current.runTest(); });
+    expect(state.calls).toBe(2);
   });
 
   it("marks the distributor unlocked and re-probes after assist", async () => {

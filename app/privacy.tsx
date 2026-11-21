@@ -36,8 +36,8 @@ export default function PrivacyPolicyScreen() {
 
   return (
     <ScreenContainer>
-      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 60 }}>
-        <PageHeader title="Privacy Policy" onBack={() => goBackOrHome(router)} />
+      <PageHeader title="Privacy Policy" onBack={() => goBackOrHome(router)} />
+      <ScrollView contentContainerStyle={{ padding: 20, paddingTop: 0, paddingBottom: 60 }}>
         <Text style={{ color: colors.muted, fontSize: 13, marginTop: 4 }}>
           Last updated {updated}
         </Text>

@@ -266,9 +266,9 @@ export default function HealthScreen() {
             <EmptyStateView
               icon="heart.slash"
               title="No distributor health data"
-              subtitle='Tap "Test All Distributors" to run a check.'
+              subtitle={testing ? "Checking distributors..." : 'Tap "Test All Distributors" to run a check.'}
               ctaLabel="Test All Distributors"
-              onCtaPress={() => {
+              onCtaPress={testing ? undefined : () => {
                 if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 runTest();
               }}

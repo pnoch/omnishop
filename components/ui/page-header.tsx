@@ -35,11 +35,11 @@ export function PageHeader({
           accessibilityRole="button"
           onPress={onBack}
           style={{
-            width: 36,
-            height: 36,
+            width: 44,
+            height: 44,
             alignItems: "center",
             justifyContent: "center",
-            marginLeft: -8,
+            marginLeft: -12,
           }}
         >
           <IconSymbol name="chevron.left" size={22} color={colors.primary} />

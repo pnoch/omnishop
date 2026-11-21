@@ -26,6 +26,7 @@ export function useHealthScreen() {
   const [stats, setStats] = useState<Record<string, HealthStats>>({});
   const [assistParserId, setAssistParserId] = useState<string | null>(null);
   const isMountedRef = useRef(true);
+  const testingRef = useRef(false);
   useEffect(() => {
     return () => {
       isMountedRef.current = false;
@@ -53,6 +54,8 @@ export function useHealthScreen() {
   }, [loadHealth]);
 
   const runTest = useCallback(async () => {
+    if (testingRef.current) return;
+    testingRef.current = true;
     setTesting(true);
     setProgress(0);
     try {
@@ -76,6 +79,7 @@ export function useHealthScreen() {
         );
       }
     } finally {
+      testingRef.current = false;
       if (isMountedRef.current) setTesting(false);
     }
   }, []);

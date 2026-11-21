@@ -212,7 +212,12 @@ export default function StatsScreen() {
               accessibilityLabel="Share statistics"
               accessibilityRole="button"
               onPress={handleShare}
-              style={{ padding: 4 }}
+              style={{
+                width: 44,
+                height: 44,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               <IconSymbol name="square.and.arrow.up" size={22} color={colors.primary} />
             </TouchableOpacity>

@@ -1,9 +1,13 @@
-import { Pressable, Switch, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { AppState, Pressable, Switch, Text, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { SettingRow } from "@/components/settings/setting-row";
 import { shouldEnforceFreeLimits } from "@/lib/pro-features";
-import { applyBackgroundServiceToggle } from "@/lib/background-service-toggle";
+import {
+  applyBackgroundServiceToggle,
+  resumeBackgroundServiceIfGranted,
+} from "@/lib/background-service-toggle";
 import { formatLastRefreshed } from "@/lib/last-refreshed";
 import type { AppSettings } from "@/lib/types";
 import type { MonitoringHealth } from "@/lib/monitoring-health";
@@ -28,6 +32,27 @@ export function BackgroundRefreshSection({
 }) {
   const colors = useColors();
   const locked = shouldEnforceFreeLimits() && !isPro;
+  const [permissionRequired, setPermissionRequired] = useState(false);
+  const [changing, setChanging] = useState(false);
+  const resumingRef = useRef(false);
+
+  useEffect(() => {
+    if (!permissionRequired) return;
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state !== "active" || resumingRef.current) return;
+      resumingRef.current = true;
+      void (async () => {
+        try {
+          if (!(await resumeBackgroundServiceIfGranted())) return;
+          setPermissionRequired(false);
+          await updateSetting("backgroundServiceEnabled", true);
+        } finally {
+          resumingRef.current = false;
+        }
+      })();
+    });
+    return () => sub.remove();
+  }, [permissionRequired, updateSetting]);
 
   return (
     <View
@@ -60,11 +85,19 @@ export function BackgroundRefreshSection({
           right={
             <Switch
               value={!locked && !!settings.backgroundServiceEnabled}
-              disabled={locked}
+              disabled={locked || changing}
               onValueChange={(value) => {
                 if (locked) return;
-                void updateSetting("backgroundServiceEnabled", value);
-                void applyBackgroundServiceToggle(value);
+                setChanging(true);
+                void (async () => {
+                  try {
+                    const result = await applyBackgroundServiceToggle(value);
+                    setPermissionRequired(result === "permission-required");
+                    await updateSetting("backgroundServiceEnabled", result === "enabled");
+                  } finally {
+                    setChanging(false);
+                  }
+                })();
               }}
               trackColor={{
                 false: colors.border,
@@ -81,6 +114,11 @@ export function BackgroundRefreshSection({
           }
         />
       </Pressable>
+      {permissionRequired && (
+        <Text style={{ color: colors.warning, fontSize: 13, paddingHorizontal: 16, paddingBottom: 12 }}>
+          Allow display over other apps in Android settings, then turn background refresh on again.
+        </Text>
+      )}
       {monitoring.status === "ok" && (
         <View
           style={{

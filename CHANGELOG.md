@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.1] - 2026-11-21
+
+### Fixed
+
+- Background refresh no longer turns on when Android's display-over-other-apps
+  permission is missing. The switch stays off and the reason is shown. After
+  granting access, returning to the app enables it automatically.
+- The permission gate applies only on Android, where the overlay renderer
+  exists, instead of blocking the toggle on iOS and web.
+- Distributor Health ignores a second "Test All Distributors" tap while a check
+  is running, and its empty-state action is hidden during the check.
+- Page headers use a 44x44 back target. The Privacy header no longer scrolls out
+  of reach, and the Statistics share action has a 44x44 target.
+
 ## [5.32.0] - 2026-11-17
 
 ### Changed
