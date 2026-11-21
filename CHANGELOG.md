@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.4] - 2026-11-21
+
+### Fixed
+
+- Linitx search pages are parsed per result row. Service plans such as
+  "UI CARE for UCG-Ultra" are rejected instead of being reported as the product,
+  which had shown £18.46 instead of the £104.39 gateway and fed wrong alert
+  prices. The parser now returns the product URL, not the search URL.
+- "Awaiting Restock" stock text maps to back order on mobile and desktop.
+- The Alerts header no longer overlaps the Restock Watches button on narrow
+  screens.
+- eBay "blocked" and "unreadable" results get accurate messages instead of
+  blaming the user's connection.
+
 ## [5.32.3] - 2026-11-21
 
 ### Added

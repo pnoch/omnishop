@@ -57,7 +57,13 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
       {result?.kind === "unavailable" && <View style={{ paddingTop: 8 }}>
         <Text style={{ color: colors.muted }}>{result.reason === "not_configured"
           ? "Online marketplace search is unavailable in this build because no reachable API server was configured."
-          : `Could not search eBay. ${result.reason === "busy" ? "The search service is busy." : "Check your connection and try again."}`}</Text>
+          : result.reason === "blocked"
+            ? "eBay is blocking automated searches right now. Try again later, or open eBay directly."
+            : result.reason === "busy"
+              ? "The search service is busy. Try again in a moment."
+              : result.reason === "unreadable"
+                ? "eBay returned a page the app could not read. Try again later."
+                : "Could not reach the search service. Check your connection and try again."}</Text>
         {result.reason !== "not_configured" && <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retry eBay search" onPress={() => setRetry((value) => value + 1)} style={{ paddingVertical: 12 }}><Text style={{ color: colors.primary }}>Retry</Text></TouchableOpacity>}
       </View>}
       {result?.kind === "results" && <>

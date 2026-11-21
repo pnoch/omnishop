@@ -203,6 +203,8 @@ pub fn infer_stock_status(text: &str) -> String {
         // "Expected 15 Sept" is a back-order signal on mobile; omitting it made
         // desktop report unknown/in_stock for the same listing.
         || lower.contains("expected")
+        || lower.contains("awaiting restock")
+        || lower.contains("awaiting stock")
         || lower.contains("παραγγελία")
     {
         return "back_order".to_string();

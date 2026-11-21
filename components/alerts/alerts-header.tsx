@@ -22,10 +22,13 @@ export function AlertsHeader({
       >
         <Heading
           level={1}
+          numberOfLines={2}
           style={{
             color: colors.foreground,
             fontSize: 28,
             fontWeight: "700",
+            flex: 1,
+            marginRight: 12,
           }}
         >
           Alerts & Reminders
@@ -41,6 +44,7 @@ export function AlertsHeader({
             paddingVertical: 6,
             borderRadius: 16,
             backgroundColor: colors.primary,
+            flexShrink: 0,
           }}
         >
           <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>

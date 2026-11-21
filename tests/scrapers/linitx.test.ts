@@ -58,3 +58,39 @@ describe("model verification", () => {
     expect(linitxParser.parsePrice(MISMATCH_HTML)?.price).toBe(480);
   });
 });
+
+// Linitx search results include service plans whose titles contain the model.
+// Reading the first price/stock on the page reported "UI CARE for UCG-Ultra"
+// (£18.46, 99 in stock) as the £104.39 gateway, and the app alerted on it.
+describe("search results with accessory listings", () => {
+  const MODEL = "UCG-Ultra";
+  const HTML = `<html><body>
+    <h3>Search results for 'UCG-Ultra'</h3>
+    <div id="results">
+      <div class="pure-g">
+        <p class="title"><a title="Ubiquiti UI CARE for UCG-Ultra" href="/product/ubiquiti-ui-care-for-ucg-ultra/18686">Ubiquiti UI CARE for UCG-Ultra</a></p>
+        <span class="stock prodview instock">99 In Stock</span>
+        <span class="price">£18.46</span>
+      </div>
+      <div class="pure-g">
+        <p class="title"><a title="Ubiquiti UniFi Cloud Gateway Ultra - UCG-Ultra - UK Converter" href="/product/ubiquiti-unifi-cloud-gateway-ultra-ucg-ultra-uk-converter/17876">Ubiquiti UniFi Cloud Gateway Ultra - UCG-Ultra - UK Converter</a></p>
+        <span class="stock prodview awaiting">Awaiting Restock</span>
+        <span class="price">£104.39</span>
+      </div>
+    </div>
+  </body></html>`;
+
+  it("skips the care plan and prices the requested product", () => {
+    const result = linitxParser.parsePrice(
+      HTML,
+      MODEL,
+      "https://linitx.com/search.php?keywords=UCG-Ultra",
+    );
+    expect(result).not.toBeNull();
+    expect(result!.price).toBe(104.39);
+    expect(result!.stockStatus).toBe("back_order");
+    expect(result!.url).toBe(
+      "https://linitx.com/product/ubiquiti-unifi-cloud-gateway-ultra-ucg-ultra-uk-converter/17876",
+    );
+  });
+});

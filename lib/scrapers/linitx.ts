@@ -5,9 +5,68 @@ import {
   parsePriceFromText,
   findPriceElement,
   inferStockStatus,
+  matchesModel,
   modelMismatch,
 } from "./utils";
 import { getTaxRate } from "../tax";
+
+const BASE_URL = "https://linitx.com";
+
+// Search results mix in service plans ("UI CARE for UCG-Ultra") and accessories
+// whose titles contain the model. Their prices are far below the product, so
+// taking the first price on the page reported a £18.46 care plan as a £104.39
+// gateway and alerted on it.
+const SERVICE_TITLE =
+  /\b(ui care|care|warranty|protection plan|support plan|licen[cs]e|subscription)\b/i;
+
+function isAccessoryTitle(title: string, model: string): boolean {
+  if (SERVICE_TITLE.test(title)) return true;
+  const escaped = model.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\bfor\\b[^.]{0,40}${escaped}`, "i").test(title);
+}
+
+function parseSearchResults(
+  $: cheerio.CheerioAPI,
+  model: string,
+  fallbackUrl: string,
+): ScrapeResult | null {
+  const candidates: (ScrapeResult & { title: string })[] = [];
+  for (const row of $("#results .pure-g").toArray()) {
+    const $row = $(row);
+    const $title = $row.find("p.title a").first();
+    const title = ($title.attr("title") ?? $title.text()).trim();
+    if (!title) continue;
+    if (!matchesModel(title, model)) continue;
+    if (isAccessoryTitle(title, model)) continue;
+
+    const price = parsePriceFromText($row.find(".price").first().text());
+    if (!price) continue;
+
+    const href = $title.attr("href");
+    let url = fallbackUrl;
+    if (href) {
+      try {
+        url = new URL(href, BASE_URL).href;
+      } catch {
+        // keep the search URL
+      }
+    }
+    candidates.push({
+      title,
+      price,
+      currency: "GBP",
+      stockStatus: inferStockStatus($row.find(".stock").first().text()),
+      url,
+      taxRate: getTaxRate("United Kingdom"),
+    });
+  }
+  if (candidates.length === 0) return null;
+  const inStock = candidates.filter((c) => c.stockStatus === "in_stock");
+  const pool = inStock.length > 0 ? inStock : candidates;
+  const best = pool.reduce((a, b) => (b.price < a.price ? b : a));
+  const { title: _title, ...result } = best;
+  return result;
+}
 
 function parseHtml(
   html: string,
@@ -15,6 +74,15 @@ function parseHtml(
   model?: string,
 ): ScrapeResult | null {
   const $ = cheerio.load(html);
+
+  // A search page must be resolved per result row. Falling back to the first
+  // price after a failed match would pick up whatever decoy the page lists
+  // first.
+  if (model) {
+    const result = parseSearchResults($, model, url);
+    if (result) return result;
+    if ($("#results").length > 0) return null;
+  }
 
   const $price = findPriceElement($, ".prodprice, .product__price, .price", model);
   if (!$price || $price.length === 0) return null;
@@ -38,10 +106,10 @@ function parseHtml(
 
 export const linitxParser: DistributorParser = {
   id: "linitx-uk",
-  baseUrl: "https://linitx.com",
+  baseUrl: BASE_URL,
   buildSearchUrl: (model) =>
     `https://linitx.com/search.php?keywords=${encodeURIComponent(model)}`,
-  parsePrice: (html, model, url) => parseHtml(html, url ?? "https://linitx.com", model),
+  parsePrice: (html, model, url) => parseHtml(html, url ?? BASE_URL, model),
   rateLimitMs: 3000,
   // The storefront blocks plain HTTP and its results are JS-rendered; it parses
   // fine from the rendered DOM (verified), so render it in the browser.

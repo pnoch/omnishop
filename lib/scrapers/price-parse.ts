@@ -24,6 +24,8 @@ export function inferStockStatus(text: string): StockStatus {
     // as in_stock (a false in-stock / restock signal).
     lower.includes("preorder") ||
     lower.includes("expected") ||
+    lower.includes("awaiting restock") ||
+    lower.includes("awaiting stock") ||
     lower.includes("παραγγελία")
   ) {
     return "back_order";
