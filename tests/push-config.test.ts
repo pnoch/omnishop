@@ -3,6 +3,15 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const state = vi.hoisted(() => ({
   expoConfig: null as { extra?: Record<string, unknown> } | null,
   easConfig: null as { projectId?: string } | null,
+  platform: "android",
+}));
+
+vi.mock("react-native", () => ({
+  Platform: {
+    get OS() {
+      return state.platform;
+    },
+  },
 }));
 
 vi.mock("expo-constants", () => ({
@@ -22,6 +31,7 @@ describe("getPushConfiguration", () => {
   beforeEach(() => {
     state.expoConfig = null;
     state.easConfig = null;
+    state.platform = "android";
   });
 
   it("uses the configured Expo project id", () => {
@@ -56,5 +66,31 @@ describe("getPushConfiguration", () => {
 
   it("reports a build without any project id", () => {
     expect(getPushConfiguration()).toEqual({ kind: "missing-project-id" });
+  });
+
+  it("reports a project id without the Android Firebase file", () => {
+    state.expoConfig = {
+      extra: { expoProjectId: "proj-1", googleServicesFilePresent: false },
+    };
+    expect(getPushConfiguration()).toEqual({ kind: "missing-native-config" });
+  });
+
+  it("ignores the Android Firebase flag on web", () => {
+    state.platform = "web";
+    state.expoConfig = {
+      extra: { expoProjectId: "proj-1", googleServicesFilePresent: false },
+    };
+    expect(getPushConfiguration()).toEqual({
+      kind: "configured",
+      projectId: "proj-1",
+    });
+  });
+
+  it("does not block older builds that lack the Firebase flag", () => {
+    state.expoConfig = { extra: { expoProjectId: "proj-1" } };
+    expect(getPushConfiguration()).toEqual({
+      kind: "configured",
+      projectId: "proj-1",
+    });
   });
 });

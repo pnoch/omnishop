@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.3] - 2026-11-21
+
+### Added
+
+- Local, EAS-free push setup. `android.googleServicesFile` is added only when
+  `google-services.json` exists (or `GOOGLE_SERVICES_JSON` points at it), and the
+  build records whether it was included. `scripts/check-push-setup.sh` reports
+  missing local inputs and the setup steps.
+
+### Changed
+
+- Push Diagnostics distinguishes a missing Expo project ID from a missing
+  Android Firebase config, and token registration skips when either is absent.
+
 ## [5.32.2] - 2026-11-21
 
 ### Added

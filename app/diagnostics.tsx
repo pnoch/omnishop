@@ -218,6 +218,12 @@ export default function DiagnosticsScreen() {
   }, [load]);
 
   const pushConfig = getPushConfiguration();
+  const pushWarning =
+    pushConfig.kind === "missing-project-id"
+      ? "This build has no push service configured, so server alerts cannot be registered. Background price and restock checks still run on a schedule."
+      : pushConfig.kind === "missing-native-config"
+        ? "This build has an Expo project ID but no google-services.json, so Android cannot obtain a push token. Add the file and rebuild."
+        : null;
 
   const onTest = useCallback(
     async (deviceId: string) => {
@@ -271,7 +277,7 @@ export default function DiagnosticsScreen() {
         }
       />
 
-      {pushConfig.kind === "missing-project-id" && (
+      {pushWarning && (
         <View
           style={{
             marginHorizontal: 16,
@@ -284,9 +290,7 @@ export default function DiagnosticsScreen() {
           }}
         >
           <Text style={{ color: colors.foreground, fontSize: 13 }}>
-            This build has no push service configured, so server alerts cannot
-            be registered. Background price and restock checks still run on a
-            schedule.
+            {pushWarning}
           </Text>
         </View>
       )}
@@ -357,9 +361,9 @@ export default function DiagnosticsScreen() {
                 No devices yet
               </Text>
               <Text style={{ color: colors.muted, fontSize: 14, marginTop: 6, textAlign: "center" }}>
-                {pushConfig.kind === "missing-project-id"
-                  ? "Push registration is unavailable in this build."
-                  : "No devices with push tokens yet — open the app on a device while signed in."}
+                {pushConfig.kind === "configured"
+                  ? "No devices with push tokens yet — open the app on a device while signed in."
+                  : "Push registration is unavailable in this build."}
               </Text>
             </View>
           }

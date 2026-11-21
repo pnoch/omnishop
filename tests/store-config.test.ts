@@ -50,4 +50,11 @@ describe("store submission config", () => {
     expect(doc).toContain("Privacy policy");
     expect(doc).toContain("eas submit");
   });
+
+  it("wires the local Firebase config only when the file exists", async () => {
+    const src = await readFile("app.config.ts", "utf8");
+    expect(src).toContain('process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json"');
+    expect(src).toContain("hasGoogleServicesFile ? { googleServicesFile } : {}");
+    expect(src).toContain("googleServicesFilePresent: hasGoogleServicesFile");
+  });
 });

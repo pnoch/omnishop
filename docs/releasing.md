@@ -46,15 +46,34 @@ Put the printed/`~/.tauri/psf-updater.key.pub` **public** key into
 until the real pubkey is set a `tauri build` fails closed (the placeholder isn't
 valid base64).
 
-### Android push (FCM)
+### Android push (FCM), local setup without EAS
 
-Remote push on Android needs Firebase credentials. Either:
-- EAS-managed: `eas credentials` → Android → Google Service Account (upload the FCM key); or
-- repo file: drop `google-services.json` in and set
-  `android: { googleServicesFile: "./google-services.json" }` in `app.config.ts`.
+Remote push needs two local settings and one dashboard setting. No EAS login or
+`eas init` is required to build and run this locally.
 
-Without this, local notifications and foreground price checks still work; only
-server/remote push no-ops.
+1. **Firebase**: create an Android app for `app.siamcreations.omnishop`, download
+   `google-services.json`, and put it in the repo root. `app.config.ts` adds it to
+   the native build only when the file exists (`GOOGLE_SERVICES_JSON` overrides
+   the path) and exposes the result as `extra.googleServicesFile`.
+2. **Expo project**: create a project in the Expo dashboard and put its project
+   ID in `.env` as `EXPO_PUBLIC_EXPO_PROJECT_ID`. This is only an identifier; it
+   does not require the EAS CLI.
+3. **FCM credentials on that Expo project**: Expo Push forwards to FCM, so the
+   Firebase credentials must be registered on the Expo project in the dashboard
+   (Credentials). `eas credentials` does the same if you adopt EAS later.
+
+Check the checkout before building:
+
+```bash
+scripts/check-push-setup.sh
+```
+
+A missing piece is not fatal. Local notifications and scheduled background price
+checks still work; server/remote push no-ops until both settings are present and
+the app is rebuilt. Native config and `EXPO_PUBLIC_*` values are baked at build
+time, so changing either requires a new build. Removing the file later needs
+`npx expo prebuild --platform android --clean` so the generated project drops the
+copied config.
 
 ---
 

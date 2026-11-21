@@ -18,6 +18,10 @@ expo-env.d.ts
 *.keystore
 # Android release signing credentials — never commit these.
 /credentials/
+
+# Local Firebase config for push (per environment; see docs/releasing.md).
+/google-services.json
+/GoogleService-Info.plist
 *.p8
 *.p12
 *.key

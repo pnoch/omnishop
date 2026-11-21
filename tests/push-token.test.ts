@@ -5,6 +5,7 @@ const state = vi.hoisted(() => ({
   isDevice: true,
   projectId: "proj-123" as string | undefined,
   easProjectId: undefined as string | undefined,
+  googleServicesFilePresent: undefined as boolean | undefined,
   token: "ExponentPushToken[mobile]",
   failToken: false,
   failUnregister: false,
@@ -32,7 +33,10 @@ vi.mock("expo-constants", () => ({
   default: {
     expoConfig: {
       get extra() {
-        return { expoProjectId: state.projectId };
+        return {
+          expoProjectId: state.projectId,
+          googleServicesFilePresent: state.googleServicesFilePresent,
+        };
       },
     },
     get easConfig() {
@@ -85,6 +89,7 @@ beforeEach(() => {
   state.isDevice = true;
   state.projectId = "proj-123";
   state.easProjectId = undefined;
+  state.googleServicesFilePresent = undefined;
   state.failToken = false;
   state.failUnregister = false;
   state.registerCalls.length = 0;
@@ -126,6 +131,13 @@ describe("registerPushToken", () => {
     state.easProjectId = "eas-linked-1";
     await registerPushToken();
     expect(state.registerCalls).toHaveLength(1);
+  });
+
+  it("skips Android when the native Firebase config is missing", async () => {
+    state.platform = "android";
+    state.googleServicesFilePresent = false;
+    await registerPushToken();
+    expect(state.registerCalls).toHaveLength(0);
   });
 
   it("never throws when the token request fails", async () => {

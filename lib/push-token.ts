@@ -16,7 +16,7 @@ export async function registerPushToken(): Promise<void> {
     const { getSessionToken } = await import("./_core/auth");
     if (!(await getSessionToken())) return;
     const config = getPushConfiguration();
-    if (config.kind === "missing-project-id") return;
+    if (config.kind !== "configured") return;
     const token = await Notifications.getExpoPushTokenAsync({
       projectId: config.projectId,
     });

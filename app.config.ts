@@ -1,5 +1,6 @@
 // Load environment variables with proper priority (system > .env)
 import "dotenv/config";
+import { existsSync } from "node:fs";
 import type { ExpoConfig } from "expo/config";
 
 export interface AndroidIntentFilterData {
@@ -56,6 +57,13 @@ export function getIosAssociatedDomains(webHost?: string): string[] {
 
 const bundleId = "app.siamcreations.omnishop";
 
+// Local (EAS-free) push setup: drop the Firebase config next to this file and
+// set EXPO_PUBLIC_EXPO_PROJECT_ID. The key is only added when the file exists,
+// because prebuild fails on a configured-but-missing path.
+const googleServicesFile =
+  process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json";
+const hasGoogleServicesFile = existsSync(googleServicesFile);
+
 const env = {
   appName: "OmniShop",
   appSlug: "omnishop",
@@ -75,7 +83,7 @@ const config: ExpoConfig = {
   slug: env.appSlug,
   description:
     "Global stock & price radar for hard-to-find hardware. Find who has it worldwide, at the best landed price, and get told the second it restocks.",
-  version: "5.32.2",
+  version: "5.32.3",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   scheme: env.scheme,
@@ -93,6 +101,7 @@ const config: ExpoConfig = {
     },
   },
   android: {
+    ...(hasGoogleServicesFile ? { googleServicesFile } : {}),
     adaptiveIcon: {
       backgroundColor: "#071046",
       foregroundImage: "./assets/images/android-icon-foreground.png",
@@ -101,7 +110,7 @@ const config: ExpoConfig = {
     },
     predictiveBackGestureEnabled: false,
     package: env.androidPackage,
-    versionCode: 13,
+    versionCode: 14,
     permissions: ["POST_NOTIFICATIONS"],
     intentFilters: getAndroidIntentFilters({
       scheme: env.scheme,
@@ -180,6 +189,7 @@ const config: ExpoConfig = {
   },
   extra: {
     expoProjectId: process.env.EXPO_PUBLIC_EXPO_PROJECT_ID,
+    googleServicesFilePresent: hasGoogleServicesFile,
   },
 };
 
