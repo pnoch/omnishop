@@ -94,3 +94,50 @@ describe("search results with accessory listings", () => {
     );
   });
 });
+
+// A model can be a prefix of a different product ("U7-Pro" vs "U7-Pro-Wall",
+// "USW-Flex" vs "USW-Flex-Mini"). Matching the prefix reported a £38.39 wall
+// mount and a £27.59 Flex Mini as the requested devices.
+describe("search results with prefix variants", () => {
+  const row = (title: string, price: string) => `<div class="pure-g">
+    <p class="title"><a title="${title}" href="/product/${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}">${title}</a></p>
+    <span class="stock">In Stock</span>
+    <span class="price">${price}</span>
+  </div>`;
+
+  it("prefers the U7 Pro over the U7 Pro Wall mount", () => {
+    const html = `<div id="results">
+      ${row("Ubiquiti UniFi U7 Pro Wall Paintable Flush Mount - UACC-U7-Pro-Wall-FM", "£38.39")}
+      ${row("Ubiquiti UniFi U7 Pro WiFi 7 Access Point - U7-Pro", "£166.34")}
+    </div>`;
+    const result = linitxParser.parsePrice(html, "U7-Pro");
+    expect(result?.price).toBe(166.34);
+  });
+
+  it("prefers the USW Flex over the Flex Mini", () => {
+    const html = `<div id="results">
+      ${row("OPEN BOX Ubiquiti UniFi Flex Mini 5 Port Network Switch - USW-FLEX-Mini", "£27.59")}
+      ${row("Ubiquiti UniFi Flex Indoor / Outdoor 5 Port Switch - USW-Flex", "£104.39")}
+    </div>`;
+    const result = linitxParser.parsePrice(html, "USW-Flex");
+    expect(result?.price).toBe(104.39);
+  });
+
+  it("prefers new stock over an open-box listing", () => {
+    const html = `<div id="results">
+      ${row("OPEN BOX Ubiquiti UniFi U7 Pro WiFi 7 Access Point - U7-Pro", "£162.00")}
+      ${row("Ubiquiti UniFi U7 Pro WiFi 7 Access Point - U7-Pro", "£166.34")}
+    </div>`;
+    const result = linitxParser.parsePrice(html, "U7-Pro");
+    expect(result?.price).toBe(166.34);
+  });
+
+  it("still matches the requested Wall variant", () => {
+    const html = `<div id="results">
+      ${row("Ubiquiti UniFi U7 Pro Wall Paintable Flush Mount - UACC-U7-Pro-Wall-FM", "£38.39")}
+      ${row("Ubiquiti UniFi U7 Pro Wall WiFi 7 Access Point - U7-Pro-Wall", "£193.19")}
+    </div>`;
+    const result = linitxParser.parsePrice(html, "U7-Pro-Wall");
+    expect(result?.price).toBe(193.19);
+  });
+});

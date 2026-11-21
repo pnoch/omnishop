@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.5] - 2026-11-21
+
+### Fixed
+
+- Linitx model matching now rejects sibling variants (U7-Pro-Wall,
+  USW-Flex-Mini), accessories (mounts, stands, enclosures), service plans, and
+  open-box or refurbished listings. U7-Pro had been reported at £38.39 from a
+  wall mount, and USW-Flex at £27.59 from a Flex Mini.
+
 ## [5.32.4] - 2026-11-21
 
 ### Fixed

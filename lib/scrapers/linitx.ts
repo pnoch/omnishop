@@ -5,24 +5,75 @@ import {
   parsePriceFromText,
   findPriceElement,
   inferStockStatus,
-  matchesModel,
   modelMismatch,
 } from "./utils";
 import { getTaxRate } from "../tax";
 
 const BASE_URL = "https://linitx.com";
 
-// Search results mix in service plans ("UI CARE for UCG-Ultra") and accessories
-// whose titles contain the model. Their prices are far below the product, so
-// taking the first price on the page reported a £18.46 care plan as a £104.39
-// gateway and alerted on it.
-const SERVICE_TITLE =
-  /\b(ui care|care|warranty|protection plan|support plan|licen[cs]e|subscription)\b/i;
+// Search results mix in service plans, accessories, and sibling models whose
+// titles contain the requested model as a prefix: U7-Pro vs U7-Pro-Wall,
+// USW-Flex vs USW-Flex-Mini. Taking the first price on the page reported a
+// £18.46 care plan, a £38.39 wall mount, and a £27.59 Flex Mini as the real
+// products.
+const ACCESSORY_TITLE =
+  /\b(mount|stand|enclosure|cover|case|bracket|plate|rail|flush|paintable|weatherproof|care|warranty|licen[cs]e|subscription|power supply|psu|cable|adapter)\b/i;
 
-function isAccessoryTitle(title: string, model: string): boolean {
-  if (SERVICE_TITLE.test(title)) return true;
-  const escaped = model.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`\\bfor\\b[^.]{0,40}${escaped}`, "i").test(title);
+// The app compares new stock. An open-box unit is a real offer but not the same
+// product condition, and its price would trigger misleading drop alerts.
+const NON_NEW_TITLE = /\b(open box|opened box|refurbished|refurb|used|ex[ -]display)\b/i;
+
+const VARIANT_SUFFIXES = new Set([
+  "wall",
+  "mini",
+  "max",
+  "utility",
+  "xg",
+  "poe",
+  "plus",
+  "pro",
+  "se",
+  "ultra",
+  "enterprise",
+  "outdoor",
+  "industrial",
+  "mesh",
+  "lite",
+  "hd",
+  "lr",
+]);
+
+function tokenize(value: string): string[] {
+  return value
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+// True only when the title names the requested model and does not continue
+// into a different variant. "… - U7-Pro" passes; "… U7 Pro Wall" does not.
+export function titleMatchesModel(title: string, model: string): boolean {
+  if (ACCESSORY_TITLE.test(title)) return false;
+  if (NON_NEW_TITLE.test(title)) return false;
+  const titleTokens = tokenize(title);
+  const modelTokens = tokenize(model);
+  if (modelTokens.length === 0) return true;
+  for (let i = 0; i + modelTokens.length <= titleTokens.length; i++) {
+    let matched = true;
+    for (let j = 0; j < modelTokens.length; j++) {
+      if (titleTokens[i + j] !== modelTokens[j]) {
+        matched = false;
+        break;
+      }
+    }
+    if (!matched) continue;
+    const next = titleTokens[i + modelTokens.length];
+    if (!next) return true;
+    if (/^\d+$/.test(next)) continue;
+    if (VARIANT_SUFFIXES.has(next)) continue;
+    return true;
+  }
+  return false;
 }
 
 function parseSearchResults(
@@ -36,8 +87,7 @@ function parseSearchResults(
     const $title = $row.find("p.title a").first();
     const title = ($title.attr("title") ?? $title.text()).trim();
     if (!title) continue;
-    if (!matchesModel(title, model)) continue;
-    if (isAccessoryTitle(title, model)) continue;
+    if (!titleMatchesModel(title, model)) continue;
 
     const price = parsePriceFromText($row.find(".price").first().text());
     if (!price) continue;
