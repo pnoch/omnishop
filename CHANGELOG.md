@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.6] - 2026-11-21
+
+### Changed
+
+- `titleMatchesModel` moved into the shared scraper helpers so any parser that
+  reads search-result titles can reject sibling variants, accessories, service
+  plans, and used stock. Linitx now uses the shared implementation instead of a
+  local copy. No other parser's behavior changed.
+
 ## [5.32.5] - 2026-11-21
 
 ### Fixed

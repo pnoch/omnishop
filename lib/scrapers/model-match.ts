@@ -21,6 +21,73 @@ const COMMERCE_SUFFIXES = new Set([
   "jp",
 ]);
 
+// ─── Search-result title matching ────────────────────────────────────────────
+// `matchesModel` tolerates SKU suffixes because card text often appends them
+// ("MikroTikCRS326-24G-2S+IN"). Search-result TITLES need the opposite: a
+// requested model that continues into another variant ("U7-Pro" →
+// "U7-Pro-Wall", "USW-Flex" → "USW-Flex-Mini") is a different product, and
+// accessories or service plans that merely mention the model are not the
+// product at all. Parsers that read a results list should use this on the
+// title.
+const ACCESSORY_TITLE =
+  /\b(mount|stand|enclosure|cover|case|bracket|plate|rail|flush|paintable|weatherproof|care|warranty|licen[cs]e|subscription|power supply|psu|cable|adapter)\b/i;
+
+const NON_NEW_TITLE =
+  /\b(open box|opened box|refurbished|refurb|used|ex[ -]display)\b/i;
+
+const VARIANT_SUFFIXES = new Set([
+  "wall",
+  "mini",
+  "max",
+  "utility",
+  "xg",
+  "poe",
+  "plus",
+  "pro",
+  "se",
+  "ultra",
+  "enterprise",
+  "outdoor",
+  "industrial",
+  "mesh",
+  "lite",
+  "hd",
+  "lr",
+]);
+
+function tokenize(value: string): string[] {
+  return value
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+export function titleMatchesModel(title: string, model: string): boolean {
+  if (ACCESSORY_TITLE.test(title)) return false;
+  if (NON_NEW_TITLE.test(title)) return false;
+  const titleTokens = tokenize(title);
+  const modelTokens = tokenize(model);
+  if (modelTokens.length === 0) return true;
+  for (let i = 0; i + modelTokens.length <= titleTokens.length; i++) {
+    let matched = true;
+    for (let j = 0; j < modelTokens.length; j++) {
+      if (titleTokens[i + j] !== modelTokens[j]) {
+        matched = false;
+        break;
+      }
+    }
+    if (!matched) continue;
+    const next = titleTokens[i + modelTokens.length];
+    if (!next) return true;
+    // A trailing number or a known variant word means this title names a
+    // different SKU; keep looking for an exact occurrence.
+    if (/^\d+$/.test(next)) continue;
+    if (VARIANT_SUFFIXES.has(next)) continue;
+    return true;
+  }
+  return false;
+}
+
 export function matchesModel(text: string, model: string): boolean {
   const needle = model.trim();
   if (!needle || !text) return false;

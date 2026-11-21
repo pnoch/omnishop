@@ -6,4 +6,5 @@ export {
   productRowContext,
   modelMismatch,
   findPriceElement,
+  titleMatchesModel,
 } from "./model-match";
