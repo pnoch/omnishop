@@ -102,6 +102,8 @@ export default function DistributorAnalysisScreen() {
                 borderRadius: 20,
                 paddingHorizontal: 12,
                 paddingVertical: 6,
+                minHeight: 44,
+                justifyContent: "center",
               }}
               accessibilityLabel="Export CSV"
               accessibilityRole="button"

@@ -44,19 +44,26 @@ fi
 rm -f "$REPO_ROOT/android/app/build/generated/assets/createBundleReleaseJsAndAssets/index.android.bundle"
 rm -f "$REPO_ROOT/android/app/build/intermediates/assets/release/mergeReleaseAssets/index.android.bundle"
 
+APK_OUT="$REPO_ROOT/android/app/build/outputs/apk/release/app-release.apk"
+AAB_OUT="$REPO_ROOT/android/app/build/outputs/bundle/release/app-release.aab"
+
 GRADLE_TASKS=()
+ARTIFACTS=()
 case "$TARGET" in
-  apk) GRADLE_TASKS=(assembleRelease) ;;
-  aab) GRADLE_TASKS=(bundleRelease) ;;
-  all) GRADLE_TASKS=(assembleRelease bundleRelease) ;;
+  apk) GRADLE_TASKS=(assembleRelease); ARTIFACTS=("$APK_OUT") ;;
+  aab) GRADLE_TASKS=(bundleRelease); ARTIFACTS=("$AAB_OUT") ;;
+  all) GRADLE_TASKS=(assembleRelease bundleRelease); ARTIFACTS=("$APK_OUT" "$AAB_OUT") ;;
   *) echo "Usage: $0 [apk|aab|all]" >&2; exit 1 ;;
 esac
 
 "$REPO_ROOT/android/gradlew" -p "$REPO_ROOT/android" "${GRADLE_TASKS[@]}"
 
+# A debug-signed or emulator-ABI APK has shipped before. Check before publishing.
+echo
+echo "Verifying artifacts..."
+"$REPO_ROOT/scripts/verify-android-artifact.sh" "${ARTIFACTS[@]}"
+
 echo
 echo "Artifacts:"
-[ -f "$REPO_ROOT/android/app/build/outputs/apk/release/app-release.apk" ] && \
-  echo "  APK: $REPO_ROOT/android/app/build/outputs/apk/release/app-release.apk"
-[ -f "$REPO_ROOT/android/app/build/outputs/bundle/release/app-release.aab" ] && \
-  echo "  AAB: $REPO_ROOT/android/app/build/outputs/bundle/release/app-release.aab"
+[ -f "$APK_OUT" ] && echo "  APK: $APK_OUT"
+[ -f "$AAB_OUT" ] && echo "  AAB: $AAB_OUT"

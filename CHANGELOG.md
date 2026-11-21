@@ -4,6 +4,26 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.2] - 2026-11-21
+
+### Added
+
+- `scripts/verify-android-artifact.sh` rejects debug-signed APKs, APKs without
+  `arm64-v8a`, wrong package names, and AABs whose signature does not verify. It
+  prints the versionCode and SHA-256. `scripts/android-release.sh` runs it on the
+  artifacts it built.
+
+### Changed
+
+- Push Diagnostics warns when the build has no push service configured, and the
+  empty state no longer suggests signing in as the fix. Project-ID lookup is
+  shared with token registration and ignores blank values.
+
+### Fixed
+
+- The Distributor Analysis export control meets the 44 dp touch target.
+- Android screen readers announce the background-refresh permission message.
+
 ## [5.32.1] - 2026-11-21
 
 ### Fixed

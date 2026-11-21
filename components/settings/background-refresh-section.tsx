@@ -115,7 +115,10 @@ export function BackgroundRefreshSection({
         />
       </Pressable>
       {permissionRequired && (
-        <Text style={{ color: colors.warning, fontSize: 13, paddingHorizontal: 16, paddingBottom: 12 }}>
+        <Text
+          accessibilityLiveRegion="polite"
+          style={{ color: colors.warning, fontSize: 13, paddingHorizontal: 16, paddingBottom: 12 }}
+        >
           Allow display over other apps in Android settings, then turn background refresh on again.
         </Text>
       )}

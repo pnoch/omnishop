@@ -1,9 +1,9 @@
 import { Platform } from "react-native";
 import * as Device from "expo-device";
-import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import { createTRPCClient } from "./trpc";
 import { withTimeout } from "./with-timeout";
+import { getPushConfiguration } from "./push-config";
 
 const TIMEOUT_MS = 4000;
 
@@ -15,11 +15,11 @@ export async function registerPushToken(): Promise<void> {
     // would only produce a 401.
     const { getSessionToken } = await import("./_core/auth");
     if (!(await getSessionToken())) return;
-    const projectId =
-      (Constants.expoConfig?.extra as { expoProjectId?: string } | undefined)
-        ?.expoProjectId ?? Constants.easConfig?.projectId;
-    if (!projectId) return;
-    const token = await Notifications.getExpoPushTokenAsync({ projectId });
+    const config = getPushConfiguration();
+    if (config.kind === "missing-project-id") return;
+    const token = await Notifications.getExpoPushTokenAsync({
+      projectId: config.projectId,
+    });
     const client = createTRPCClient();
     await withTimeout(
       client.notifications.registerPushToken.mutate({

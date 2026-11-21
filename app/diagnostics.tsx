@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/toast";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { getDeviceId } from "@/lib/device-id";
 import { goBackOrHome } from "@/lib/navigation";
+import { getPushConfiguration } from "@/lib/push-config";
 import {
   fetchPushStatusAll,
   sendTestPush,
@@ -216,6 +217,8 @@ export default function DiagnosticsScreen() {
     }
   }, [load]);
 
+  const pushConfig = getPushConfiguration();
+
   const onTest = useCallback(
     async (deviceId: string) => {
       setTestingId(deviceId);
@@ -267,6 +270,26 @@ export default function DiagnosticsScreen() {
           )
         }
       />
+
+      {pushConfig.kind === "missing-project-id" && (
+        <View
+          style={{
+            marginHorizontal: 16,
+            marginBottom: 12,
+            padding: 12,
+            borderRadius: 12,
+            backgroundColor: colors.warning + "14",
+            borderWidth: 1,
+            borderColor: colors.warning + "44",
+          }}
+        >
+          <Text style={{ color: colors.foreground, fontSize: 13 }}>
+            This build has no push service configured, so server alerts cannot
+            be registered. Background price and restock checks still run on a
+            schedule.
+          </Text>
+        </View>
+      )}
 
       {devices === null && !loadError ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 60 }}>
@@ -334,7 +357,9 @@ export default function DiagnosticsScreen() {
                 No devices yet
               </Text>
               <Text style={{ color: colors.muted, fontSize: 14, marginTop: 6, textAlign: "center" }}>
-                No devices with push tokens yet — open the app on a device while signed in.
+                {pushConfig.kind === "missing-project-id"
+                  ? "Push registration is unavailable in this build."
+                  : "No devices with push tokens yet — open the app on a device while signed in."}
               </Text>
             </View>
           }

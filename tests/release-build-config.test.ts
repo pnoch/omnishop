@@ -48,4 +48,20 @@ describe("release build configuration", () => {
     expect(docs).toContain("scripts/android-release.sh apk");
     expect(docs).not.toContain("pnpm build:apk                                 # cd android");
   });
+
+  it("verifies the signature and ABI of what it built", async () => {
+    const script = await readFile("scripts/android-release.sh", "utf8");
+    expect(script).toContain("scripts/verify-android-artifact.sh");
+    expect(script.indexOf("verify-android-artifact.sh")).toBeLessThan(
+      script.indexOf("Artifacts:"),
+    );
+
+    const verifier = await readFile(
+      "scripts/verify-android-artifact.sh",
+      "utf8",
+    );
+    expect(verifier).toContain("CN=Android Debug");
+    expect(verifier).toContain("arm64-v8a");
+    expect(verifier).toContain("apksigner");
+  });
 });

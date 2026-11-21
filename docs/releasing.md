@@ -129,14 +129,19 @@ Output: `android/app/build/outputs/apk/release/app-release.apk` (signed with
 scoped storage perms). Prebuild also regenerates Gradle 9.4.1 and applies the
 Room constructor keep rule (`plugins/with-android-r8-keep-rules`).
 
-Verify before uploading:
+`android-release.sh` verifies the artifacts it built before printing their
+paths, and the verifier can be re-run on a downloaded asset:
 
 ```bash
-APK=android/app/build/outputs/apk/release/app-release.apk
-# Existing key: CN=Product Stock Finder. A regenerated key (scripts/android-keystore.sh): CN=OmniShop.
-"$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs "$APK"
-"$ANDROID_HOME"/build-tools/*/aapt dump badging "$APK" | grep "package: name='app.siamcreations.omnishop'"
+scripts/verify-android-artifact.sh \
+  android/app/build/outputs/apk/release/app-release.apk \
+  android/app/build/outputs/bundle/release/app-release.aab
 ```
+
+It fails on the debug key, a non-ARM APK, or a wrong package, and prints the
+versionCode and SHA-256. Compare the printed signer digest with the release key:
+existing key `CN=Product Stock Finder` (`3d4b5642…549ecc`); a regenerated key
+(`scripts/android-keystore.sh`) is `CN=OmniShop`.
 
 Upload to Play Console (internal track). `versionCode` is whatever
 `android/app/build.gradle` has after prebuild; Play requires it to increase per
