@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.18] - 2026-11-23
+
+### Security
+
+- Backup import caps the file at 10 MB and each collection at 5,000 items, and
+  drops rows missing required fields (product name, alert target price, reminder
+  date). A crafted or accidentally huge backup can no longer freeze the app or
+  import unusable entries.
+
 ## [5.32.17] - 2026-11-22
 
 ### Security

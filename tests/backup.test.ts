@@ -4,6 +4,8 @@ import {
   buildBackup,
   parseBackup,
   BACKUP_FORMAT,
+  MAX_BACKUP_BYTES,
+  MAX_BACKUP_ITEMS,
 } from "../lib/backup";
 import type {
   AppSettings,
@@ -99,6 +101,43 @@ describe("buildBackup / parseBackup round-trip", () => {
 });
 
 describe("parseBackup validation", () => {
+  it("rejects a file over the import size cap", () => {
+    expect(parseBackup("x".repeat(MAX_BACKUP_BYTES + 1))).toBeNull();
+  });
+
+  it("rejects a collection over the item cap", () => {
+    const raw = JSON.stringify({
+      format: BACKUP_FORMAT,
+      version: 1,
+      exportedAt: NOW,
+      watchlist: Array.from({ length: MAX_BACKUP_ITEMS + 1 }, (_, i) =>
+        product(`p${i}`),
+      ),
+      alerts: [],
+      reminders: [],
+      stockWatches: [],
+    });
+    expect(parseBackup(raw)).toBeNull();
+  });
+
+  it("drops rows missing required fields instead of importing garbage", () => {
+    const raw = JSON.stringify({
+      format: BACKUP_FORMAT,
+      version: 1,
+      exportedAt: NOW,
+      watchlist: [{ id: "broken" }, { id: "ok", name: "Router" }],
+      alerts: [{ id: "a1", productId: "p1" }],
+      reminders: [{ id: "r1", productId: "p1" }],
+      stockWatches: [{ id: "w1", productId: "p1" }],
+    });
+    const backup = parseBackup(raw);
+    expect(backup?.watchlist.map((p) => p.id)).toEqual(["ok"]);
+    expect(backup?.watchlist[0]?.listings).toEqual([]);
+    expect(backup?.alerts).toEqual([]);
+    expect(backup?.reminders).toEqual([]);
+    expect(backup?.stockWatches).toEqual([]);
+  });
+
   it("rejects garbage JSON", () => {
     expect(parseBackup("not json")).toBeNull();
   });

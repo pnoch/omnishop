@@ -10,6 +10,10 @@ import { stripBackupSecrets } from "./settings-privacy";
 export const BACKUP_FORMAT = "omnishop-backup";
 export const LEGACY_BACKUP_FORMATS = ["product-stock-finder-backup"];
 export const BACKUP_VERSION = 1;
+// A backup is user-controlled input. Cap the file before parsing and each
+// collection before merging so a huge or crafted file cannot freeze the app.
+export const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
+export const MAX_BACKUP_ITEMS = 5000;
 
 // Baseline used to tell "explicitly customized on the exporting device" apart
 // from "merely carried along at its default value": default-valued fields in a
@@ -75,27 +79,56 @@ export function buildBackup(input: BackupInput): string {
   );
 }
 
-function asArray<T>(value: unknown): T[] {
-  return Array.isArray(value) ? (value as T[]) : [];
+function asArray(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
 }
 
-/**
- * Like asArray, but drops entries without a usable string id. A malformed row
- * otherwise collides on the same `undefined` map key, writes a bogus
- * `"undefined"` sync-meta entry, and retries forever as a server validation
- * rejection.
- */
-function asIdArray<T extends { id?: unknown }>(value: unknown): T[] {
-  return asArray<T>(value).filter(
-    (item) =>
-      !!item &&
-      typeof item === "object" &&
-      typeof (item as { id?: unknown }).id === "string" &&
-      (item as { id: string }).id.length > 0,
-  );
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function hasId(value: Record<string, unknown>): boolean {
+  return typeof value.id === "string" && value.id.length > 0;
+}
+
+function asProductArray(value: unknown): Product[] {
+  return asArray(value)
+    .filter(isRecord)
+    .filter((item) => hasId(item) && typeof item.name === "string")
+    .map((item) => ({
+      ...item,
+      listings: Array.isArray(item.listings) ? item.listings : [],
+    })) as unknown as Product[];
+}
+
+function asAlertArray(value: unknown): PriceAlert[] {
+  return asArray(value)
+    .filter(isRecord)
+    .filter(
+      (item) =>
+        hasId(item) &&
+        typeof item.productId === "string" &&
+        item.productId.length > 0 &&
+        typeof item.targetPrice === "number" &&
+        Number.isFinite(item.targetPrice),
+    ) as unknown as PriceAlert[];
+}
+
+function asReminderArray(value: unknown): BackOrderReminder[] {
+  return asArray(value)
+    .filter(isRecord)
+    .filter(
+      (item) =>
+        hasId(item) &&
+        typeof item.productId === "string" &&
+        item.productId.length > 0 &&
+        typeof item.reminderDate === "string" &&
+        item.reminderDate.length > 0,
+    ) as unknown as BackOrderReminder[];
 }
 
 export function parseBackup(json: string): BackupData | null {
+  if (json.length > MAX_BACKUP_BYTES) return null;
   let parsed: unknown;
   try {
     parsed = JSON.parse(json);
@@ -113,17 +146,20 @@ export function parseBackup(json: string): BackupData | null {
   if (typeof obj.version !== "number" || obj.version > BACKUP_VERSION) {
     return null;
   }
+  for (const key of ["watchlist", "alerts", "reminders", "stockWatches"]) {
+    if (asArray(obj[key]).length > MAX_BACKUP_ITEMS) return null;
+  }
   return {
     format: BACKUP_FORMAT,
     version: obj.version,
     exportedAt: typeof obj.exportedAt === "string" ? obj.exportedAt : "",
-    watchlist: asIdArray<Product>(obj.watchlist),
-    alerts: asIdArray<PriceAlert>(obj.alerts),
-    reminders: asIdArray<BackOrderReminder>(obj.reminders),
-    stockWatches: asIdArray<BackOrderReminder>(obj.stockWatches),
+    watchlist: asProductArray(obj.watchlist),
+    alerts: asAlertArray(obj.alerts),
+    reminders: asReminderArray(obj.reminders),
+    stockWatches: asReminderArray(obj.stockWatches),
     settings:
-      obj.settings && typeof obj.settings === "object"
-        ? stripBackupSecrets(obj.settings as AppSettings)
+      isRecord(obj.settings)
+        ? stripBackupSecrets(obj.settings as unknown as AppSettings)
         : undefined,
   };
 }

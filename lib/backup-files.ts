@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
 import * as DocumentPicker from "expo-document-picker";
+import { MAX_BACKUP_BYTES } from "./backup";
 
 function backupFileName(): string {
   return `omnishop-backup-${new Date().toISOString().slice(0, 10)}.json`;
@@ -49,6 +50,7 @@ export async function pickBackupFile(): Promise<string | null> {
         input.onchange = () => {
           const file = input.files?.[0];
           if (!file) return resolve(null);
+          if (file.size > MAX_BACKUP_BYTES) return resolve(null);
           const reader = new FileReader();
           reader.onload = () =>
             resolve(typeof reader.result === "string" ? reader.result : null);
@@ -64,7 +66,11 @@ export async function pickBackupFile(): Promise<string | null> {
       type: ["application/json", "text/plain", "application/octet-stream"],
     });
     if (result.canceled || result.assets.length === 0) return null;
-    return await FileSystem.readAsStringAsync(result.assets[0].uri);
+    const asset = result.assets[0];
+    if (typeof asset.size === "number" && asset.size > MAX_BACKUP_BYTES) {
+      return null;
+    }
+    return await FileSystem.readAsStringAsync(asset.uri);
   } catch {
     return null;
   }
