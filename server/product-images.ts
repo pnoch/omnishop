@@ -9,6 +9,7 @@ import { fetchWithTimeout } from "./fetch-timeout";
 import { getImageThumbnailDataUrl } from "./image-thumbnail";
 import { generateImage } from "./_core/imageGeneration";
 import { tryConsumeBudget } from "./spend-budget";
+import { isBlockedUrl } from "./product-parse";
 
 type CatalogProduct = (typeof PRODUCT_CATALOG)[number];
 
@@ -72,6 +73,9 @@ async function getProductImageInner(
   }
 
   if (!imageUrl) return null;
+  // Cached values and page metadata predate the SSRF checks below, so gate the
+  // final fetch/thumbnail path as well.
+  if (isBlockedUrl(imageUrl)) return null;
   if (!thumbWidth) return { imageUrl };
   const thumbnailUrl = await getImageThumbnailDataUrl(imageUrl, thumbWidth);
   return { imageUrl, ...(thumbnailUrl ? { thumbnailUrl } : {}) };
@@ -121,6 +125,8 @@ export function extractProductImageUrl(
     if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
       return null;
     }
+    // A trusted page can still advertise an internal target as its og:image.
+    if (isBlockedUrl(resolved.toString())) return null;
     // A successful page can still advertise a site logo as its social image.
     // Those are not product photos; leave the card on the placeholder.
     if (
@@ -184,13 +190,17 @@ async function resolveDistributorImages(
         15_000,
       );
       if (!response.ok) continue;
+      const finalUrl = response.url || sourceUrl;
+      // `redirect: "follow"` could leave the distributor host entirely.
+      if (isBlockedUrl(finalUrl)) continue;
+      if (!trusted && !isAllowedImageSource(finalUrl)) continue;
       const contentType = response.headers.get("content-type") ?? "";
       if (!contentType.includes("text/html") && !contentType.includes("xhtml")) {
         continue;
       }
       const html = await response.text();
       if (!trusted && !pageMatchesProduct(html, product)) continue;
-      const image = extractProductImageUrl(html, response.url || sourceUrl);
+      const image = extractProductImageUrl(html, finalUrl);
       if (image) return image;
     } catch {
       // Try the next product page.

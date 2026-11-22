@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.17] - 2026-11-22
+
+### Security
+
+- Product-image resolution rejects redirects that leave distributor hosts and
+  `og:image` targets on private or loopback hosts, closing an SSRF path from a
+  compromised distributor page. Cached image URLs are checked before a thumbnail
+  fetch as well.
+
 ## [5.32.16] - 2026-11-22
 
 ### Security

@@ -100,6 +100,25 @@ describe("real product images from distributor pages", () => {
     ).toBeNull();
   });
 
+  // A compromised distributor page could advertise an internal URL as its
+  // social image. The page is trusted; its og:image target is not.
+  it("rejects og:image URLs that resolve to private hosts", () => {
+    const html = (url: string) =>
+      `<meta property="og:image" content="${url}">`;
+    expect(
+      extractProductImageUrl(
+        html("http://127.0.0.1:3000/admin.png"),
+        "https://server2u.com/shop/crs804",
+      ),
+    ).toBeNull();
+    expect(
+      extractProductImageUrl(
+        html("http://169.254.169.254/latest/meta-data/secret.png"),
+        "https://server2u.com/shop/crs804",
+      ),
+    ).toBeNull();
+  });
+
   it("only accepts distributor hosts", () => {
     expect(isAllowedImageSource("https://server2u.com/shop/crs804")).toBe(true);
     expect(isAllowedImageSource("https://evil.example/crs804")).toBe(false);
