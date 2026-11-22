@@ -63,6 +63,8 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
               ? "The search service is busy. Try again in a moment."
               : result.reason === "unreadable"
                 ? "eBay returned a page the app could not read. Try again later."
+                : result.reason === "credentials"
+                  ? "eBay search is temporarily unavailable. Try again later."
                 : "Could not reach the search service. Check your connection and try again."}</Text>
         {result.reason !== "not_configured" && <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retry eBay search" onPress={() => setRetry((value) => value + 1)} style={{ paddingVertical: 12 }}><Text style={{ color: colors.primary }}>Retry</Text></TouchableOpacity>}
       </View>}

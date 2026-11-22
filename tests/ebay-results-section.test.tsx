@@ -66,6 +66,17 @@ describe("eBay inline search", () => {
     expect(screen.getByText("RTX5090")).toBeTruthy();
   });
 
+  it("does not blame the connection when eBay rejects server credentials", async () => {
+    state.fetch.mockResolvedValueOnce({
+      kind: "unavailable",
+      reason: "credentials",
+    });
+    render(<EbayResultsSection query="rtx5090" onTrack={() => {}} />);
+    await debounce();
+    expect(screen.getByText(/temporarily unavailable/i)).toBeTruthy();
+    expect(screen.queryByText(/check your connection/i)).toBeNull();
+  });
+
   it("does not search pasted URLs", async () => {
     render(<EbayResultsSection query="https://www.ebay.com/itm/178212205608" onTrack={() => {}} />);
     await debounce();

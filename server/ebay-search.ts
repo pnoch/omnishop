@@ -14,14 +14,33 @@ const SearchResponse = z.object({
   })).optional(),
 });
 
-function itemIdentity(raw: string): { itemId: string; url: string } | null {
+type Environment = "production" | "sandbox";
+
+function itemIdentity(
+  raw: string,
+  environment: Environment = "production",
+): { itemId: string; url: string } | null {
   try {
     const url = new URL(raw, "https://www.ebay.com");
-    if (url.protocol !== "https:" || url.username || url.password || url.port || !["www.ebay.com", "ebay.com"].includes(url.hostname)) return null;
+    // Sandbox itemWebUrl values are `http://www.sandbox.ebay.com/itm/...`.
+    // Production must stay https-only.
+    const protocolOk =
+      url.protocol === "https:" ||
+      (environment === "sandbox" && url.protocol === "http:");
+    const hosts =
+      environment === "sandbox"
+        ? ["www.sandbox.ebay.com", "sandbox.ebay.com"]
+        : ["www.ebay.com", "ebay.com"];
+    if (!protocolOk || url.username || url.password || url.port || !hosts.includes(url.hostname)) return null;
     if (url.searchParams.get("var")) return null;
     const match = url.pathname.match(/^\/itm\/(?:[^/]+\/)?([1-9]\d{0,19})\/?$/);
     const itemId = match?.[1];
-    return itemId ? { itemId, url: `https://www.ebay.com/itm/${itemId}` } : null;
+    if (!itemId) return null;
+    const base =
+      environment === "sandbox"
+        ? "https://www.sandbox.ebay.com"
+        : "https://www.ebay.com";
+    return { itemId, url: `${base}/itm/${itemId}` };
   } catch { return null; }
 }
 
@@ -33,13 +52,17 @@ function imageUrl(raw: string | undefined): string | null {
   } catch { return null; }
 }
 
-export function mapEbaySearchResponse(raw: unknown): EbaySearchResult {
+export function mapEbaySearchResponse(
+  raw: unknown,
+  options: { environment?: Environment } = {},
+): EbaySearchResult {
   const parsed = SearchResponse.safeParse(raw);
   if (!parsed.success) return { kind: "unavailable", reason: "unreadable" };
+  const environment = options.environment ?? "production";
   const listings: EbaySearchListing[] = [];
   const seen = new Set<string>();
   for (const item of parsed.data.itemSummaries ?? []) {
-    const identity = itemIdentity(item.itemWebUrl);
+    const identity = itemIdentity(item.itemWebUrl, environment);
     if (!identity || seen.has(identity.itemId) || !item.title.trim()) continue;
     seen.add(identity.itemId);
     const price = Number(item.price?.value);
@@ -132,6 +155,7 @@ export function createEbaySearch(deps: Dependencies) {
   }
 
   async function run(query: string): Promise<EbaySearchResult> {
+    const environment = deps.environment ?? "production";
     if (deps.clientId && deps.clientSecret) {
       try {
         const bearer = await accessToken();
@@ -142,10 +166,38 @@ export function createEbaySearch(deps: Dependencies) {
         });
         if (res.status === 401) token = null;
         if (res.ok) {
-          const result = mapEbaySearchResponse(await res.json());
-          if (result.kind !== "unavailable") return result;
+          const result = mapEbaySearchResponse(await res.json(), {
+            environment,
+          });
+          // Sandbox data never appears on the public site, so a failed mapping
+          // must not fall through to the production browser page.
+          if (environment === "sandbox" || result.kind !== "unavailable") {
+            return result;
+          }
+        } else if (environment === "sandbox") {
+          return {
+            kind: "unavailable",
+            reason:
+              res.status === 401 || res.status === 403
+                ? "credentials"
+                : "network",
+          };
         }
-      } catch { /* Public browser fallback does not use account credentials. */ }
+      } catch (error) {
+        // Public browser fallback does not use account credentials, but it must
+        // only run against production.
+        if (environment === "sandbox") {
+          return {
+            kind: "unavailable",
+            reason:
+              error instanceof Error && error.message === "credentials"
+                ? "credentials"
+                : "network",
+          };
+        }
+      }
+    } else if (environment === "sandbox") {
+      return { kind: "unavailable", reason: "not_configured" };
     }
     try {
       const params = new URLSearchParams({ _nkw: query, _ipg: "25" });

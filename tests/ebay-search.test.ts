@@ -119,4 +119,61 @@ describe("eBay provider", () => {
     expect(requests[0]).toBe("https://api.sandbox.ebay.com/identity/v1/oauth2/token");
     expect(requests[1]).toContain("https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search");
   });
+
+  it("accepts sandbox item URLs when mapping a sandbox response", () => {
+    const sandboxResult = {
+      total: 1,
+      itemSummaries: [
+        {
+          itemWebUrl:
+            "http://www.sandbox.ebay.com/itm/Test-Router-/110531452595?hash=item19bc301eb3",
+          title: "Test Router",
+          price: { value: "99.00", currency: "USD" },
+        },
+      ],
+    };
+    expect(
+      mapEbaySearchResponse(sandboxResult, { environment: "sandbox" }),
+    ).toMatchObject({
+      kind: "results",
+      source: "api",
+      listings: [
+        {
+          itemId: "110531452595",
+          url: "https://www.sandbox.ebay.com/itm/110531452595",
+        },
+      ],
+    });
+    // Production mapping must still reject sandbox links.
+    expect(mapEbaySearchResponse(sandboxResult)).toEqual({
+      kind: "unavailable",
+      reason: "unreadable",
+    });
+  });
+
+  it("does not fall back to the production page in sandbox mode", async () => {
+    const render = vi.fn(async () => page);
+    const rejected = createEbaySearch({
+      fetch: async () => new Response("denied", { status: 403 }),
+      render,
+      clientId: "sandbox-id",
+      clientSecret: "sandbox-secret",
+      environment: "sandbox",
+    });
+    expect(await rejected("gpu")).toEqual({
+      kind: "unavailable",
+      reason: "credentials",
+    });
+
+    const missing = createEbaySearch({
+      fetch,
+      render,
+      environment: "sandbox",
+    });
+    expect(await missing("gpu")).toEqual({
+      kind: "unavailable",
+      reason: "not_configured",
+    });
+    expect(render).not.toHaveBeenCalled();
+  });
 });

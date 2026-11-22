@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.11] - 2026-11-22
+
+### Fixed
+
+- Sandbox eBay results are no longer discarded. Sandbox `itemWebUrl` values use
+  `http://www.sandbox.ebay.com`, which the mapper rejected because it only
+  accepted production https links. Sandbox mode also no longer falls back to the
+  production browser page, and a rejected keyset reports `credentials` instead
+  of blaming the network.
+
 ## [5.32.10] - 2026-11-22
 
 ### Changed
