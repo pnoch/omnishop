@@ -64,4 +64,12 @@ describe("release build configuration", () => {
     expect(verifier).toContain("arm64-v8a");
     expect(verifier).toContain("apksigner");
   });
+
+  it("enforces the coverage thresholds in CI", async () => {
+    // `pnpm test` skips coverage, so the thresholds in vitest.config.ts only
+    // gate a release when CI runs `test:coverage`.
+    const ci = await readFile(".github/workflows/ci.yml", "utf8");
+    expect(ci).toContain("pnpm test:coverage");
+    expect(ci).not.toMatch(/^\s+- run: pnpm test\s*$/m);
+  });
 });

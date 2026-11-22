@@ -52,7 +52,9 @@ jobs:
       - run: pnpm check
       - run: pnpm check:desktop
       - run: pnpm lint
-      - run: pnpm test
+      # Coverage (not just a green test run): the thresholds in vitest.config.ts
+      # are the merge gate. Running `pnpm test` here skipped them entirely.
+      - run: pnpm test:coverage
       - run: pnpm --dir desktop test
       # The desktop Vite production build: `check:desktop` (tsc) and vitest do
       # not exercise the bundler, so a build-time regression (e.g. a `define`
