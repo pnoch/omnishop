@@ -14,6 +14,7 @@ import { createRemindersStorage } from "./reminders";
 import { createCriterionWatchesStorage } from "./criterion-watches";
 import { createSettingsStorage } from "./settings";
 import { stripDeviceLocalSettings } from "../settings-privacy";
+import { clearSecureLlmKey } from "../llm-key-store";
 import { createDigestFxStorage } from "./digest-fx";
 import { createFxHistoryStorage } from "./fx-history";
 import { RECENT_SEARCHES_KEY } from "../recent-searches";
@@ -105,6 +106,9 @@ export function createStorage(
       ...(await ctx.listQuarantinedKeys()),
       QUARANTINE_INDEX_KEY,
     ]);
+    // The BYO-LLM key lives in the OS keychain on native, outside the adapter
+    // keys above, so a full wipe has to remove it explicitly.
+    await clearSecureLlmKey();
     ctx.setClearing(false);
     await clearExpiredAccount();
     // Settings are preserved as device preferences, but account credentials are

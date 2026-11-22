@@ -4,6 +4,11 @@ import { generateTagId } from "../tags";
 import type { StorageContext } from "./context";
 import { quarantinePayload } from "./context";
 import type { createWatchlistStorage } from "./watchlist";
+import {
+  getSecureLlmKey,
+  setSecureLlmKey,
+} from "../llm-key-store";
+import { stripDeviceLocalSettings } from "../settings-privacy";
 
 type WatchlistReader = Pick<
   ReturnType<typeof createWatchlistStorage>,
@@ -38,8 +43,40 @@ export function createSettingsStorage(
 ) {
   const { adapter, KEYS, notify, enqueue } = ctx;
   const { updateWatchlist } = watchlist;
+  let keyCleanupScheduled = false;
 
   // ─── Settings ───────────────────────────────────────────────────────────────
+
+  // Serialized with normal settings writes so a concurrent update cannot be
+  // reverted by the cleanup. getSettings() may run inside the queue, so the
+  // task is fire-and-forget rather than awaited.
+  function scheduleStoredKeyCleanup(): void {
+    if (keyCleanupScheduled) return;
+    keyCleanupScheduled = true;
+    void enqueue(KEYS.SETTINGS, async () => {
+      try {
+        const current = await getSettings();
+        await persistSettings(current, { silent: true });
+      } finally {
+        keyCleanupScheduled = false;
+      }
+    }).catch(() => {
+      keyCleanupScheduled = false;
+    });
+  }
+
+  async function persistSettings(
+    settings: AppSettings,
+    opts?: { silent?: boolean },
+  ): Promise<void> {
+    // Native writes the key to the OS keychain and keeps it out of plain
+    // AsyncStorage. When SecureStore is unavailable (web, tests), keep the
+    // legacy copy so the key is never silently lost.
+    const secured = await setSecureLlmKey(settings.llmApiKey);
+    const toStore = secured ? stripDeviceLocalSettings(settings) : settings;
+    await adapter.setItem(KEYS.SETTINGS, JSON.stringify(toStore));
+    if (!opts?.silent) notify("settings", "settings");
+  }
 
   async function getSettings(): Promise<AppSettings> {
     let raw: string | null;
@@ -57,7 +94,19 @@ export function createSettingsStorage(
       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
         throw new Error("settings payload must be an object");
       }
-      return { ...DEFAULT_SETTINGS, ...(parsed as Partial<AppSettings>) };
+      const stored = parsed as Partial<AppSettings>;
+      const settings = { ...DEFAULT_SETTINGS, ...stored };
+      const secureKey = await getSecureLlmKey();
+      if (secureKey) {
+        settings.llmApiKey = secureKey;
+        // A pre-SecureStore build left a plaintext copy in the JSON. Remove it
+        // once the keychain has the value.
+        if (stored.llmApiKey) scheduleStoredKeyCleanup();
+      } else if (settings.llmApiKey) {
+        const secured = await setSecureLlmKey(settings.llmApiKey);
+        if (secured) scheduleStoredKeyCleanup();
+      }
+      return settings;
     } catch {
       await quarantinePayload(adapter, KEYS.SETTINGS, raw);
       log.warn("[storage] quarantined corrupt payload for app_settings");
@@ -70,9 +119,8 @@ export function createSettingsStorage(
     opts?: { silent?: boolean },
   ): Promise<void> {
     await enqueue(KEYS.SETTINGS, async () => {
-      await adapter.setItem(KEYS.SETTINGS, JSON.stringify(settings));
+      await persistSettings(settings, opts);
     });
-    if (!opts?.silent) notify("settings", "settings");
   }
 
   // Serialized read-modify-write. Two quick setting changes that each read the
@@ -85,7 +133,7 @@ export function createSettingsStorage(
     await enqueue(KEYS.SETTINGS, async () => {
       const current = await getSettings();
       next = { ...current, ...patch };
-      await adapter.setItem(KEYS.SETTINGS, JSON.stringify(next));
+      await persistSettings(next, { silent: true });
     });
     notify("settings", "settings");
     return next ?? (await getSettings());
@@ -115,10 +163,7 @@ export function createSettingsStorage(
     await enqueue(KEYS.SETTINGS, async () => {
       const settings = await getSettings();
       next = fn(settings.tagDefinitions ?? {});
-      await adapter.setItem(
-        KEYS.SETTINGS,
-        JSON.stringify({ ...settings, tagDefinitions: next }),
-      );
+      await persistSettings({ ...settings, tagDefinitions: next }, { silent: true });
     });
     // Tag definitions live in the settings collection, so the change must mark
     // settings dirty or it never syncs to other devices (products would then

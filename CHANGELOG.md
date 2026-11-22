@@ -4,6 +4,17 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.16] - 2026-11-22
+
+### Security
+
+- The BYO-LLM API key is stored in the OS keychain on iOS and Android instead of
+  plaintext AsyncStorage settings. Existing plaintext keys migrate on first read,
+  keychain writes are cached to avoid a read on every settings access, and a
+  failed keychain write keeps the legacy copy rather than losing the key. Web
+  keeps the existing storage because SecureStore is unavailable there. The key
+  remains excluded from sync and backups.
+
 ## [5.32.15] - 2026-11-22
 
 ### Security

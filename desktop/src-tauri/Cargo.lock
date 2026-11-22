@@ -2646,7 +2646,7 @@ dependencies = [
 
 [[package]]
 name = "omnishop"
-version = "5.32.15"
+version = "5.32.16"
 dependencies = [
  "futures",
  "notify-rust",
