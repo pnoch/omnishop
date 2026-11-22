@@ -3,8 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { ScrollView, Text, View, Platform, ActivityIndicator } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
 
 import { ScreenContainer } from "@/components/screen-container";
+import { PageHeader } from "@/components/ui/page-header";
+import { goBackOrHome } from "@/lib/navigation";
 import { PaywallScreen } from "@/components/paywall/paywall-screen";
 import { useAuth } from "@/hooks/use-auth";
 import { useSettings } from "@/lib/settings-provider";
@@ -25,7 +28,6 @@ import {
 import { useMonitoringHealth } from "@/hooks/use-monitoring-health";
 
 import { ConnectionSection } from "@/components/settings/connection-section";
-import { Heading } from "@/components/ui/heading";
 import { AccountSection } from "@/components/settings/account-section";
 import { DeviceManagementSection } from "@/components/settings/device-management-section";
 import { DataSection } from "@/components/settings/data-section";
@@ -44,6 +46,7 @@ import { LoginModal } from "@/components/settings/login-modal";
 import { SectionHeader } from "@/components/settings/section-header";
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { configured } = useServerConfig();
@@ -215,11 +218,7 @@ export default function SettingsScreen() {
           alignSelf: "center",
         }}
       >
-        <View className="px-4 pt-4 pb-2">
-          <Heading level={1} className="text-2xl font-bold text-foreground">
-            Settings
-          </Heading>
-        </View>
+        <PageHeader title="Settings" onBack={() => goBackOrHome(router)} />
 
         <ConnectionSection />
 

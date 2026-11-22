@@ -66,6 +66,14 @@ export const CatalogProductCard = memo(function CatalogProductCard({
         <Text style={{ color: colors.muted, fontSize: 12, marginTop: 3 }} numberOfLines={1} ellipsizeMode="tail">
           {product.modelNumber}
         </Text>
+        {isAdding && (
+          <Text
+            style={{ color: colors.muted, fontSize: 12, marginTop: 3 }}
+            accessibilityLiveRegion="polite"
+          >
+            Checking distributor prices…
+          </Text>
+        )}
         <View
           style={{
             flexDirection: "row",

@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.9] - 2026-11-22
+
+### Changed
+
+- Settings has the shared page header, so the gear route has a visible 44 dp back
+  control. `PageHeader` now renders a real level-1 heading on web, keeping one H1
+  per screen.
+- A product being added shows "Checking distributor prices…" while the
+  distributor scrape runs, instead of only a spinner.
+
 ## [5.32.8] - 2026-11-22
 
 ### Fixed

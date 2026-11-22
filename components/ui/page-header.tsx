@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useColors } from "@/hooks/use-colors";
+import { Heading } from "@/components/ui/heading";
 
 export function PageHeader({
   title,
@@ -46,13 +47,13 @@ export function PageHeader({
         </TouchableOpacity>
       )}
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text
-          accessibilityRole="header"
+        <Heading
+          level={1}
           style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}
           numberOfLines={2}
         >
           {title}
-        </Text>
+        </Heading>
         {subtitle ? (
           <Text style={{ color: colors.muted, fontSize: 12, marginTop: 2 }} numberOfLines={2}>
             {subtitle}
