@@ -10,10 +10,15 @@ import { EBAY_SEARCH_QUERY_MAX } from "../../shared/ebay-search";
 
 export const productsRouter = router({
   searchEbay: publicProcedure
-    .input(z.object({ query: z.string().trim().min(2).max(EBAY_SEARCH_QUERY_MAX) }))
+    .input(
+      z.object({
+        query: z.string().trim().min(2).max(EBAY_SEARCH_QUERY_MAX),
+        force: z.boolean().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       checkRateLimit(ctx, "products.searchEbay", 10, 60_000);
-      return searchEbay(input.query);
+      return searchEbay(input.query, { force: input.force });
     }),
   resolveMarketplace: publicProcedure
     .input(z.object({ url: z.string().min(1).max(MAX_MARKETPLACE_URL_LENGTH) }))

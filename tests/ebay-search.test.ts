@@ -188,4 +188,14 @@ describe("eBay provider", () => {
     expect(second).toEqual({ kind: "unavailable", reason: "blocked" });
     expect(render).toHaveBeenCalledTimes(1);
   });
+
+  it("lets a manual retry bypass the blocked cooldown", async () => {
+    const render = vi.fn(async () => "<title>Pardon our interruption</title>");
+    const search = createEbaySearch({ fetch, render });
+    await search("gpu");
+    await search("router");
+    expect(render).toHaveBeenCalledTimes(1);
+    await search("router", { force: true });
+    expect(render).toHaveBeenCalledTimes(2);
+  });
 });

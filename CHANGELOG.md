@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.13] - 2026-11-22
+
+### Fixed
+
+- The eBay Retry button bypasses the blocked-browser cooldown, so a manual retry
+  can actually reach eBay instead of returning the cached block.
+
+### Added
+
+- When eBay search is blocked, the card links to the same keyword search on
+  ebay.com.
+
 ## [5.32.12] - 2026-11-22
 
 ### Fixed

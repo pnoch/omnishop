@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, Linking, Text, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { fetchEbaySearch } from "@/lib/server-marketplace";
 import { convertPrice } from "@/lib/currency";
@@ -36,7 +36,11 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
       setLoading(true);
     });
     const timer = setTimeout(() => {
-      void fetchEbaySearch(trimmed).then((value) => {
+      const request =
+        retry > 0
+          ? fetchEbaySearch(trimmed, { force: true })
+          : fetchEbaySearch(trimmed);
+      void request.then((value) => {
         if (!active) return;
         setResult(value);
         setLoading(false);
@@ -67,6 +71,19 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
                   ? "eBay search is temporarily unavailable. Try again later."
                 : "Could not reach the search service. Check your connection and try again."}</Text>
         {result.reason !== "not_configured" && <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retry eBay search" onPress={() => setRetry((value) => value + 1)} style={{ paddingVertical: 12 }}><Text style={{ color: colors.primary }}>Retry</Text></TouchableOpacity>}
+        {result.reason === "blocked" && (
+          <TouchableOpacity
+            accessibilityRole="link"
+            accessibilityLabel="Open this search on eBay"
+            onPress={() => {
+              const url = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(trimmed)}`;
+              void Linking.openURL(url).catch(() => {});
+            }}
+            style={{ paddingVertical: 12 }}
+          >
+            <Text style={{ color: colors.primary }}>Open on eBay</Text>
+          </TouchableOpacity>
+        )}
       </View>}
       {result?.kind === "results" && <>
         <Text style={{ color: colors.muted, fontSize: 12, paddingTop: 4 }}>Observed offers for your query. Confirm model, condition, and shipping before tracking.</Text>

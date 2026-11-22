@@ -159,7 +159,10 @@ export function createEbaySearch(deps: Dependencies) {
     try { return await tokenPending; } finally { tokenPending = null; }
   }
 
-  async function run(query: string): Promise<EbaySearchResult> {
+  async function run(
+    query: string,
+    options: { force?: boolean } = {},
+  ): Promise<EbaySearchResult> {
     const environment = deps.environment ?? "production";
     if (deps.clientId && deps.clientSecret) {
       try {
@@ -204,7 +207,7 @@ export function createEbaySearch(deps: Dependencies) {
     } else if (environment === "sandbox") {
       return { kind: "unavailable", reason: "not_configured" };
     }
-    if (Date.now() < browserBlockedUntil) {
+    if (!options.force && Date.now() < browserBlockedUntil) {
       return { kind: "unavailable", reason: "blocked" };
     }
     try {
@@ -219,7 +222,10 @@ export function createEbaySearch(deps: Dependencies) {
     } catch { return { kind: "unavailable", reason: "network" }; }
   }
 
-  return async (rawQuery: string): Promise<EbaySearchResult> => {
+  return async (
+    rawQuery: string,
+    options: { force?: boolean } = {},
+  ): Promise<EbaySearchResult> => {
     const query = rawQuery.trim();
     const key = query.toLowerCase();
     const hit = cache.get(key);
@@ -228,7 +234,7 @@ export function createEbaySearch(deps: Dependencies) {
     if (existing) return existing;
     if (active >= 2) return { kind: "unavailable", reason: "busy" };
     active++;
-    const operation = run(query).then((result) => {
+    const operation = run(query, options).then((result) => {
       if (result.kind !== "unavailable") {
         if (cache.size >= 100) cache.delete(cache.keys().next().value ?? "");
         cache.set(key, { result, until: Date.now() + 300000 });

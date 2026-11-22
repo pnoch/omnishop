@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { EbaySearchResult } from "../shared/ebay-search";
 
-const state = vi.hoisted(() => ({ fetch: vi.fn() }));
+const state = vi.hoisted(() => ({ fetch: vi.fn(), openURL: vi.fn() }));
 vi.mock("@/lib/server-marketplace", () => ({ fetchEbaySearch: state.fetch }));
 vi.mock("@/lib/storage", () => ({ getSettings: vi.fn(async () => ({ displayCurrency: "USD" })) }));
 vi.mock("@/hooks/use-colors", () => ({ useColors: () => ({ foreground: "#111", muted: "#888", primary: "#00f", border: "#ddd", surface: "#fff" }) }));
@@ -15,6 +15,13 @@ vi.mock("react-native", async () => {
     Text: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
     Image: () => null,
     ActivityIndicator: () => <span>loading</span>,
+    Linking: {
+      openURL: (url: string) => {
+        state.openURL(url);
+        return Promise.resolve();
+      },
+    },
+    Platform: { OS: "android" },
     TouchableOpacity: ({ children, onPress, accessibilityLabel }: { children?: React.ReactNode; onPress: () => void; accessibilityLabel: string }) => <button aria-label={accessibilityLabel} onClick={onPress}>{children}</button>,
   };
 });
@@ -33,7 +40,7 @@ describe("eBay inline search", () => {
     expect(screen.getByText(/no reachable API server was configured/)).toBeTruthy();
     expect(screen.queryByLabelText("Retry eBay search")).toBeNull();
   });
-  beforeEach(() => { vi.useFakeTimers(); state.fetch.mockReset(); state.fetch.mockResolvedValue(result); });
+  beforeEach(() => { vi.useFakeTimers(); state.fetch.mockReset(); state.openURL.mockReset(); state.fetch.mockResolvedValue(result); });
   afterEach(() => { cleanup(); vi.useRealTimers(); });
 
   it("searches the entered keyword and tracks the selected offer without pasting", async () => {
@@ -63,6 +70,7 @@ describe("eBay inline search", () => {
     fireEvent.click(screen.getByLabelText("Retry eBay search"));
     await debounce();
     expect(state.fetch).toHaveBeenCalledTimes(2);
+    expect(state.fetch).toHaveBeenLastCalledWith("rtx5090", { force: true });
     expect(screen.getByText("RTX5090")).toBeTruthy();
   });
 
@@ -75,6 +83,16 @@ describe("eBay inline search", () => {
     await debounce();
     expect(screen.getByText(/temporarily unavailable/i)).toBeTruthy();
     expect(screen.queryByText(/check your connection/i)).toBeNull();
+  });
+
+  it("offers a direct eBay search when the page fallback is blocked", async () => {
+    state.fetch.mockResolvedValueOnce({ kind: "unavailable", reason: "blocked" });
+    render(<EbayResultsSection query="crs326" onTrack={() => {}} />);
+    await debounce();
+    fireEvent.click(screen.getByLabelText("Open this search on eBay"));
+    expect(state.openURL).toHaveBeenCalledWith(
+      "https://www.ebay.com/sch/i.html?_nkw=crs326",
+    );
   });
 
   it("does not search pasted URLs", async () => {
