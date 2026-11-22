@@ -13,7 +13,9 @@ type WatchlistReader = Pick<
 export const DEFAULT_SETTINGS: AppSettings = {
   theme: "auto",
   displayCurrency: "USD",
-  checkInterval: "manual",
+  // Daily keeps the welcome screen's alert promise without hourly scraping on a
+  // fresh install; users can still choose manual.
+  checkInterval: "daily",
   notificationsEnabled: true,
   backgroundServiceEnabled: false,
   stockAlerts: true,

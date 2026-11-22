@@ -401,7 +401,9 @@ describe("settings", () => {
     const s = await getSettings();
     expect(s.theme).toBe("auto");
     expect(s.displayCurrency).toBe("USD");
-    expect(s.checkInterval).toBe("manual");
+    // A fresh install schedules a daily background check so the welcome
+    // screen's alert promise holds without a trip to Settings.
+    expect(s.checkInterval).toBe("daily");
     expect(s.webNotificationsEnabled).toBe(false);
   });
 

@@ -20,7 +20,7 @@ export const BACKUP_VERSION = 1;
 const SETTING_DEFAULTS: Record<string, unknown> = {
   theme: "auto",
   displayCurrency: "USD",
-  checkInterval: "manual",
+  checkInterval: "daily",
   notificationsEnabled: true,
   stockAlerts: true,
   priceAlerts: true,

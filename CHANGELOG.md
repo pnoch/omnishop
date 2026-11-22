@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.14] - 2026-11-22
+
+### Changed
+
+- A fresh install now defaults to a **daily** background check instead of
+  **manual**, so the welcome screen's restock and price-alert promise holds
+  without a trip to Settings. Existing saved values are untouched, and manual
+  remains an option.
+
 ## [5.32.13] - 2026-11-22
 
 ### Fixed
