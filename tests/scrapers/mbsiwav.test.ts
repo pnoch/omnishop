@@ -41,4 +41,23 @@ describe("Mbsiwav Parser", () => {
     expect(result!.currency).toBe("CAD");
     expect(result!.stockStatus).toBe("in_stock");
   });
+
+  // The stock text came from the first `.item-stock` on the page rather than the
+  // matched card, so a later in-stock product was reported out of stock (and
+  // vice versa) whenever the first result differed.
+  it("reads stock from the matched card, not the first result", () => {
+    const card = (sku: string, price: string, stock: string) => `
+      <div class="facets-item-cell-grid" data-sku="${sku}">
+        <a class="facets-item-cell-grid-title"><span itemprop="name">${sku} Radio</span></a>
+        <div class="item-stock">${stock}</div>
+        <div class="product-views-price"><span class="product-views-price-exact">C$${price}</span></div>
+      </div>`;
+    const html = `<div class="facets-facet-browse-items">
+      ${card("AAA-111", "99.00", "Out of Stock")}
+      ${card("BBB-222", "249.00", "In Stock")}
+    </div>`;
+    const result = mbsiwavParser.parsePrice(html, "BBB-222");
+    expect(result?.price).toBe(249);
+    expect(result?.stockStatus).toBe("in_stock");
+  });
 });

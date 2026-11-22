@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.7] - 2026-11-22
+
+### Fixed
+
+- MBS I-WAV and Inter Projekt read stock from the first result on the page
+  instead of the card the price came from, so a matched product could inherit a
+  different product's stock status. Both now scope the stock lookup to the
+  matched card, with tests that fail on the old behavior.
+
 ## [5.32.6] - 2026-11-21
 
 ### Changed

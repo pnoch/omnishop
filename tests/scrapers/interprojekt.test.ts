@@ -43,4 +43,22 @@ describe("Interprojekt Parser", () => {
     expect(result!.currency).toBe("EUR");
     expect(result!.stockStatus).toBe("in_stock");
   });
+
+  // The stock text came from the first `.stock_status` on the page, so any
+  // result whose price was not the first card paired with the wrong stock.
+  it("reads stock from the matched card, not the first result", () => {
+    const card = (sku: string, price: string, stock: string) => `
+      <li class="item product product-item">
+        <a class="product-item-link">${sku} Access Point</a>
+        <span class="price">€${price}</span>
+        <span class="stock_status">${stock}</span>
+      </li>`;
+    const html = `<ol class="products list items product-items">
+      ${card("AAA-111", "99.00", "Out of stock")}
+      ${card("BBB-222", "249.00", "In stock")}
+    </ol>`;
+    const result = interprojektParser.parsePrice(html, "BBB-222");
+    expect(result?.price).toBe(249);
+    expect(result?.stockStatus).toBe("in_stock");
+  });
 });

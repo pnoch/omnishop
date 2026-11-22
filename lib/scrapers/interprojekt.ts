@@ -22,7 +22,12 @@ function parseHtml(
   if (!price) return null;
   if (modelMismatch($price, model)) return null;
 
-  const stockText = $(".stock_status, .stock-status").first().text();
+  // Scope stock to the matched card; the page's first `.stock_status` belongs
+  // to a different result.
+  const $card = $price.closest(".product-item, .product-item-info, li");
+  const stockText =
+    $card.find(".stock_status, .stock-status").first().text() ||
+    $(".stock_status, .stock-status").first().text();
   const stockStatus = inferStockStatus(stockText);
 
   return {
