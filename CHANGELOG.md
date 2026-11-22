@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.10] - 2026-11-22
+
+### Changed
+
+- eBay search can use a sandbox keyset. Set `EBAY_ENVIRONMENT=sandbox` so the
+  OAuth and Browse calls go to `api.sandbox.ebay.com`; production remains the
+  default. Previously the hosts were hardcoded, so a sandbox keyset could not be
+  tested at all.
+
 ## [5.32.9] - 2026-11-22
 
 ### Changed

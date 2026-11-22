@@ -311,6 +311,29 @@ transactional mail uses Resend:
 4. Verify end-to-end with `POST /api/auth/forgot` (expect a real Resend message
    id) and a test password-reset email.
 
+### eBay search (Browse API)
+
+Without a keyset the app falls back to a browser-rendered eBay search page, which
+eBay blocks in production. The Browse API is free but needs a restricted Buy
+integration:
+
+1. Create a keyset at `https://developer.ebay.com/my/keys`. Start with Sandbox;
+   the Developers Program is free.
+2. On Railway set `EBAY_CLIENT_ID` and `EBAY_CLIENT_SECRET`, plus
+   `EBAY_ENVIRONMENT=sandbox` while sandbox keys are in use. eBay rejects
+   sandbox keysets on the production hosts.
+3. Production keys need an eBay Partner Network application and an Application
+   Growth Check: `https://developer.ebay.com/api-docs/buy/static/buy-requirements.html`.
+
+Verify a keyset against the live server:
+
+```bash
+curl 'https://web.omnishop.siamcreations.app/api/trpc/products.searchEbay?input=%7B%22json%22%3A%7B%22query%22%3A%22CRS326%22%7D%7D'
+```
+
+`source: "api"` means the keyset works. `reason: "blocked"` means the browser
+fallback was used.
+
 ---
 
 ### Release page

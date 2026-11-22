@@ -98,9 +98,16 @@ interface Dependencies {
   render: (url: string) => Promise<string>;
   clientId?: string;
   clientSecret?: string;
+  // Sandbox keysets are only valid against the sandbox hosts, so the endpoint
+  // has to follow the keyset environment.
+  environment?: "production" | "sandbox";
 }
 
 export function createEbaySearch(deps: Dependencies) {
+  const apiHost =
+    deps.environment === "sandbox"
+      ? "https://api.sandbox.ebay.com"
+      : "https://api.ebay.com";
   let token: { value: string; until: number } | null = null;
   let tokenPending: Promise<string> | null = null;
   const cache = new Map<string, { result: EbaySearchResult; until: number }>();
@@ -111,7 +118,7 @@ export function createEbaySearch(deps: Dependencies) {
     if (token && token.until > Date.now()) return token.value;
     if (tokenPending) return tokenPending;
     tokenPending = (async () => {
-      const res = await deps.fetch("https://api.ebay.com/identity/v1/oauth2/token", {
+      const res = await deps.fetch(`${apiHost}/identity/v1/oauth2/token`, {
         method: "POST", redirect: "error", signal: AbortSignal.timeout(10000),
         headers: { Authorization: `Basic ${Buffer.from(`${deps.clientId}:${deps.clientSecret}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ grant_type: "client_credentials", scope: "https://api.ebay.com/oauth/api_scope" }).toString(),
@@ -129,7 +136,7 @@ export function createEbaySearch(deps: Dependencies) {
       try {
         const bearer = await accessToken();
         const params = new URLSearchParams({ q: query, limit: String(EBAY_SEARCH_LIMIT) });
-        const res = await deps.fetch(`https://api.ebay.com/buy/browse/v1/item_summary/search?${params}`, {
+        const res = await deps.fetch(`${apiHost}/buy/browse/v1/item_summary/search?${params}`, {
           redirect: "error", signal: AbortSignal.timeout(15000),
           headers: { Authorization: `Bearer ${bearer}`, "X-EBAY-C-MARKETPLACE-ID": "EBAY_US" },
         });
@@ -171,6 +178,8 @@ export const searchEbay = createEbaySearch({
   fetch: (...args) => fetch(...args),
   clientId: process.env.EBAY_CLIENT_ID,
   clientSecret: process.env.EBAY_CLIENT_SECRET,
+  environment:
+    process.env.EBAY_ENVIRONMENT === "sandbox" ? "sandbox" : "production",
   render: async (url) => {
     const { fetchWithBrowser } = await import("../lib/scrapers/browser");
     return fetchWithBrowser(url, { timeoutMs: 20000, waitForSelector: ".s-card, .s-item", publicSession: true });

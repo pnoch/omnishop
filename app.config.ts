@@ -83,7 +83,7 @@ const config: ExpoConfig = {
   slug: env.appSlug,
   description:
     "Global stock & price radar for hard-to-find hardware. Find who has it worldwide, at the best landed price, and get told the second it restocks.",
-  version: "5.32.9",
+  version: "5.32.10",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   scheme: env.scheme,
@@ -110,7 +110,7 @@ const config: ExpoConfig = {
     },
     predictiveBackGestureEnabled: false,
     package: env.androidPackage,
-    versionCode: 20,
+    versionCode: 21,
     permissions: ["POST_NOTIFICATIONS"],
     intentFilters: getAndroidIntentFilters({
       scheme: env.scheme,

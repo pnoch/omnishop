@@ -94,4 +94,29 @@ describe("eBay provider", () => {
     const search = createEbaySearch({ fetch: fetcher, render: async () => { throw new Error("blocked"); }, clientId: "test-id", clientSecret: "test-secret" });
     expect(await search("gpu")).toEqual({ kind: "unavailable", reason: "network" });
   });
+
+  // Sandbox keysets only work against the sandbox hosts. Hardcoding the
+  // production URLs meant a developer could not test a sandbox keyset at all.
+  it("uses the sandbox hosts when the environment is sandbox", async () => {
+    const requests: string[] = [];
+    const fetcher: typeof fetch = async (input) => {
+      const url = String(input);
+      requests.push(url);
+      return Response.json(
+        url.endsWith("/token")
+          ? { access_token: "sandbox-token", expires_in: 7200 }
+          : apiResult,
+      );
+    };
+    const search = createEbaySearch({
+      fetch: fetcher,
+      render: async () => page,
+      clientId: "sandbox-id",
+      clientSecret: "sandbox-secret",
+      environment: "sandbox",
+    });
+    await search("gpu");
+    expect(requests[0]).toBe("https://api.sandbox.ebay.com/identity/v1/oauth2/token");
+    expect(requests[1]).toContain("https://api.sandbox.ebay.com/buy/browse/v1/item_summary/search");
+  });
 });
