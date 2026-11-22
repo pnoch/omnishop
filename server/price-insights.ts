@@ -10,9 +10,39 @@ import { getDb } from "./db";
 import { tryConsumeBudget } from "./spend-budget";
 import { isServerFundedLlm } from "./user-llm";
 import { invokeUserLlm, type UserLlmConfig } from "./user-llm";
-import type { DistributorListing } from "../lib/types";
+import type { DistributorListing, PricePoint } from "../lib/types";
 
 export const INSIGHT_TTL_MS = 24 * 60 * 60 * 1000;
+
+// Long histories are expensive to send and can exceed small BYO models. The
+// model gets a recent tail for trend plus a summary of the full window.
+export const MAX_INSIGHT_HISTORY_POINTS = 14;
+
+function summarizeHistory(points: PricePoint[]): {
+  points: number;
+  min: number;
+  max: number;
+  avg: number;
+} | null {
+  let min = Infinity;
+  let max = -Infinity;
+  let sum = 0;
+  let counted = 0;
+  for (const point of points) {
+    if (!Number.isFinite(point.price)) continue;
+    min = Math.min(min, point.price);
+    max = Math.max(max, point.price);
+    sum += point.price;
+    counted++;
+  }
+  if (counted === 0) return null;
+  return {
+    points: points.length,
+    min,
+    max,
+    avg: Number((sum / counted).toFixed(2)),
+  };
+}
 
 const memoryInsights = new Map<
   string,
@@ -172,7 +202,8 @@ async function buildInsightContext(
       price: l.price,
       currency: l.currency,
       stockStatus: l.stockStatus,
-      history: l.priceHistory,
+      history: l.priceHistory.slice(-MAX_INSIGHT_HISTORY_POINTS),
+      historySummary: summarizeHistory(l.priceHistory),
     })),
   };
 }

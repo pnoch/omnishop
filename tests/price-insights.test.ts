@@ -334,6 +334,36 @@ describe("getInsight deal score grounding", () => {
     expect(systemMessage).toBeDefined();
     expect(systemMessage!.content).toContain("never contradict");
   });
+
+  // A year of daily points across every distributor is far more context than the
+  // model needs (and can exceed small BYO models). Send a short tail plus a
+  // summary instead of the full history.
+  it("caps the history sent to the model and includes a summary", async () => {
+    const longHistory: PricePoint[] = Array.from({ length: 100 }, (_, i) => ({
+      date: new Date(Date.UTC(2026, 0, 1 + i)).toISOString(),
+      price: 100 + i,
+      currency: "MYR",
+      stockStatus: "in_stock",
+    }));
+    mockedGetHistory.mockResolvedValue(longHistory);
+    await getInsight("mikrotik-crs804-4ddq-hrm");
+    const args = mockedInvokeLLM.mock.calls[0]?.[0] as {
+      messages: { role: string; content: string }[];
+    };
+    const userMessage = args.messages.find((m) => m.role === "user");
+    const context = JSON.parse(userMessage!.content) as {
+      listings: {
+        history: unknown[];
+        historySummary: { points: number; min: number; max: number };
+      }[];
+    };
+    expect(context.listings[0]!.history).toHaveLength(14);
+    expect(context.listings[0]!.historySummary).toMatchObject({
+      points: 100,
+      min: 100,
+      max: 199,
+    });
+  });
 });
 
 describe("getInsight DB resilience", () => {

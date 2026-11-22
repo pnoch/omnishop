@@ -66,12 +66,14 @@ export const discoveryRouter = router({
           message: "Discovery is temporarily unavailable. Try again later.",
         });
       }
-      const prompt = `${DISCOVERY_PROMPT}\n\nSearch query: ${input.query}`;
       let result: Awaited<ReturnType<typeof invokeUserLlm>>;
       try {
         result = await invokeUserLlm(userLlm, {
           messages: [
-            { role: "system", content: prompt },
+            // The system prompt stays static. Interpolating the query here put
+            // user-controlled text in the instruction channel, where it could
+            // override the output contract.
+            { role: "system", content: DISCOVERY_PROMPT },
             { role: "user", content: input.query },
           ],
           maxTokens: 500,

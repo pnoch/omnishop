@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.15] - 2026-11-22
+
+### Security
+
+- AI discovery keeps the user query in the user message rather than embedding it
+  in the system prompt, so query text cannot override the JSON output contract.
+
+### Changed
+
+- AI price insights send the last 14 points per distributor plus a
+  points/min/max/average summary instead of the full price history. This cuts
+  token cost and keeps small BYO models inside their context window.
+
 ## [5.32.14] - 2026-11-22
 
 ### Changed
