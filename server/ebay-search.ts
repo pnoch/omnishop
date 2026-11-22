@@ -131,6 +131,11 @@ export function createEbaySearch(deps: Dependencies) {
     deps.environment === "sandbox"
       ? "https://api.sandbox.ebay.com"
       : "https://api.ebay.com";
+  // eBay blocks the public search page in production, so a fallback render
+  // burns ~20s and returns nothing. After one blocked response, fail fast for a
+  // few minutes before trying again.
+  const BLOCKED_COOLDOWN_MS = 5 * 60_000;
+  let browserBlockedUntil = 0;
   let token: { value: string; until: number } | null = null;
   let tokenPending: Promise<string> | null = null;
   const cache = new Map<string, { result: EbaySearchResult; until: number }>();
@@ -199,9 +204,18 @@ export function createEbaySearch(deps: Dependencies) {
     } else if (environment === "sandbox") {
       return { kind: "unavailable", reason: "not_configured" };
     }
+    if (Date.now() < browserBlockedUntil) {
+      return { kind: "unavailable", reason: "blocked" };
+    }
     try {
       const params = new URLSearchParams({ _nkw: query, _ipg: "25" });
-      return parseEbaySearchPage(await deps.render(`https://www.ebay.com/sch/i.html?${params}`));
+      const result = parseEbaySearchPage(
+        await deps.render(`https://www.ebay.com/sch/i.html?${params}`),
+      );
+      if (result.kind === "unavailable" && result.reason === "blocked") {
+        browserBlockedUntil = Date.now() + BLOCKED_COOLDOWN_MS;
+      }
+      return result;
     } catch { return { kind: "unavailable", reason: "network" }; }
   }
 

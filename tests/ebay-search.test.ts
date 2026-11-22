@@ -176,4 +176,16 @@ describe("eBay provider", () => {
     });
     expect(render).not.toHaveBeenCalled();
   });
+
+  // Without a keyset, every search pays a browser render that eBay blocks in
+  // production. Repeating that on every query is slow and pointless; back off
+  // for a short cooldown, then try again.
+  it("backs off the browser after a blocked response", async () => {
+    const render = vi.fn(async () => "<title>Pardon our interruption</title>");
+    const search = createEbaySearch({ fetch, render });
+    expect((await search("gpu")).kind).toBe("unavailable");
+    const second = await search("router");
+    expect(second).toEqual({ kind: "unavailable", reason: "blocked" });
+    expect(render).toHaveBeenCalledTimes(1);
+  });
 });

@@ -4,6 +4,13 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.12] - 2026-11-22
+
+### Fixed
+
+- After eBay blocks the public search page, the server waits five minutes before
+  rendering it again instead of paying the 20-second attempt on every query.
+
 ## [5.32.11] - 2026-11-22
 
 ### Fixed
