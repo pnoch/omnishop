@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.8] - 2026-11-22
+
+### Fixed
+
+- The notification permission prompt no longer covers the welcome screen on a
+  first run. It is requested after onboarding finishes, so the prompt follows the
+  explanation of what the app will notify about.
+- Search results no longer repeat the count ("6 CATALOG RESULTS" plus a "6"
+  badge).
+
 ## [5.32.7] - 2026-11-22
 
 ### Fixed

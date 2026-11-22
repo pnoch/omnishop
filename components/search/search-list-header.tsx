@@ -276,26 +276,6 @@ export function SearchListHeader({
             ? `${resultCount} catalog result${resultCount !== 1 ? "s" : ""}`
             : "All Products"}
         </Text>
-        {query.trim().length > 0 && resultCount > 0 && (
-          <View
-            style={{
-              backgroundColor: colors.primary + "14",
-              borderRadius: 8,
-              paddingHorizontal: 7,
-              paddingVertical: 2,
-            }}
-          >
-            <Text
-              style={{
-                color: colors.primary,
-                fontSize: 11,
-                fontWeight: "700",
-              }}
-            >
-              {resultCount}
-            </Text>
-          </View>
-        )}
       </View>
     </View>
   );

@@ -8,7 +8,6 @@ import {
   setupAndroidNotificationChannel,
   setupPushEventTracking,
 } from "@/lib/notifications";
-import { getSettings } from "@/lib/storage";
 import {
   registerPriceCheckTask,
   registerHealthProbeTask,
@@ -18,6 +17,7 @@ import { isServerConfigured } from "@/constants/oauth";
 import { syncServerNotifications } from "@/lib/server-notifications";
 import { registerPushToken } from "@/lib/push-token";
 import { notificationRouteFor } from "@/lib/notification-routing";
+import { shouldRequestNotificationPermission } from "@/lib/notification-permission-gate";
 
 export function useNotificationSetup({
   rootNavigationReadyRef,
@@ -86,8 +86,7 @@ export function useNotificationSetup({
     );
     void (async () => {
       try {
-        const settings = await getSettings().catch(() => null);
-        if (settings?.notificationsEnabled) {
+        if (await shouldRequestNotificationPermission()) {
           await requestNotificationPermissions();
         }
       } catch (e) {
