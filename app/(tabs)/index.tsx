@@ -21,6 +21,7 @@ import { useConnection } from "@/hooks/use-connection";
 import { useMonitoringHealth } from "@/hooks/use-monitoring-health";
 import { useHomeData } from "@/hooks/use-home-data";
 import { HomeHeader } from "@/components/home/home-header";
+import { NotificationPermissionBanner } from "@/components/alerts/notification-permission-banner";
 import { HomeFeed } from "@/components/home/home-feed";
 import { HomeLoadingSkeleton } from "@/components/home/home-loading-skeleton";
 import { HomeStats } from "@/components/home/home-stats";
@@ -115,6 +116,8 @@ export default function HomeScreen() {
           monitoringDismissed={monitoringDismissed}
           onDismissMonitoring={() => setMonitoringDismissed(true)}
         />
+
+        <NotificationPermissionBanner />
 
         {!loaded ? (
           <HomeLoadingSkeleton />

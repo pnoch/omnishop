@@ -4,6 +4,21 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.20] - 2026-11-23
+
+### Added
+
+- Alerts and Home show a banner when notification permission is denied and at
+  least one alert, reminder, or stock watch is saved. It links to system settings
+  and re-checks when the app returns to the foreground, so alerts that stop
+  silently are explained.
+
+### Changed
+
+- The accessibility smoke covers 11 routes at desktop and mobile viewports. It no
+  longer fails a page whose only focusable control leaves the second Tab in
+  browser chrome.
+
 ## [5.32.19] - 2026-11-23
 
 ### Security

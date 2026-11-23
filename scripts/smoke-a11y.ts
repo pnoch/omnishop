@@ -8,6 +8,11 @@ const ROUTES = [
   ["Settings", "/settings"],
   ["Rates", "/rates"],
   ["Alerts", "/alerts"],
+  ["Stats", "/stats"],
+  ["Health", "/health"],
+  ["Diagnostics", "/diagnostics"],
+  ["Privacy", "/privacy"],
+  ["Search", "/search"],
 ] as const;
 
 type PageAudit = {
@@ -65,8 +70,13 @@ async function auditPage(page: any, route: string): Promise<PageAudit> {
     ),
   );
   await page.keyboard.press("Tab");
+  const afterFirst = String(
+    await page.evaluate(
+      "document.activeElement && document.activeElement.tagName || ''",
+    ),
+  );
   await page.keyboard.press("Tab");
-  const after = String(
+  const afterSecond = String(
     await page.evaluate(
       "document.activeElement && document.activeElement.tagName || ''",
     ),
@@ -74,7 +84,12 @@ async function auditPage(page: any, route: string): Promise<PageAudit> {
   return {
     ...result,
     route,
-    keyboardFocusMoves: before !== after && after !== "BODY",
+    // A page with one focusable control (e.g. Privacy's back button) leaves the
+    // second Tab in browser chrome. Either Tab reaching a real element proves
+    // keyboard focus works.
+    keyboardFocusMoves:
+      (afterFirst !== "BODY" && afterFirst !== before) ||
+      (afterSecond !== "BODY" && afterSecond !== before),
   };
 }
 
@@ -95,16 +110,24 @@ async function main() {
   }
   await page.waitForTimeout(1_500);
 
-  const audits: PageAudit[] = [];
-  for (const [label, route] of ROUTES) {
-    await page.goto(new URL(route, BASE_URL).toString(), {
-      waitUntil: "domcontentloaded",
-      timeout: 120_000,
-    });
-    await page.waitForTimeout(1_800);
-    const audit = await auditPage(page, label);
-    audits.push(audit);
+  async function runPass(suffix: string): Promise<PageAudit[]> {
+    const audits: PageAudit[] = [];
+    for (const [label, route] of ROUTES) {
+      await page.goto(new URL(route, BASE_URL).toString(), {
+        waitUntil: "domcontentloaded",
+        timeout: 120_000,
+      });
+      await page.waitForTimeout(1_800);
+      audits.push(await auditPage(page, `${label}${suffix}`));
+    }
+    return audits;
   }
+
+  // Desktop first, then the same screens at a phone viewport: mobile layouts
+  // can drop or duplicate headings even when the desktop page is correct.
+  const audits = await runPass("");
+  await page.setViewportSize({ width: 390, height: 844 });
+  audits.push(...(await runPass(" (mobile)")));
   await browser.close();
 
   let failed = false;

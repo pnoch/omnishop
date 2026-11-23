@@ -21,6 +21,7 @@ import { useAlertsData } from "@/hooks/use-alerts-data";
 import { useCriterionWatches } from "@/hooks/use-criterion-watches";
 import { useAlertEditDraft } from "@/hooks/use-alert-edit-draft";
 import { AlertsHeader } from "@/components/alerts/alerts-header";
+import { NotificationPermissionBanner } from "@/components/alerts/notification-permission-banner";
 import { AlertsFab } from "@/components/alerts/alerts-fab";
 import { CriterionWatchesSection } from "@/components/alerts/criterion-watches-section";
 import { AlertsListHeader } from "@/components/alerts/alerts-list-header";
@@ -105,6 +106,8 @@ export default function AlertsScreen() {
           router.push("/restock-watches");
         }}
       />
+
+      <NotificationPermissionBanner />
 
       {/* Tab Switcher */}
       <TabSwitcher active={activeTab} counts={tabCount} onChange={setActiveTab} />
