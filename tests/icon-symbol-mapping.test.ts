@@ -3,17 +3,17 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 // AGENTS.md: every `<IconSymbol name="...">` must have an Android/web mapping
-// in components/ui/icon-symbol.tsx, or it silently renders a "help" glyph on
+// in components/ui/icon-symbol-mapping.ts, or it silently renders a "help" glyph on
 // Android/web. The mapping is deliberately NOT widened to every SF Symbol, so
 // TypeScript catches unmapped names at the call site — but `name={x as never}`
 // casts (and names passed through `string`-typed props) defeat that. This
 // scans the literals that reach IconSymbol and asserts they are all mapped.
-const MAPPING_FILE = "components/ui/icon-symbol.tsx";
+const MAPPING_FILE = "components/ui/icon-symbol-mapping.ts";
 
 function mappedNames(): Set<string> {
   const src = readFileSync(MAPPING_FILE, "utf8");
   const start = src.indexOf("const MAPPING");
-  const block = src.slice(start, src.indexOf("} as", start));
+  const block = src.slice(start, src.indexOf("} satisfies", start));
   return new Set(
     [...block.matchAll(/^\s*["']?([a-z][a-zA-Z0-9._]*)["']?\s*:/gm)].map(
       (m) => m[1]!,

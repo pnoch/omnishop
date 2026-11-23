@@ -180,7 +180,7 @@ Anything under `lib/_core/`, `server/_core/`, or `shared/_core/` is framework-le
 - **Path aliases:** `@/*` → repo root, `@shared/*` → `shared/`. Prefer `@/lib/...`, `@/components/...`, `@/hooks/...`.
 - **Styling:** Use NativeWind classes (`className="..."`) for layout where possible; inline `style={{}}` for dynamic/theme-driven colors via `useColors()`. Theme color tokens: `primary, background, surface, foreground, muted, border, success, warning, error, card, tint`.
 - **Colors:** Never hardcode brand colors in components. Pull from `useColors()` (returns current scheme palette) or `constants/theme.ts`.
-- **Icons:** Use `<IconSymbol name="..." />`. iOS uses SF Symbols; Android/web maps to Material names in `components/ui/icon-symbol.tsx`. If you add a new icon name, add the Android/web mapping too.
+- **Icons:** Use `<IconSymbol name="..." />`. iOS uses SF Symbols; Android/web maps to Material names in `components/ui/icon-symbol-mapping.ts`. If you add a new icon name, add the Android/web mapping and run `scripts/subset-material-icons.py` to regenerate the web subset (`assets/icons/`). The web renderer ships only those glyphs.
 - **Haptics:** `expo-haptics` is used for tap feedback (`Haptics.impactAsync`) and notifications (`notificationAsync`). Follow existing patterns on tappable elements.
 - **Notifications:** All notification scheduling must guard `Platform.OS === "web"` (return early). See `lib/notifications.ts`.
 - **Background tasks:** `TaskManager.defineTask` must be called at module-level (global scope), not inside a component — see `lib/background-price-check.ts`.

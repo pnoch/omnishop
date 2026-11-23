@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.22] - 2026-11-23
+
+### Performance
+
+- The web build now ships an 8.6 KB subset of MaterialIcons instead of the
+  348 KB full font, covering the 81 glyphs the app maps. The full font is no
+  longer in the web export. Regenerate the subset with
+  `scripts/subset-material-icons.py` after adding a mapping.
+
 ## [5.32.21] - 2026-11-23
 
 ### Performance

@@ -89,3 +89,6 @@ desktop/src-tauri/gen/
 
 # Superpowers brainstorm scratch
 .superpowers/
+
+# Local Python environment for scripts/subset-material-icons.py
+/.venv-icons/
