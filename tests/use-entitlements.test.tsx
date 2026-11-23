@@ -1,10 +1,13 @@
 // @vitest-environment jsdom
-import { renderHook, waitFor } from "@testing-library/react";
+import { cleanup, renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
 import { setEntitlementProvider } from "../lib/entitlements";
 import { useEntitlements } from "../hooks/use-entitlements";
 
-afterEach(() => setEntitlementProvider(null));
+afterEach(() => {
+  cleanup();
+  setEntitlementProvider(null);
+});
 
 describe("useEntitlements", () => {
   it("defaults to free", async () => {
