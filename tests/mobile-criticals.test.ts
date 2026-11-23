@@ -375,7 +375,13 @@ describe("launch side effects are guarded", () => {
   );
 
   it("guards the launch price check", () => {
-    expect(gate).toContain("void checkPriceDropsNow().catch(");
+    // The scraper stack is imported lazily, so the guard moved onto the
+    // dynamic import's promise chain.
+    expect(gate).toContain('import("@/lib/background-price-check")');
+    expect(gate).toContain("m.checkPriceDropsNow()");
+    expect(gate).toContain(
+      '.catch((e) => log.error("[Launch] price check failed", e));',
+    );
   });
 
   it("guards the FX loads", () => {

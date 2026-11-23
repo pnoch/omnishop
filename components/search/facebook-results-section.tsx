@@ -11,10 +11,10 @@ import { useColors } from "@/hooks/use-colors";
 import { formatPrice } from "@shared/currency";
 import {
   buildFbSearchUrl,
-  searchFbMarketplace,
   type FbSearchState,
   type ObservedSearchScope,
 } from "@/lib/marketplace/fb-search";
+import { searchFbMarketplace } from "@/lib/marketplace/fb-search-html";
 import {
   getMarketplaceConnectionsService,
   type FacebookSearchPreference,

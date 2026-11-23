@@ -8,10 +8,6 @@ import {
   setupAndroidNotificationChannel,
   setupPushEventTracking,
 } from "@/lib/notifications";
-import {
-  registerPriceCheckTask,
-  registerHealthProbeTask,
-} from "@/lib/background-price-check";
 import { setBackgroundAppState } from "@/lib/background-safe-timers";
 import { isServerConfigured } from "@/constants/oauth";
 import { syncServerNotifications } from "@/lib/server-notifications";
@@ -93,8 +89,14 @@ export function useNotificationSetup({
         log.error("[Launch] notification permission request failed", e);
       }
     })();
-    registerPriceCheckTask();
-    registerHealthProbeTask();
+    // Deferred so task registration runs after the first render instead of on
+    // the launch critical path.
+    void import("@/lib/background-price-check")
+      .then((m) => {
+        m.registerPriceCheckTask();
+        m.registerHealthProbeTask();
+      })
+      .catch(() => {});
     if (isServerConfigured()) {
       void registerPushToken();
       void syncServerNotifications();

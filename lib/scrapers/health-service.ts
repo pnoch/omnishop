@@ -1,4 +1,4 @@
-import { PARSERS } from "./registry";
+import type { DistributorParser } from "./types";
 import { createStorageBreakerStore, fetchAndParse } from "./resilient";
 import type { StorageAdapter } from "../storage";
 import {
@@ -117,7 +117,7 @@ export function createHealthService(adapter: StorageAdapter): HealthService {
   }
 
   async function probeParser(
-    parser: (typeof PARSERS)[number],
+    parser: DistributorParser,
     breakerStore: ReturnType<typeof createStorageBreakerStore>,
   ): Promise<DistributorHealth> {
     const start = Date.now();
@@ -146,6 +146,9 @@ export function createHealthService(adapter: StorageAdapter): HealthService {
   async function testDistributor(
     parserId: string,
   ): Promise<DistributorHealth | null> {
+    // Loaded here, not at module scope: the registry imports every parser and
+    // cheerio, which must not land in the shared web chunk.
+    const { PARSERS } = await import("./registry");
     const parser = PARSERS.find((p) => p.id === parserId);
     if (!parser) return null;
     const breakerStore = createStorageBreakerStore(adapter);
@@ -166,6 +169,7 @@ export function createHealthService(adapter: StorageAdapter): HealthService {
   async function testAllDistributorsInner(
     onProgress?: (current: number, total: number) => void,
   ): Promise<DistributorHealth[]> {
+    const { PARSERS } = await import("./registry");
     const results: DistributorHealth[] = [];
     const CONCURRENCY = 3;
     const total = PARSERS.length;

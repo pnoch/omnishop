@@ -19,7 +19,7 @@ import { formatLastRefreshed } from "@/lib/last-refreshed";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
 import { SessionAssistModal } from "@/components/session-assist-modal";
 import { assistUrl, isAssistCandidate } from "@/lib/scrapers/session-assist";
-import { PARSERS } from "@/lib/scrapers/registry";
+import { getSiteUrl } from "@/lib/scrapers/parser-sites";
 import { useHealthScreen } from "@/hooks/use-health-screen";
 import { HealthSparkline } from "@/components/health/health-sparkline";
 
@@ -291,7 +291,7 @@ export default function HealthScreen() {
       {assistParserId && (
         <SessionAssistModal
           visible
-          url={assistUrl(PARSERS.find((p) => p.id === assistParserId)!)}
+          url={assistUrl({ baseUrl: getSiteUrl(assistParserId) ?? "" })}
           title={getDistributorById(assistParserId)?.name ?? assistParserId}
           onClose={() => setAssistParserId(null)}
           onDone={() => void handleAssistDone()}

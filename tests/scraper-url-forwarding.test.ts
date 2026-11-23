@@ -10,7 +10,7 @@ describe("parser URL forwarding", () => {
   it("no parser hardcodes an origin URL in its parsePrice arrow", () => {
     const offenders: string[] = [];
     for (const file of readdirSync(SCRAPERS_DIR)) {
-      if (!file.endsWith(".ts") || file === "browser.web.ts" || file === "types.ts" || file === "utils.ts" || file === "registry.ts" || file === "resilient.ts" || file === "health.ts" || file === "browser.ts") continue;
+      if (!file.endsWith(".ts") || file === "browser.web.ts" || file === "types.ts" || file === "utils.ts" || file === "registry.ts" || file === "resilient.ts" || file === "health.ts" || file === "browser.ts" || file === "web-parsers.ts") continue;
       const text = readFileSync(path.join(SCRAPERS_DIR, file), "utf8");
       if (!text.includes("parsePrice:")) continue;
       // The parsePrice arrow must accept the url param and forward it

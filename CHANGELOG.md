@@ -4,6 +4,22 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.23] - 2026-11-23
+
+### Performance
+
+- The initial web JavaScript shrank by about 1.0 MB uncompressed. The shared
+  chunk fell from 3.08 MB to 2.08 MB (740 KB → 504 KB gzip) and now excludes
+  packages the browser never executes:
+  - Marketplace connection validation uses hand-written validators instead of
+    zod.
+  - Distributor ids and origins live in lightweight metadata modules, so
+    discovery, health, and settings no longer pull every parser (and cheerio).
+  - The web build resolves stubs for the distributor registry and the
+    Facebook/Shopee HTML parsers; native keeps the real parsers.
+  - The launch price check, background task registration, missing-listing
+    rediscovery, and the Facebook results section load after the first render.
+
 ## [5.32.22] - 2026-11-23
 
 ### Performance

@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { FlatList, View } from "react-native";
 
 import { ScreenContainer } from "@/components/screen-container";
@@ -10,7 +10,6 @@ import { PaywallScreen } from "@/components/paywall/paywall-screen";
 import { TagPickerSheet } from "@/components/tag-picker-sheet";
 import { BulkImportModal } from "@/components/search/bulk-import-modal";
 import { ManualAddSheet } from "@/components/search/manual-add-sheet";
-import { FacebookResultsSection } from "@/components/search/facebook-results-section";
 import { EbayResultsSection } from "@/components/search/ebay-results-section";
 import { TrendingSection } from "@/components/home/trending-section";
 import { CatalogSearchBar } from "@/components/search/catalog-search-bar";
@@ -20,6 +19,14 @@ import { SearchHeader } from "@/components/search/search-header";
 import { SearchDiscoverFooter } from "@/components/search/search-discover-footer";
 import { SearchListHeader } from "@/components/search/search-list-header";
 import { useSearchScreen } from "@/hooks/use-search-screen";
+
+// The Facebook section pulls its own marketplace helpers and probe code.
+// Mount it only when a search has results instead of on every search mount.
+const FacebookResultsSection = lazy(() =>
+  import("@/components/search/facebook-results-section").then((m) => ({
+    default: m.FacebookResultsSection,
+  })),
+);
 
 export default function SearchScreen({
   mode = "add",
@@ -160,14 +167,16 @@ export default function SearchScreen({
               resultCount={sortedResults.length}
             />
 
-            <FacebookResultsSection
-              query={deferredQuery}
-              onTrack={(url) => {
-                setEbayPrefill(null);
-                setManualPrefill(url);
-                setManualVisible(true);
-              }}
-            />
+            <Suspense fallback={null}>
+              <FacebookResultsSection
+                query={deferredQuery}
+                onTrack={(url) => {
+                  setEbayPrefill(null);
+                  setManualPrefill(url);
+                  setManualVisible(true);
+                }}
+              />
+            </Suspense>
 
             <EbayResultsSection query={deferredQuery} onTrack={(listing) => {
               setEbayPrefill(listing);

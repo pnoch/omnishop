@@ -1,7 +1,7 @@
 import { isPlausiblePrice } from "../shared/const";
 import { isMarketplaceKey, parseMarketplaceUrl, type MarketplaceIdentity } from "../shared/marketplace-url";
 import type { DistributorListing, PricePoint, Product } from "./types";
-import { parseShopeePrice } from "./scrapers/shopee-th";
+import { parseShopeePrice } from "./scrapers/shopee-price";
 import { parseLazadaPrice } from "./scrapers/lazada-th";
 import { facebookPageReferencesItem, parseFacebookPrice } from "./scrapers/facebook";
 import { parseEbayPrice } from "./scrapers/ebay";

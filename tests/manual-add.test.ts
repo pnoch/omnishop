@@ -10,7 +10,7 @@ import {
 } from "../lib/manual-add";
 import type { DistributorListing } from "../lib/types";
 
-vi.mock("../lib/scrapers/registry", () => ({
+vi.mock("../lib/scrapers/parser-ids", () => ({
   getAllParserIds: () => ["d1", "d2", "d3"],
 }));
 

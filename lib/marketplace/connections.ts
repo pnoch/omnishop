@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { z } from "zod";
 
 export type MarketplaceSite = "facebook" | "shopee" | "lazada";
 
@@ -12,43 +11,96 @@ export const MARKETPLACE_SITES = [
 export const MARKETPLACE_CONNECTIONS_KEY = "marketplace_connections_v1";
 export const FACEBOOK_SEARCH_PREFERENCES_KEY = "facebook_search_preferences_v1";
 
-const probeCapabilitySchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("search"), query: z.string() }),
-  z.object({ kind: z.literal("listing"), productId: z.string() }),
-  z.object({ kind: z.literal("navigation") }),
-]);
+export type ProbeCapability =
+  | { kind: "search"; query: string }
+  | { kind: "listing"; productId: string }
+  | { kind: "navigation" };
 
-const verificationSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("not_checked") }),
-  z.object({ kind: z.literal("checking") }),
-  z.object({
-    kind: z.literal("ready"),
-    checkedAt: z.string(),
-    capability: probeCapabilitySchema,
-  }),
-  z.object({ kind: z.literal("login_required"), checkedAt: z.string() }),
-  z.object({
-    kind: z.literal("unverified"),
-    checkedAt: z.string(),
-    reason: z.string(),
-  }),
-  z.object({ kind: z.literal("unavailable") }),
-]);
+export type Verification =
+  | { kind: "not_checked" }
+  | { kind: "checking" }
+  | { kind: "ready"; checkedAt: string; capability: ProbeCapability }
+  | { kind: "login_required"; checkedAt: string }
+  | { kind: "unverified"; checkedAt: string; reason: string }
+  | { kind: "unavailable" };
 
-const connectionsSchema = z.object({
-  facebook: verificationSchema.optional(),
-  shopee: verificationSchema.optional(),
-  lazada: verificationSchema.optional(),
-});
+export type FacebookSearchPreference = {
+  requestedArea: string;
+  requestedRadiusKm: 10 | 30 | 64;
+};
 
-const preferencesSchema = z.object({
-  requestedArea: z.string(),
-  requestedRadiusKm: z.union([z.literal(10), z.literal(30), z.literal(64)]),
-});
+// Hand-written instead of zod: this module is in the web bundle, and importing
+// zod for four small shapes added hundreds of KB to the first load.
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
 
-export type ProbeCapability = z.infer<typeof probeCapabilitySchema>;
-export type Verification = z.infer<typeof verificationSchema>;
-export type FacebookSearchPreference = z.infer<typeof preferencesSchema>;
+function parseProbeCapability(value: unknown): ProbeCapability | null {
+  if (!isRecord(value)) return null;
+  if (value.kind === "search" && typeof value.query === "string") {
+    return { kind: "search", query: value.query };
+  }
+  if (value.kind === "listing" && typeof value.productId === "string") {
+    return { kind: "listing", productId: value.productId };
+  }
+  if (value.kind === "navigation") return { kind: "navigation" };
+  return null;
+}
+
+function parseVerification(value: unknown): Verification | null {
+  if (!isRecord(value)) return null;
+  switch (value.kind) {
+    case "not_checked":
+      return { kind: "not_checked" };
+    case "checking":
+      return { kind: "checking" };
+    case "unavailable":
+      return { kind: "unavailable" };
+    case "login_required":
+      return typeof value.checkedAt === "string"
+        ? { kind: "login_required", checkedAt: value.checkedAt }
+        : null;
+    case "unverified":
+      return typeof value.checkedAt === "string" && typeof value.reason === "string"
+        ? {
+            kind: "unverified",
+            checkedAt: value.checkedAt,
+            reason: value.reason,
+          }
+        : null;
+    case "ready": {
+      if (typeof value.checkedAt !== "string") return null;
+      const capability = parseProbeCapability(value.capability);
+      return capability
+        ? { kind: "ready", checkedAt: value.checkedAt, capability }
+        : null;
+    }
+    default:
+      return null;
+  }
+}
+
+function parseConnections(
+  value: unknown,
+): Partial<Record<MarketplaceSite, Verification>> | null {
+  if (!isRecord(value)) return null;
+  const out: Partial<Record<MarketplaceSite, Verification>> = {};
+  for (const site of MARKETPLACE_SITES) {
+    if (value[site] === undefined) continue;
+    const parsed = parseVerification(value[site]);
+    if (!parsed) return null;
+    out[site] = parsed;
+  }
+  return out;
+}
+
+function parsePreferences(value: unknown): FacebookSearchPreference | null {
+  if (!isRecord(value)) return null;
+  const radius = value.requestedRadiusKm;
+  if (typeof value.requestedArea !== "string") return null;
+  if (radius !== 10 && radius !== 30 && radius !== 64) return null;
+  return { requestedArea: value.requestedArea, requestedRadiusKm: radius };
+}
 
 export interface ObservedSearchScope {
   area: string | null;
@@ -207,14 +259,14 @@ class MarketplaceConnectionsServiceImpl implements MarketplaceConnectionsService
       raw = null;
     }
     if (raw == null) return;
-    const parsed = connectionsSchema.safeParse(parseJson(raw));
-    if (!parsed.success) {
+    const parsed = parseConnections(parseJson(raw));
+    if (!parsed) {
       this.states = defaultStates();
       await this.enqueue(() => this.writeConnections());
       return;
     }
     for (const site of MARKETPLACE_SITES) {
-      this.states[site] = parsed.data[site] ?? NOT_CHECKED;
+      this.states[site] = parsed[site] ?? NOT_CHECKED;
     }
   }
 
@@ -226,13 +278,13 @@ class MarketplaceConnectionsServiceImpl implements MarketplaceConnectionsService
       raw = null;
     }
     if (raw == null) return;
-    const parsed = preferencesSchema.safeParse(parseJson(raw));
-    if (!parsed.success) {
+    const parsed = parsePreferences(parseJson(raw));
+    if (!parsed) {
       this.prefs = { ...DEFAULT_FACEBOOK_SEARCH_PREFERENCE };
       await this.enqueue(() => this.writePreferences());
       return;
     }
-    this.prefs = parsed.data;
+    this.prefs = parsed;
   }
 
   current(site: MarketplaceSite): Verification {
@@ -244,9 +296,9 @@ class MarketplaceConnectionsServiceImpl implements MarketplaceConnectionsService
   }
 
   async setPreferences(preference: FacebookSearchPreference): Promise<void> {
-    const parsed = preferencesSchema.safeParse(preference);
-    if (!parsed.success) return;
-    this.prefs = parsed.data;
+    const parsed = parsePreferences(preference);
+    if (!parsed) return;
+    this.prefs = parsed;
     try {
       await this.enqueue(() => this.writePreferences());
     } catch {
@@ -269,9 +321,9 @@ class MarketplaceConnectionsServiceImpl implements MarketplaceConnectionsService
     verification: Verification,
   ): Promise<void> {
     if (this.generations[site] !== generation) return;
-    const parsed = verificationSchema.safeParse(verification);
-    if (!parsed.success) return;
-    this.states[site] = parsed.data;
+    const parsed = parseVerification(verification);
+    if (!parsed) return;
+    this.states[site] = parsed;
     await this.persistVerification(site, generation);
   }
 

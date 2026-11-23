@@ -2,14 +2,16 @@ import { describe, expect, it } from "vitest";
 import {
   buildFbSearchUrl,
   classifyFbSearchPage,
+  evaluateProbe,
+  facebookListingReader,
+} from "../lib/marketplace/fb-search";
+import { snapshotFromHtml } from "../lib/marketplace/fb-search-html";
+import {
   detectEmptyMessage,
   detectLoginWall,
-  evaluateProbe,
   extractFbCards,
   extractFbSearchResults,
-  facebookListingReader,
-  snapshotFromHtml,
-} from "../lib/marketplace/fb-search";
+} from "../lib/marketplace/fb-search-parse";
 import type { MarketplacePageSnapshot } from "../lib/scrapers/webview-host";
 
 const RENDERED = `

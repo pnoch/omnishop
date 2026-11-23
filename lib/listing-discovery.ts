@@ -1,7 +1,7 @@
 import { resolvePrice } from "./price-source";
 import { isMarketplaceKey } from "../shared/marketplace-url";
 import { isFreshPriceSnapshot } from "./price-freshness";
-import { getAllParserIds } from "./scrapers/registry";
+import { getAllParserIds } from "./scrapers/parser-ids";
 import type { DistributorListing } from "./types";
 
 const CONCURRENCY = 3;

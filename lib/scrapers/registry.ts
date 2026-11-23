@@ -66,6 +66,4 @@ export function getParserByDistributorId(
   return PARSERS.find((p) => p.id === distributorId);
 }
 
-export function getAllParserIds(): string[] {
-  return PARSERS.map((p) => p.id);
-}
+export { getAllParserIds } from "./parser-ids";

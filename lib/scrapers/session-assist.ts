@@ -1,9 +1,11 @@
 import type { DistributorParser } from "./types";
 import { getWebViewHost } from "./webview-host";
 import { clearUnlocked, clearAllUnlocked, getUnlocked } from "./session-store";
-import { PARSERS } from "./registry";
+import { getSiteUrl } from "./parser-sites";
 
-export function distributorHost(parser: DistributorParser): string {
+type ParserSiteLike = Pick<DistributorParser, "id" | "baseUrl">;
+
+export function distributorHost(parser: Pick<DistributorParser, "baseUrl">): string {
   try {
     return new URL(parser.baseUrl).hostname;
   } catch {
@@ -11,7 +13,7 @@ export function distributorHost(parser: DistributorParser): string {
   }
 }
 
-export function assistUrl(parser: DistributorParser): string {
+export function assistUrl(parser: Pick<DistributorParser, "baseUrl">): string {
   return parser.baseUrl;
 }
 
@@ -29,7 +31,7 @@ export function isAssistCandidate(
 }
 
 export async function clearDistributorSession(
-  parser: DistributorParser,
+  parser: ParserSiteLike,
 ): Promise<void> {
   const url = assistUrl(parser);
   try {
@@ -68,10 +70,10 @@ export async function clearSiteData(): Promise<void> {
     const host = getWebViewHost();
     if (host) {
       for (const id of Object.keys(unlocked)) {
-        const parser = PARSERS.find((p) => p.id === id);
-        if (parser) {
+        const baseUrl = getSiteUrl(id);
+        if (baseUrl) {
           try {
-            await host.clearStorage(assistUrl(parser));
+            await host.clearStorage(baseUrl);
           } catch {
             // skip this origin
           }

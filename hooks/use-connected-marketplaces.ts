@@ -13,7 +13,7 @@ import { buildFbSearchUrl, evaluateProbe, facebookListingReader, type ListingPro
 import { useMarketplaceConnections } from "@/hooks/use-marketplace-connections";
 import { getWatchlist } from "@/lib/storage";
 import { showAlert } from "@/lib/alert";
-import { parseShopeePrice } from "@/lib/scrapers/shopee-th";
+import { parseShopeePrice } from "@/lib/scrapers/shopee-price";
 import { parseLazadaPrice } from "@/lib/scrapers/lazada-th";
 import {
   getWebViewHost,

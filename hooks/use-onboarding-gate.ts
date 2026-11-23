@@ -3,9 +3,6 @@ import { router, usePathname } from "expo-router";
 import { log } from "@shared/log";
 import { hasSeenOnboarding, isPublicRoute } from "@/lib/onboarding";
 import { getWatchlist, updateProductListings } from "@/lib/storage";
-import { rediscoverMissingListings } from "@/lib/manual-add";
-import { discoverListings } from "@/lib/listing-discovery";
-import { checkPriceDropsNow } from "@/lib/background-price-check";
 import { notificationRouteFor } from "@/lib/notification-routing";
 
 export function useOnboardingGate({
@@ -44,13 +41,24 @@ export function useOnboardingGate({
   useEffect(() => {
     if (onboardingState !== "app" || launchCheckRanRef.current) return;
     launchCheckRanRef.current = true;
-    void checkPriceDropsNow().catch((e) =>
-      log.error("[Launch] price check failed", e),
+    // Load the scraper stack after the shell renders; it is a launch extra, not
+    // part of the first paint.
+    void import("@/lib/background-price-check")
+      .then((m) => m.checkPriceDropsNow())
+      .catch((e) => log.error("[Launch] price check failed", e));
+    void (async () => {
+      const [{ rediscoverMissingListings }, { discoverListings }] =
+        await Promise.all([
+          import("@/lib/manual-add"),
+          import("@/lib/listing-discovery"),
+        ]);
+      await rediscoverMissingListings({
+        storage: { getWatchlist, updateProductListings },
+        discover: discoverListings,
+      });
+    })().catch((e) =>
+      log.error("[Launch] missing-listings discovery failed", e),
     );
-    void rediscoverMissingListings({
-      storage: { getWatchlist, updateProductListings },
-      discover: discoverListings,
-    }).catch((e) => log.error("[Launch] missing-listings discovery failed", e));
   }, [onboardingState]);
 
   return { onboardingState, setOnboardingState, isPublic };

@@ -10,7 +10,7 @@ import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
 import { SectionHeader } from "@/components/settings/section-header";
 import { getDistributorById } from "@shared/distributors";
-import { getAllParserIds } from "@/lib/scrapers/registry";
+import { getAllParserIds } from "@/lib/scrapers/parser-ids";
 import type { Product } from "@/lib/types";
 
 function getDistributorHealth(

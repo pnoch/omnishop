@@ -4,8 +4,8 @@ import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import React from "react";
 
 const searchFbMarketplace = vi.hoisted(() => vi.fn());
-vi.mock("@/lib/marketplace/fb-search", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/marketplace/fb-search")>();
+vi.mock("@/lib/marketplace/fb-search-html", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/marketplace/fb-search-html")>();
   return { ...actual, searchFbMarketplace };
 });
 

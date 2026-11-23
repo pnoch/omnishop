@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColors } from "@/hooks/use-colors";
 import { getDistributorById } from "@shared/distributors";
-import { PARSERS } from "@/lib/scrapers/registry";
+import { PARSER_SITES, getSiteUrl } from "@/lib/scrapers/parser-sites";
 import { createHealthService, type DistributorHealth } from "@/lib/scrapers/health";
 import {
   assistUrl,
@@ -50,14 +50,14 @@ export function SiteSessionsSection() {
   }, [load]);
 
   const byId = new Map(health.map((h) => [h.distributorId, h]));
-  const relevant = PARSERS.filter((p) => {
+  const relevant = PARSER_SITES.filter((p) => {
     if (showAll) return true;
     const h = byId.get(p.id);
     return !!unlocked[p.id] || isAssistCandidate(h?.status, h?.reason);
   });
 
   async function handleClear(id: string) {
-    const parser = PARSERS.find((p) => p.id === id);
+    const parser = PARSER_SITES.find((p) => p.id === id);
     if (!parser) return;
     setBusy(true);
     try {
@@ -145,7 +145,7 @@ export function SiteSessionsSection() {
           style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: colors.border }}
         >
           <Text style={{ color: colors.foreground, fontSize: 13, fontWeight: "600" }}>
-            {showAll ? "Show relevant" : `Show all ${PARSERS.length}`}
+            {showAll ? "Show relevant" : `Show all ${PARSER_SITES.length}`}
           </Text>
         </Pressable>
         <Pressable
@@ -165,7 +165,7 @@ export function SiteSessionsSection() {
       {assistId && (
         <SessionAssistModal
           visible
-          url={assistUrl(PARSERS.find((p) => p.id === assistId)!)}
+          url={assistUrl({ baseUrl: getSiteUrl(assistId) ?? "" })}
           title={getDistributorById(assistId)?.name ?? assistId}
           onClose={() => setAssistId(null)}
           onDone={() => {

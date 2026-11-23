@@ -2,7 +2,7 @@ import { withTimeoutReject } from "./with-timeout";
 import type { DistributorListing, Product } from "./types";
 import { isAutomaticProduct } from "./marketplace";
 import { isMarketplaceKey } from "../shared/marketplace-url";
-import { getAllParserIds } from "./scrapers/registry";
+import { getAllParserIds } from "./scrapers/parser-ids";
 import type { DiscoverOptions } from "./listing-discovery";
 
 // A cold discovery sweeps every registered parser with concurrency 3, so the

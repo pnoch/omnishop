@@ -9,7 +9,7 @@ import {
   STORAGE_CLEARED_SENTINEL,
   type MarketplacePageSnapshot,
 } from "../lib/scrapers/webview-host";
-import { extractFbCards } from "../lib/marketplace/fb-search";
+import { extractFbCards } from "../lib/marketplace/fb-search-parse";
 
 const nodeRequire = createRequire(import.meta.url);
 

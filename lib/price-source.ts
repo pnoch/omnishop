@@ -1,7 +1,6 @@
 import { isServerConfigured } from "@/constants/oauth";
 import { isFreshPriceSnapshot } from "@/lib/price-freshness";
 import { fetchServerPrice } from "@/lib/server-prices";
-import { getParserByDistributorId } from "@/lib/scrapers/registry";
 import {
   createMemoryBreakerStore,
   fetchAndParse,
@@ -27,6 +26,9 @@ export async function scrapePriceOnDevice(
   modelNumber: string,
 ): Promise<ResolvedPrice | null> {
   if (isMarketplaceKey(modelNumber)) return null;
+  // Local scraping is only a fallback. Load the parser set on first use so the
+  // common path does not pay for it.
+  const { getParserByDistributorId } = await import("@/lib/scrapers/registry");
   const parser = getParserByDistributorId(distributorId);
   if (!parser) return null;
   await scrapeSlots.acquire();

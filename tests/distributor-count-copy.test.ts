@@ -25,12 +25,12 @@ describe("distributor-count copy", () => {
     expect(DISTRIBUTORS.length).toBeGreaterThan(25);
   });
 
-  it("derives the site-sessions 'Show all' count from PARSERS", () => {
+  it("derives the site-sessions 'Show all' count from PARSER_SITES", () => {
     const src = readFileSync(
       path.join(process.cwd(), "components/settings/site-sessions-section.tsx"),
       "utf8",
     );
-    expect(src).toContain("Show all ${PARSERS.length}");
+    expect(src).toContain("Show all ${PARSER_SITES.length}");
     expect(src).not.toMatch(/Show all 25/);
   });
 });
