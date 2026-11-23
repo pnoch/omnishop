@@ -4,6 +4,17 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.25] - 2026-11-23
+
+### Performance
+
+- The push-token module no longer imports `expo-device` (and its
+  `ua-parser-js` dependency) on web: the real-device check is platform-split,
+  so the shared chunk drops another 25 KB uncompressed.
+- Measured locally on slow 4G with 4x CPU throttling, 5.32.23 → 5.32.25 cut
+  DOMContentLoaded from 4.44 s to 3.46 s and transferred JS from 817 KB to
+  614 KB.
+
 ## [5.32.24] - 2026-11-23
 
 ### Performance

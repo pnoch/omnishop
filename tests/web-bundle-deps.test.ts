@@ -48,6 +48,15 @@ describe("web bundle stays free of native animation libraries", () => {
     expect(src).not.toMatch(REANIMATED_IMPORT);
   });
 
+  it("only the native device check imports expo-device", () => {
+    const importers = APP_DIRS.flatMap((dir) =>
+      sourceFiles(path.join(process.cwd(), dir)),
+    )
+      .filter((file) => /from "expo-device"/.test(readFileSync(file, "utf8")))
+      .map((file) => path.relative(process.cwd(), file));
+    expect(importers).toEqual(["lib/is-real-device.ts"]);
+  });
+
   it("the root layout no longer imports reanimated for its side effects", () => {
     const src = readFileSync(path.join(process.cwd(), "app/_layout.tsx"), "utf8");
     expect(src).not.toContain('import "react-native-reanimated"');
