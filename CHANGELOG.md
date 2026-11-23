@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.19] - 2026-11-23
+
+### Security
+
+- Price refreshes compare each new price with the trusted history median. A
+  single outlier is held and is only written after a second reading within 10%
+  confirms it, so a care plan, mount, or sibling model cannot overwrite a good
+  price. Applied to the server cache/history and to local-only client refreshes.
+
 ## [5.32.18] - 2026-11-23
 
 ### Security

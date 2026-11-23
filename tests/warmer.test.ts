@@ -45,7 +45,7 @@ vi.mock("../server/notifications", async (importOriginal) => {
 
 vi.mock("../server/price-history", () => ({
   recordHistoryPoint: vi.fn(),
-  getHistory: vi.fn(),
+  getHistory: vi.fn(async () => []),
   mergeHistory: vi.fn(),
   purgeOldHistory: vi.fn(),
   clearHistoryForTests: vi.fn(),

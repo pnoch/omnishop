@@ -91,6 +91,7 @@ import {
 } from "../server/price-cache";
 import { getHistory, recordHistoryPoint } from "../server/price-history";
 import { listProductsMissingImage } from "../server/product-images";
+import { clearPriceAnomalyGuardForTests } from "../lib/price-anomaly-guard";
 import {
   getPrice,
   PRICE_TTL_MS,
@@ -135,6 +136,7 @@ const freshSnapshot: PriceSnapshot = {
 describe("getPrice", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    clearPriceAnomalyGuardForTests();
     mockedGetParser.mockReturnValue(parser);
     mockedGetHistory.mockResolvedValue([]);
   });
@@ -252,6 +254,72 @@ describe("getPrice", () => {
       "CRS804",
       expect.objectContaining({ price: 88.5, currency: "MYR" }),
     );
+  });
+
+  // A plausible absolute price can still be the wrong item (a care plan, mount,
+  // or sibling model). The server must not overwrite a good snapshot with it.
+  it("holds a price far below the trusted history", async () => {
+    const warned = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockedGetCached.mockResolvedValue(null);
+    mockedGetHistory.mockResolvedValue(
+      [100, 104, 98, 102, 99].map((price) => ({
+        date: "2026-08-01T00:00:00.000Z",
+        price,
+        currency: "MYR",
+        stockStatus: "in_stock" as const,
+      })),
+    );
+    mockedFetch.mockResolvedValue({
+      status: "ok",
+      html: "<html>price</html>",
+      method: "plain",
+    });
+    parser.parsePrice = () => ({ ...scrapeResult, price: 18.46 });
+
+    await getPrice("server2u-my", "ANOMALY-MODEL");
+    await vi.waitFor(() =>
+      expect(warned).toHaveBeenCalledWith(
+        expect.stringContaining("Held far_below_history"),
+      ),
+    );
+    expect(mockedSetCached).not.toHaveBeenCalled();
+    expect(mockedRecordHistory).not.toHaveBeenCalled();
+    warned.mockRestore();
+  });
+
+  it("accepts the same outlier after a second confirmation", async () => {
+    mockedGetCached.mockResolvedValue(null);
+    mockedGetHistory.mockResolvedValue(
+      [100, 104, 98, 102, 99].map((price) => ({
+        date: "2026-08-01T00:00:00.000Z",
+        price,
+        currency: "MYR",
+        stockStatus: "in_stock" as const,
+      })),
+    );
+    mockedFetch.mockResolvedValue({
+      status: "ok",
+      html: "<html>price</html>",
+      method: "plain",
+    });
+    mockedSetCached.mockResolvedValue(undefined);
+    const warned = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    parser.parsePrice = () => ({ ...scrapeResult, price: 18.46 });
+    await getPrice("server2u-my", "CONFIRMED-MODEL");
+    await vi.waitFor(() =>
+      expect(warned).toHaveBeenCalledWith(
+        expect.stringContaining("Held far_below_history"),
+      ),
+    );
+    // Let the held refresh settle so the second call starts a new scrape
+    // instead of joining the single-flight promise.
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
+    parser.parsePrice = () => ({ ...scrapeResult, price: 19 });
+    await getPrice("server2u-my", "CONFIRMED-MODEL");
+    await vi.waitFor(() => expect(mockedSetCached).toHaveBeenCalled());
+    warned.mockRestore();
   });
 });
 

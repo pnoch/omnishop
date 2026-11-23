@@ -26,6 +26,7 @@ import { purgeOldWebhookLog } from "./notifications/webhook-alerts";
 import { purgeExpiredAuthTokens } from "./db";
 import { purgeOldRevokedDevices } from "./devices";
 import { PRICE_SNAPSHOT_TTL_MS } from "../shared/const";
+import { guardPriceAgainstHistory } from "../lib/price-anomaly-guard";
 
 export const PRICE_TTL_MS = PRICE_SNAPSHOT_TTL_MS; // 1 hour
 const WARMER_INTERVAL_MS = 5 * 60 * 1000; // every 5 min
@@ -76,6 +77,23 @@ async function refreshPrice(
   try {
     const { result } = await fetchAndParse(parser, modelNumber, breakerStore);
     if (!result) return null;
+    // A plausible absolute price can still be the wrong item (a care plan,
+    // mount, or sibling model). Compare against this pair's trusted history and
+    // hold a single outlier until the next check confirms it.
+    const history = await getHistory(distributorId, modelNumber, {
+      trustedOnly: true,
+    });
+    const guard = guardPriceAgainstHistory(
+      `${distributorId}|${modelNumber}`,
+      result.price,
+      history.map((point) => point.price),
+    );
+    if (!guard.accept) {
+      console.warn(
+        `[Prices] Held ${guard.reason} price for ${distributorId}/${modelNumber}: ${result.price}`,
+      );
+      return getCachedPrice(distributorId, modelNumber);
+    }
     const snapshot: PriceSnapshot = { ...result, fetchedAt: Date.now() };
     await setCachedPrice(distributorId, modelNumber, snapshot);
     await recordHistoryPoint(distributorId, modelNumber, snapshot);

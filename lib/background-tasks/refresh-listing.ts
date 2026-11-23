@@ -12,6 +12,8 @@ import type { DistributorListing, PricePoint, Product } from "../types";
 import { breakerStore } from "./instances";
 import type { HealthCollector } from "./health-collector";
 import { isAutomaticProduct } from "../marketplace";
+import { guardPriceAgainstHistory } from "../price-anomaly-guard";
+import { log } from "@shared/log";
 
 export async function refreshListing(
   product: Product,
@@ -100,6 +102,20 @@ export async function refreshListing(
     // alert. The server cache applies the same bound (server/price-cache.ts).
     if (!isPlausiblePrice(result.price)) {
       healthCollector.record(parser.id, "error", "implausible price");
+      return listing;
+    }
+    // The server applies the same relative guard, but local-only mode and a
+    // server cache miss both reach this branch.
+    const guard = guardPriceAgainstHistory(
+      `${listing.distributorId}|${product.modelNumber}`,
+      result.price,
+      (listing.priceHistory ?? []).map((point) => point.price),
+    );
+    if (!guard.accept) {
+      log.warn(
+        `[PriceCheck] Held ${guard.reason} price for ${listing.distributorId}/${product.modelNumber}: ${result.price}`,
+      );
+      healthCollector.record(parser.id, "working");
       return listing;
     }
     healthCollector.record(parser.id, "working");
