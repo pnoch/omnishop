@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import compression from "compression";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
@@ -49,6 +50,17 @@ async function startServer() {
   // cookies + rate-limit keys). Defaults to one hop; see resolveTrustProxy for
   // the TRUST_PROXY overrides.
   app.set("trust proxy", resolveTrustProxy(process.env.TRUST_PROXY));
+
+  // The web export is several MB of JS/CSS; without this the server sends it
+  // uncompressed. Skip event streams, which compression would buffer.
+  app.use(
+    compression({
+      filter: (req, res) => {
+        if (res.getHeader("Content-Type") === "text/event-stream") return false;
+        return compression.filter(req, res);
+      },
+    }),
+  );
 
   // Enable CORS for all routes - only allow known frontend origins to support credentials
   const allowedOrigins = new Set(

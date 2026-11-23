@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.21] - 2026-11-23
+
+### Performance
+
+- The server compresses HTML, JS, CSS, and JSON with brotli or gzip. The entry
+  bundle drops from about 1.1 MB to 285 KB over the wire.
+- The SPA serves an inline branded boot shell, so first paint no longer waits for
+  the JS bundle, and repeat navigation paints immediately.
+- In a throttled local run using the same profile as the baseline, welcome first
+  paint fell from about 7.0 s to 1.8 s on slow 4G and from 3.3 s to 0.4 s on
+  normal 4G.
+
 ## [5.32.20] - 2026-11-23
 
 ### Added

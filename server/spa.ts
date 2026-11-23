@@ -48,6 +48,31 @@ export function withPwaHead(html: string): string {
   return html.replace("</head>", `${PWA_HEAD_TAGS}</head>`);
 }
 
+// The SPA has no server-rendered content, so without this the first paint waits
+// for the full JS bundle. This static shell paints immediately and is replaced
+// when React mounts into #root. No script or external asset is involved.
+const BOOT_SHELL_STYLE = `<style id="boot-shell-style">
+  #root > .boot-shell{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#071046;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .boot-shell__mark{font-size:22px;font-weight:700;letter-spacing:.02em}
+  .boot-shell__spinner{width:24px;height:24px;border:2px solid rgba(255,255,255,.25);border-top-color:#3B7DD8;border-radius:50%;animation:boot-shell-spin .8s linear infinite}
+  .boot-shell__hint{font-size:13px;color:rgba(255,255,255,.7)}
+  @keyframes boot-shell-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.boot-shell__spinner{animation:none}}
+</style>`;
+
+const BOOT_SHELL = `<div class="boot-shell" role="status" aria-live="polite">
+  <div class="boot-shell__mark">OmniShop</div>
+  <div class="boot-shell__spinner" aria-hidden="true"></div>
+  <div class="boot-shell__hint">Loading your radar…</div>
+</div>`;
+
+export function withBootShell(html: string): string {
+  if (html.includes('id="boot-shell-style"')) return html;
+  return html
+    .replace("</head>", `${BOOT_SHELL_STYLE}</head>`)
+    .replace('<div id="root"></div>', `<div id="root">${BOOT_SHELL}</div>`);
+}
+
 function readWebIndex(webDist: string): string {
   return fs.readFileSync(path.join(webDist, "index.html"), "utf8");
 }
@@ -157,7 +182,7 @@ export function registerSpa(app: Express, webDist = resolveWebDist()): boolean {
   }
   app.get(["/", "/index.html"], (_req, res) => {
     res.setHeader("Cache-Control", cacheControlFor("/index.html"));
-    res.type("html").send(withPwaHead(readWebIndex(webDist)));
+    res.type("html").send(withBootShell(withPwaHead(readWebIndex(webDist))));
   });
   app.use(
     express.static(webDist, {
@@ -194,7 +219,7 @@ export function registerSpa(app: Express, webDist = resolveWebDist()): boolean {
     // `public, max-age=0` and a browser could retain a stale shell referencing
     // old hashed bundles after a deploy.
     res.setHeader("Cache-Control", cacheControlFor("/index.html"));
-    res.type("html").send(withPwaHead(readWebIndex(webDist)));
+    res.type("html").send(withBootShell(withPwaHead(readWebIndex(webDist))));
   });
   console.log(`[spa] serving web export from ${webDist}`);
   return true;
