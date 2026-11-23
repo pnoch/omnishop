@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import React from "react";
 
@@ -43,7 +43,12 @@ vi.mock("react-native", async () => {
       Value: AnimatedValue,
       spring: (value: any, config: any) => {
         animations.springs.push({ value, config });
-        return { start: () => {} };
+        return {
+          start: (callback?: (result: { finished: boolean }) => void) => {
+            value.setValue(config.toValue);
+            callback?.({ finished: true });
+          },
+        };
       },
     },
     PanResponder: {
@@ -76,12 +81,30 @@ vi.mock("@/components/ui/icon-symbol", () => ({
 
 import { SwipeableCard } from "@/components/watchlist/swipeable-card";
 
+function openRow() {
+  act(() => {
+    panConfig.current.onPanResponderGrant();
+    panConfig.current.onPanResponderMove({}, { dx: -150, dy: 0 });
+    panConfig.current.onPanResponderRelease({}, { dx: -150, dy: 0, vx: 0 });
+  });
+}
+
 describe("SwipeableCard", () => {
   afterEach(() => {
     cleanup();
     panConfig.current = null;
     animations.values.length = 0;
     animations.springs.length = 0;
+  });
+
+  it("mounts no hidden actions while the row is closed", () => {
+    render(
+      <SwipeableCard onDelete={() => {}} onToggleAlert={() => {}}>
+        <div>CRS326</div>
+      </SwipeableCard>,
+    );
+    expect(screen.queryByLabelText("Remove from watchlist")).toBeNull();
+    expect(screen.queryByLabelText("Set price alert")).toBeNull();
   });
 
   it("renders the configured actions and removes on press", () => {
@@ -99,14 +122,36 @@ describe("SwipeableCard", () => {
       </SwipeableCard>,
     );
 
+    openRow();
     expect(screen.getByText("Muted")).toBeTruthy();
     expect(screen.getByText("Want")).toBeTruthy();
     fireEvent.click(screen.getByLabelText("Remove from watchlist"));
     expect(onDelete).toHaveBeenCalledTimes(1);
+
+    // Acting on one action closes the row; reopen for the next one.
+    openRow();
     fireEvent.click(screen.getByLabelText("Manage price alert"));
     expect(onToggleAlert).toHaveBeenCalledTimes(1);
+
+    openRow();
     fireEvent.click(screen.getByLabelText("Mark as acquired"));
     expect(onToggleAcquired).toHaveBeenCalledTimes(1);
+  });
+
+  it("unmounts the actions again after closing", () => {
+    render(
+      <SwipeableCard onDelete={() => {}}>
+        <div>CRS326</div>
+      </SwipeableCard>,
+    );
+    openRow();
+    expect(screen.getByLabelText("Remove from watchlist")).toBeTruthy();
+    act(() => {
+      panConfig.current.onPanResponderGrant();
+      panConfig.current.onPanResponderMove({}, { dx: 240, dy: 0 });
+      panConfig.current.onPanResponderRelease({}, { dx: 240, dy: 0, vx: 0 });
+    });
+    expect(screen.queryByLabelText("Remove from watchlist")).toBeNull();
   });
 
   it("opens past the halfway point and snaps back under it", () => {
@@ -139,6 +184,7 @@ describe("SwipeableCard", () => {
         <div>CRS326</div>
       </SwipeableCard>,
     );
+    openRow();
     expect(screen.queryByText("Alert")).toBeNull();
     expect(screen.queryByText("Want")).toBeNull();
     expect(screen.getByText("Remove")).toBeTruthy();

@@ -78,6 +78,10 @@ export function SwipeableCard({
   const startX = useRef(0);
   const openRef = useRef(false);
   const [open, setOpen] = useState(false);
+  // The actions are only mounted while the row is open or being dragged. A
+  // closed row then has no hidden buttons for screen readers to announce or
+  // keyboard users to tab into.
+  const [actionsVisible, setActionsVisible] = useState(false);
 
   const showAlert = onToggleAlert != null;
   const showAcquired = onToggleAcquired != null;
@@ -88,6 +92,7 @@ export function SwipeableCard({
       if (nextOpen && !openRef.current && Platform.OS !== "web") {
         void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
+      if (nextOpen) setActionsVisible(true);
       openRef.current = nextOpen;
       setOpen(nextOpen);
       Animated.spring(translateX, {
@@ -96,7 +101,9 @@ export function SwipeableCard({
         tension: 68,
         friction: 11,
         overshootClamping: true,
-      }).start();
+      }).start(({ finished }) => {
+        if (finished && !openRef.current) setActionsVisible(false);
+      });
     },
     [translateX, width],
   );
@@ -126,6 +133,7 @@ export function SwipeableCard({
           Math.abs(gesture.dx) > 6 &&
           Math.abs(gesture.dx) > Math.abs(gesture.dy) * 1.2,
         onPanResponderGrant: () => {
+          if (!openRef.current) setActionsVisible(true);
           startX.current = openRef.current ? -width : 0;
           translateX.stopAnimation((value) => {
             startX.current = value;
@@ -175,6 +183,7 @@ export function SwipeableCard({
         backgroundColor: colors.error + "18",
       }}
     >
+      {actionsVisible && (
       <Animated.View
         pointerEvents={open ? "auto" : "none"}
         style={{
@@ -238,6 +247,7 @@ export function SwipeableCard({
           }}
         />
       </Animated.View>
+      )}
 
       <Animated.View
         {...panResponder.panHandlers}

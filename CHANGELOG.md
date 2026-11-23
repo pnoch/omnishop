@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.32] - 2026-11-23
+
+### Fixed
+
+- A closed watchlist row no longer keeps its swipe actions mounted. The hidden
+  buttons stayed in the accessibility tree and keyboard tab order, so screen
+  readers announced and keyboard users tabbed into invisible
+  Alert/Want/Remove controls alongside the visible footer actions. The actions
+  now mount on drag or open and unmount after the close animation.
+
 ## [5.32.31] - 2026-11-23
 
 ### Changed
