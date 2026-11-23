@@ -106,6 +106,8 @@ export default function YouScreen() {
                 borderRadius: 12,
                 paddingHorizontal: 16,
                 paddingVertical: 10,
+                minHeight: 44,
+                justifyContent: "center",
               }}
             >
               <Text style={{ color: "#fff", fontSize: 14, fontWeight: "600" }}>

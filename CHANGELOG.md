@@ -4,6 +4,13 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.36] - 2026-11-24
+
+### Fixed
+
+- Two targets that only appear with live data: Discover’s “See all”
+  available-products link and the Settings/You “Sign in” buttons are now 44 px.
+
 ## [5.32.35] - 2026-11-24
 
 ### Fixed

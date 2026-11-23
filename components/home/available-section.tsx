@@ -140,6 +140,7 @@ export const AvailableSection = memo(function AvailableSection() {
           accessibilityLabel="See all available products"
           accessibilityRole="button"
           hitSlop={8}
+          style={{ minHeight: 44, justifyContent: "center" }}
         >
           <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
             See all
