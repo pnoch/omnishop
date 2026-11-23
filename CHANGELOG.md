@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.28] - 2026-11-23
+
+### Changed
+
+- Snoozing a price alert now opens an in-app sheet with 1/3/7/30-day choices
+  (each showing the date it ends) plus a “Wake now” action when the alert is
+  already snoozed. The web app previously asked for a number of days with
+  `window.prompt`; native used a five-button system alert that had to be split
+  to fit Android’s three-button limit.
+- The sheet names the product and its current snooze date, and the alert card
+  refreshes immediately after a choice. The snooze handler no longer branches
+  on platform.
+
 ## [5.32.27] - 2026-11-23
 
 ### Changed

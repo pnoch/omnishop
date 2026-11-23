@@ -33,6 +33,7 @@ import { TabSwitcher } from "@/components/alerts/tab-switcher";
 import { StockWatchCard } from "@/components/alerts/stock-watch-card";
 import { ReminderCard } from "@/components/alerts/reminder-card";
 import { RescheduleModal } from "@/components/alerts/reschedule-modal";
+import { SnoozeAlertSheet } from "@/components/alerts/snooze-alert-sheet";
 import { SkeletonList } from "@/components/ui/skeleton";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
 
@@ -47,7 +48,7 @@ export default function AlertsScreen() {
     refreshing, loading, onRefresh, loadError,
     setUnreadNotifications,
     handleToggle, handleDeleteAlert, handleDeleteReminder,
-    handleSnoozeAlert, handleUpdateAlert,
+    handleSnoozeAlert, handleApplySnooze, closeSnooze, snoozeTarget, handleUpdateAlert,
     handleRemoveStockWatch, handleReschedule, handleRearmAlert,
     getProductName, triggeredAlerts, totalSaved, displayCurrency, tabCount,
     rescheduleTarget, setRescheduleTarget,
@@ -304,6 +305,14 @@ export default function AlertsScreen() {
           setRescheduleTarget(null);
           setShowReschedulePicker(false);
         }}
+      />
+
+      <SnoozeAlertSheet
+        visible={!!snoozeTarget}
+        alert={snoozeTarget}
+        productName={snoozeTarget ? getProductName(snoozeTarget.productId) : ""}
+        onSelect={handleApplySnooze}
+        onClose={closeSnooze}
       />
 
       <AlertsFab

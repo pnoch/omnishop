@@ -48,6 +48,7 @@ export function useAlertsData() {
     useState<BackOrderReminder | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState<Date>(new Date());
   const [showReschedulePicker, setShowReschedulePicker] = useState(false);
+  const [snoozeTarget, setSnoozeTarget] = useState<PriceAlert | null>(null);
   // Guards against a double-tap rescheduling twice (which orphaned the first
   // scheduled notification).
   const [rescheduling, setRescheduling] = useState(false);
@@ -138,44 +139,29 @@ export function useAlertsData() {
 
   const handleSnoozeAlert = useCallback(
     (alertId: string) => {
-      const apply = async (days: number) => {
-        try {
-          await snoozeAlert(alertId, days);
-          await loadData();
-        } catch (e) {
-          log.error("[Alerts] snooze failed", e);
-          showAlert("Snooze failed", "We couldn't snooze that alert. Please try again.");
-        }
-      };
-      if (Platform.OS === "web") {
-        const input = window.prompt(
-          "Snooze Alert\nPause notifications for how many days? (0 to wake now)",
-          "7",
-        );
-        if (input === null) return;
-        const trimmed = input.trim();
-        if (trimmed === "") {
-          showAlert("Invalid input", "Please enter a number of days.");
-          return;
-        }
-        const days = Number(trimmed);
-        if (!Number.isFinite(days) || !Number.isInteger(days) || days < 0) {
-          showAlert("Invalid input", "Please enter a non-negative integer.");
-          return;
-        }
-        void apply(days);
-        return;
-      }
-      showAlert("Snooze Alert", "Pause notifications for this alert.", [
-        { text: "1 day", onPress: () => void apply(1) },
-        { text: "7 days", onPress: () => void apply(7) },
-        { text: "30 days", onPress: () => void apply(30) },
-        { text: "Wake now", onPress: () => void apply(0) },
-        { text: "Cancel", style: "cancel" as const },
-      ]);
+      const target = alerts.find((alert) => alert.id === alertId);
+      if (target) setSnoozeTarget(target);
     },
-    [loadData],
+    [alerts],
   );
+
+  const handleApplySnooze = useCallback(
+    async (days: number) => {
+      const target = snoozeTarget;
+      if (!target) return;
+      setSnoozeTarget(null);
+      try {
+        await snoozeAlert(target.id, days);
+        await loadData();
+      } catch (e) {
+        log.error("[Alerts] snooze failed", e);
+        showAlert("Snooze failed", "We couldn't snooze that alert. Please try again.");
+      }
+    },
+    [snoozeTarget, loadData],
+  );
+
+  const closeSnooze = useCallback(() => setSnoozeTarget(null), []);
 
   const handleUpdateAlert = useCallback(
     async (
@@ -375,6 +361,9 @@ export function useAlertsData() {
     handleToggle,
     handleDeleteAlert,
     handleSnoozeAlert,
+    handleApplySnooze,
+    closeSnooze,
+    snoozeTarget,
     handleUpdateAlert,
     handleDeleteReminder,
     handleRemoveStockWatch,
