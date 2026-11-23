@@ -4,6 +4,21 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.33] - 2026-11-24
+
+### Fixed
+
+- Product detail tap targets: the sticky header actions, back control,
+  watch/acquired chips, Buy now, “Set alert at…”, Visit store, Add price alert,
+  Remind me, note edit, and the per-distributor “+” target buttons are all at
+  least 44 px (the “+” buttons were 26 px).
+- Price-chart and distributor-site buttons include the distributor name
+  (“Open price chart for MikroTik Store EU”), so screen readers no longer hear
+  three identical controls; the note row is announced as “Edit note content”.
+- The sticky header mounts only after a small scroll, so its transparent copy
+  of Back/Edit/Share/Export is no longer in the accessibility tree or tab order
+  at the top of the page.
+
 ## [5.32.32] - 2026-11-23
 
 ### Fixed

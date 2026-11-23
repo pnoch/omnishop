@@ -87,9 +87,9 @@ export function TargetTableCard({
                 onPress={() => onSetTarget(listing.distributorId)}
                 hitSlop={10}
                 style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: 13,
+                  width: 44,
+                  height: 44,
+                  borderRadius: 22,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: colors.primary + "22",

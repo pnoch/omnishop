@@ -71,7 +71,7 @@ export function AlertSection({ productId, productName, displayCurrency = "USD", 
         <Text style={{ color: colors.muted, fontSize: 14 }}>{CURRENCY_SYMBOLS[currency] ?? currency}</Text>
         <TextInput value={price} onChangeText={setPrice} keyboardType="decimal-pad" placeholder="Target price" placeholderTextColor={colors.muted} returnKeyType="done" onSubmitEditing={onAdd} style={{ flex: 1, paddingVertical: 10, marginLeft: 6, color: colors.foreground }} />
       </View>
-      <TouchableOpacity activeOpacity={0.85} onPress={onAdd} style={{ backgroundColor: colors.primary, borderRadius: 8, padding: 10, marginTop: 10, alignItems: "center" }} accessibilityLabel="Add price alert" accessibilityRole="button"><Text style={{ color: "#fff", fontWeight: "600" }}>Add Alert</Text></TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.85} onPress={onAdd} style={{ backgroundColor: colors.primary, borderRadius: 8, padding: 10, marginTop: 10, alignItems: "center", justifyContent: "center", minHeight: 44 }} accessibilityLabel="Add price alert" accessibilityRole="button"><Text style={{ color: "#fff", fontWeight: "600" }}>Add Alert</Text></TouchableOpacity>
     </View>
   );
 }

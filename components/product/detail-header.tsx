@@ -60,7 +60,7 @@ export function DetailHeader({
           icon="chevron.left"
           label="Back"
           onPress={onBack}
-          size={36}
+          size={44}
           iconSize={22}
           color={colors.primary}
           style={{ marginLeft: -8 }}
@@ -81,6 +81,8 @@ export function DetailHeader({
             alignSelf: "flex-start",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
+            minHeight: 44,
             gap: 6,
             paddingHorizontal: 14,
             paddingVertical: 8,
@@ -104,6 +106,8 @@ export function DetailHeader({
           alignSelf: "flex-start",
           flexDirection: "row",
           alignItems: "center",
+          justifyContent: "center",
+          minHeight: 44,
           gap: 6,
           paddingHorizontal: 12,
           paddingVertical: 7,
@@ -126,6 +130,8 @@ export function DetailHeader({
           alignSelf: "flex-start",
           flexDirection: "row",
           alignItems: "center",
+          justifyContent: "center",
+          minHeight: 44,
           gap: 6,
           paddingHorizontal: 12,
           paddingVertical: 7,

@@ -45,7 +45,7 @@ export function DetailStickyHeader({
         icon="chevron.left"
         label="Back"
         onPress={onBack}
-        size={40}
+        size={44}
         iconSize={20}
         color={colors.primary}
         style={{ marginRight: 4 }}
@@ -69,7 +69,7 @@ export function DetailStickyHeader({
           icon="pencil"
           label="Edit product"
           onPress={onEdit}
-          size={36}
+          size={44}
           iconSize={18}
           color={colors.primary}
           style={{ marginLeft: 4 }}
@@ -78,7 +78,7 @@ export function DetailStickyHeader({
           icon="square.and.arrow.up"
           label="Share product"
           onPress={onShare}
-          size={36}
+          size={44}
           iconSize={18}
           color={colors.primary}
           style={{ marginLeft: 4 }}
@@ -87,7 +87,7 @@ export function DetailStickyHeader({
           icon="square.and.arrow.down"
           label="Export CSV"
           onPress={onExportCsv}
-          size={36}
+          size={44}
           iconSize={18}
           color={colors.primary}
           style={{ marginLeft: 4 }}

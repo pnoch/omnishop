@@ -106,6 +106,8 @@ export function BestDealEstimateCard({
             alignSelf: "flex-start",
             flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
+            minHeight: 44,
             gap: 6,
             paddingHorizontal: 14,
             paddingVertical: 8,

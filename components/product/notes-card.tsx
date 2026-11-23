@@ -61,7 +61,7 @@ export function NotesCard({ productId }: { productId: string }) {
             icon="pencil"
             label="Edit note"
             onPress={startEditing}
-            size={32}
+            size={44}
             iconSize={16}
           />
         )}
@@ -107,8 +107,10 @@ export function NotesCard({ productId }: { productId: string }) {
               style={{
                 flex: 1,
                 paddingVertical: 10,
+                minHeight: 44,
                 borderRadius: 12,
                 alignItems: "center",
+                justifyContent: "center",
                 borderWidth: 1,
                 borderColor: colors.border,
               }}
@@ -124,8 +126,10 @@ export function NotesCard({ productId }: { productId: string }) {
               style={{
                 flex: 1,
                 paddingVertical: 10,
+                minHeight: 44,
                 borderRadius: 12,
                 alignItems: "center",
+                justifyContent: "center",
                 backgroundColor: colors.primary,
               }}
               accessibilityLabel="Save note"
@@ -136,7 +140,7 @@ export function NotesCard({ productId }: { productId: string }) {
           </View>
         </>
       ) : (
-        <TouchableOpacity activeOpacity={0.7} onPress={startEditing} accessibilityLabel="Edit note" accessibilityRole="button">
+        <TouchableOpacity activeOpacity={0.7} onPress={startEditing} accessibilityLabel="Edit note content" accessibilityRole="button" style={{ minHeight: 44, justifyContent: "center" }}>
           {note ? (
             <Text
               style={{ color: colors.foreground, fontSize: 14, lineHeight: 20 }}

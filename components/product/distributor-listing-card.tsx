@@ -56,6 +56,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
     [listing.lastChecked],
   );
   const isWatching = stockWatches[listing.distributorId];
+  const distributorName = distributor?.name ?? listing.distributorId;
   const handleOpenChart = useCallback(() => {
     if (Platform.OS !== "web")
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -169,7 +170,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
                 hitSlop={8}
                 android_ripple={{ color: colors.primary + "22", borderless: false, radius: 24 }}
                 style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, borderRadius: 8, overflow: "hidden", minHeight: 44, minWidth: 44, justifyContent: "center", alignItems: "center" })}
-                accessibilityLabel="Open price chart"
+                accessibilityLabel={`Open price chart for ${distributorName}`}
                 accessibilityRole="button"
               >
                 <PriceSparkline
@@ -200,8 +201,8 @@ export const DistributorListingCard = memo(function DistributorListingCard({
             })}
             accessibilityLabel={
               hasDestination
-                ? "Visit distributor website for exact shipping"
-                : "Visit distributor website"
+                ? `Visit ${distributorName} website for exact shipping`
+                : `Visit ${distributorName} website`
             }
             accessibilityRole="button"
           >

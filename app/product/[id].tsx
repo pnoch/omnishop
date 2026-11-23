@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Stack, router } from "expo-router";
 import { goBackOrHome } from "@/lib/navigation";
 import { deriveHeaderStockStatus } from "@/lib/product-header-status";
@@ -110,6 +111,17 @@ export default function ProductDetailScreen() {
     handleSetReminder,
   } = reminders;
 
+  // The sticky header is transparent at the top; mounting it only after a
+  // small scroll keeps its controls out of the accessibility tree (and tab
+  // order) until it is actually visible.
+  const [stickyActive, setStickyActive] = useState(false);
+  useEffect(() => {
+    const listenerId = scrollY.addListener(({ value }) => {
+      setStickyActive((wasActive) => (wasActive ? value > 8 : value > 24));
+    });
+    return () => scrollY.removeListener(listenerId);
+  }, [scrollY]);
+
   if (!loaded || !isSettingsLoaded) {
     return (
       <ScreenContainer>
@@ -150,15 +162,17 @@ export default function ProductDetailScreen() {
           title overlapping the status bar. Keep the root Stack's
           headerShown:false. */}
       <Stack.Screen options={{ headerShown: false }} />
-      <DetailStickyHeader
-        productName={product.name}
-        opacity={stickyOpacity}
-        topInset={insets.top}
-        onBack={() => goBackOrHome(router)}
-        onEdit={() => setEditingProduct(true)}
-        onShare={handleShare}
-        onExportCsv={handleExportCsv}
-      />
+      {stickyActive && (
+        <DetailStickyHeader
+          productName={product.name}
+          opacity={stickyOpacity}
+          topInset={insets.top}
+          onBack={() => goBackOrHome(router)}
+          onEdit={() => setEditingProduct(true)}
+          onShare={handleShare}
+          onExportCsv={handleExportCsv}
+        />
+      )}
       <Animated.ScrollView
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
         scrollEventThrottle={16}
