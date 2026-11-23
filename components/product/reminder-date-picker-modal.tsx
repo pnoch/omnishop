@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { CrossPlatformDatePicker } from "@/components/ui/cross-platform-date-picker";
+import { ReminderDatePresets } from "@/components/ui/reminder-date-presets";
 import { DistributorListing } from "@/lib/types";
 import { getDistributorById } from "@shared/distributors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -101,7 +102,7 @@ export function ReminderDatePickerModal({
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: 20,
+              marginBottom: 10,
             }}
             accessibilityLabel="Select date"
             accessibilityRole="button"
@@ -139,6 +140,14 @@ export function ReminderDatePickerModal({
               color={colors.muted}
             />
           </TouchableOpacity>
+          <ReminderDatePresets
+            value={reminderDate}
+            minimumDate={minimumDate}
+            onChange={(date) => {
+              setReminderDate(date);
+              setShowDatePicker(Platform.OS === "ios");
+            }}
+          />
           {showDatePicker && (
             <ScrollView style={{ maxHeight: 380, marginBottom: 12 }} showsVerticalScrollIndicator={false}>
               <CrossPlatformDatePicker

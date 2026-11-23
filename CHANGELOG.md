@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.30] - 2026-11-23
+
+### Changed
+
+- Reminder and reschedule sheets have one-tap presets — Tomorrow, In 1 week,
+  In 1 month — so the common cases no longer need the calendar. The presets are
+  a radio group, show which one matches the selected date, are clamped to the
+  sheet’s minimum date, and expose `aria-checked` on web.
+- The calendar remains available for any other date.
+
 ## [5.32.29] - 2026-11-23
 
 ### Changed

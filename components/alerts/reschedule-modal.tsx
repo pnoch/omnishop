@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { CrossPlatformDatePicker } from "@/components/ui/cross-platform-date-picker";
+import { ReminderDatePresets } from "@/components/ui/reminder-date-presets";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { BackOrderReminder } from "@/lib/types";
 import { showAlert } from "@/lib/alert";
@@ -116,7 +117,7 @@ export function RescheduleModal({
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                marginBottom: 20,
+                marginBottom: 10,
               }}
               accessibilityLabel="Select date"
               accessibilityRole="button"
@@ -142,6 +143,14 @@ export function RescheduleModal({
               </View>
               <IconSymbol name="chevron.right" size={16} color={colors.muted} />
             </TouchableOpacity>
+            <ReminderDatePresets
+              value={date}
+              minimumDate={startOfToday()}
+              onChange={(next) => {
+                onDateChange(next);
+                onShowPicker(false);
+              }}
+            />
             {showPicker && (
               <CrossPlatformDatePicker
                 value={date}
