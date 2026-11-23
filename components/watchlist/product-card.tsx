@@ -342,7 +342,7 @@ export const ProductCard = memo(function ProductCard({
               hitSlop={8}
               accessibilityLabel="No prices — find prices"
               accessibilityRole="button"
-              style={{ alignSelf: "flex-start", marginTop: 6, opacity: findingPrices ? 0.5 : 1 }}
+              style={{ alignSelf: "flex-start", marginTop: 6, minHeight: 44, justifyContent: "center", opacity: findingPrices ? 0.5 : 1 }}
             >
               <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>
                 {findingPrices
@@ -370,6 +370,8 @@ export const ProductCard = memo(function ProductCard({
                 style={{
                   alignSelf: "flex-start",
                   marginTop: 6,
+                  minHeight: 44,
+                  justifyContent: "center",
                   opacity: findingPrices ? 0.5 : 1,
                 }}
               >

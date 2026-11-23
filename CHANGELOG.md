@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.34] - 2026-11-24
+
+### Fixed
+
+- The remaining text-link actions on the watchlist and product detail
+  (“No prices — Find”, “Find more prices”) now have 44 px targets too. A
+  production audit of the product detail screen now reports no interactive
+  control below 40 px and no duplicate accessible names.
+
 ## [5.32.33] - 2026-11-24
 
 ### Fixed

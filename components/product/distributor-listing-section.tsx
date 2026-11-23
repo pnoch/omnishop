@@ -271,6 +271,7 @@ export function DistributorListingSection({
                 marginBottom: 12,
                 paddingHorizontal: 16,
                 paddingVertical: 8,
+                minHeight: 44,
                 borderRadius: 16,
                 borderWidth: 1,
                 borderColor: colors.primary,
