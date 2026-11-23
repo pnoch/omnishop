@@ -46,7 +46,7 @@ export function ConnectionSection() {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               connection.refetch();
             }}
-            style={{ flexDirection: "row", alignItems: "center", gap: 6 }}
+            style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, minHeight: 44 }}
             accessibilityLabel="Check connection now"
             accessibilityRole="button"
           >

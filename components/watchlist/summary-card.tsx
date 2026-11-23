@@ -140,6 +140,7 @@ export function SummaryCard({
           gap: 6,
           marginTop: 12,
           paddingTop: 12,
+          minHeight: 44,
           borderTopWidth: 1,
           borderTopColor: colors.border,
         }}

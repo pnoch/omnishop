@@ -84,6 +84,7 @@ export function WebhookSettings({
           onPress={onTest}
           accessibilityLabel="Send test webhook"
           accessibilityRole="button"
+          style={{ minHeight: 44, justifyContent: "center" }}
         >
           <Text
             style={{

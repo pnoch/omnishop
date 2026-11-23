@@ -33,7 +33,7 @@ export function ConnectionBadge({
         backgroundColor: colors.surface,
         borderRadius: 20,
         paddingHorizontal: 11,
-        height: 30,
+        height: 44,
         minWidth: 108,
         justifyContent: "center",
         borderWidth: 1,

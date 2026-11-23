@@ -55,6 +55,7 @@ export function TabSwitcher({ active, counts, onChange }: TabSwitcherProps) {
           style={{
             flex: 1,
             paddingVertical: 8,
+            minHeight: 44,
             borderRadius: 9,
             alignItems: "center",
             flexDirection: "row",

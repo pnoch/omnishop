@@ -241,6 +241,8 @@ export function DataSection() {
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 6,
+                minHeight: 44,
+                justifyContent: "center",
                 borderRadius: 12,
                 backgroundColor: colors.primary + "22",
                 opacity: busy ? 0.5 : 1,
@@ -267,6 +269,8 @@ export function DataSection() {
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 6,
+                minHeight: 44,
+                justifyContent: "center",
                 borderRadius: 12,
                 backgroundColor: colors.primary + "22",
                 opacity: busy ? 0.5 : 1,
@@ -293,6 +297,8 @@ export function DataSection() {
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 6,
+                minHeight: 44,
+                justifyContent: "center",
                 borderRadius: 12,
                 backgroundColor: colors.primary + "22",
                 opacity: busy ? 0.5 : 1,

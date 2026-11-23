@@ -158,6 +158,8 @@ export function ScraperStatusSection({
                   style={{
                     paddingHorizontal: 10,
                     paddingVertical: 5,
+                    minHeight: 44,
+                    justifyContent: "center",
                     borderRadius: 12,
                     backgroundColor: colors.primary + "22",
                   }}

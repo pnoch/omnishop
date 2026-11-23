@@ -62,8 +62,9 @@ export function RadioPicker({
               alignItems: "center",
               gap: 10,
               paddingVertical: 8,
+              minHeight: 44,
             }}
-            accessibilityLabel={`Select ${opt.label}`}
+            accessibilityLabel={`Select ${opt.label} for ${label}`}
             accessibilityRole="radio"
             accessibilityState={{ selected: value === opt.value }}
           >

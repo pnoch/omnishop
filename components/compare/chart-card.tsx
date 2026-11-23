@@ -65,6 +65,9 @@ export function ChartCard({
                 style={{
                   paddingHorizontal: 8,
                   paddingVertical: 4,
+                  minHeight: 44,
+                  minWidth: 44,
+                  alignItems: "center",
                   borderRadius: 8,
                   backgroundColor: active
                     ? colors.primary

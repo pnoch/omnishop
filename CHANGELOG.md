@@ -4,6 +4,21 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.35] - 2026-11-24
+
+### Fixed
+
+- Tap targets across Home, Watchlist, Alerts, Discover, Settings, and Rates are
+  now at least 44 px: alert tabs, sort/group chips, the product-title control,
+  the Buy pill, “See all price drops”, the connection badge, search
+  manual/bulk-import icons, Discover add buttons, settings action buttons and
+  pickers, rate range chips, and the site-session buttons.
+- Discover’s three identical “Add to watchlist” controls now name their
+  product, and settings pickers say which setting they change (“Select Off for
+  …”), so screen readers no longer hear duplicates.
+- Browser audit of all six routes at 390 px and 1440 px: no control below
+  40 px, no duplicate accessible names, no horizontal overflow.
+
 ## [5.32.34] - 2026-11-24
 
 ### Fixed

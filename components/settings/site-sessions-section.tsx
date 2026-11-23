@@ -142,7 +142,7 @@ export function SiteSessionsSection() {
           accessibilityLabel="Show all distributors"
           onPress={() => setShowAll((v) => !v)}
           hitSlop={8}
-          style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: colors.border }}
+          style={{ paddingHorizontal: 12, paddingVertical: 8, minHeight: 44, justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: colors.border }}
         >
           <Text style={{ color: colors.foreground, fontSize: 13, fontWeight: "600" }}>
             {showAll ? "Show relevant" : `Show all ${PARSER_SITES.length}`}
@@ -154,7 +154,7 @@ export function SiteSessionsSection() {
           disabled={busy}
           onPress={handleClearAll}
           hitSlop={8}
-          style={{ paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10, borderWidth: 1, borderColor: colors.error, opacity: busy ? 0.5 : 1 }}
+          style={{ paddingHorizontal: 12, paddingVertical: 8, minHeight: 44, justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: colors.error, opacity: busy ? 0.5 : 1 }}
         >
           <Text style={{ color: colors.error, fontSize: 13, fontWeight: "700" }}>
             Clear all sessions

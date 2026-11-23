@@ -153,7 +153,7 @@ export const DropCard = memo(function DropCard({
         onPress={() => router.push("/drops")}
         accessibilityLabel="See all price drops"
         accessibilityRole="button"
-        style={{ marginTop: 8, alignSelf: "flex-end" }}
+        style={{ marginTop: 8, alignSelf: "flex-end", minHeight: 44, justifyContent: "center" }}
       >
         <Text style={{ fontSize: 13, fontWeight: "600", color: colors.primary }}>
           See all →

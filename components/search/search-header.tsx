@@ -58,8 +58,7 @@ export function SearchHeader({
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onManualAdd();
         }}
-        style={{ padding: 4 }}
-        hitSlop={12}
+        style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}
       >
         <IconSymbol name="wand.and.stars" size={22} color={colors.primary} />
       </TouchableOpacity>
@@ -72,8 +71,7 @@ export function SearchHeader({
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onBulkImport();
         }}
-        style={{ padding: 4 }}
-        hitSlop={12}
+        style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}
       >
         <IconSymbol
           name="square.and.arrow.down"

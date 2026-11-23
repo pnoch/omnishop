@@ -209,6 +209,8 @@ export const DropLeaderboard = memo(function DropLeaderboard() {
           alignItems: "center",
           paddingVertical: 4,
           paddingHorizontal: 4,
+          minHeight: 44,
+          justifyContent: "center",
         }}
         accessibilityLabel="See all price drops"
         accessibilityRole="button"

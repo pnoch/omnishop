@@ -97,9 +97,15 @@ export const TrendingProductRow = memo(function TrendingProductRow({
             borderRadius: 8,
             paddingHorizontal: 12,
             paddingVertical: 6,
+            minHeight: 44,
+            justifyContent: "center",
             marginLeft: 8,
           }}
-          accessibilityLabel={isInWatchlist ? "Already in watchlist" : "Add to watchlist"}
+          accessibilityLabel={
+            isInWatchlist
+              ? `Already in watchlist: ${product.name}`
+              : `Add ${product.name} to watchlist`
+          }
           accessibilityRole="button"
         >
           <Text

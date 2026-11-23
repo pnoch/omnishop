@@ -56,6 +56,7 @@ export function SortGroupBar({
             gap: 6,
             paddingHorizontal: 14,
             paddingVertical: 7,
+            minHeight: 44,
             borderRadius: 20,
             backgroundColor: colors.surface,
             borderWidth: 1,
@@ -97,6 +98,7 @@ export function SortGroupBar({
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 7,
+                minHeight: 44,
                 borderRadius: 20,
                 backgroundColor: active ? colors.primary : colors.surface,
                 borderWidth: 1,

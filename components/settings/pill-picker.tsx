@@ -67,11 +67,13 @@ export function PillPicker({
             style={{
               paddingHorizontal: 14,
               paddingVertical: 6,
+              minHeight: 44,
+              justifyContent: "center",
               borderRadius: 999,
               backgroundColor:
                 value === opt ? colors.primary : colors.border,
             }}
-            accessibilityLabel={`Select ${opt}`}
+            accessibilityLabel={`Select ${opt} for ${label}`}
             accessibilityRole="radio"
             accessibilityState={{ selected: value === opt }}
           >

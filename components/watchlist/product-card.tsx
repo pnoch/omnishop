@@ -287,6 +287,7 @@ export const ProductCard = memo(function ProductCard({
             onPress={onPress}
             onLongPress={onLongPress}
             delayLongPress={350}
+            style={{ minHeight: 44, justifyContent: "center" }}
             accessibilityLabel={[
               product.name,
               bestPrice ? formatPrice(bestPrice.price, bestPrice.currency) : null,
@@ -412,8 +413,9 @@ export const ProductCard = memo(function ProductCard({
                 void openListingUrl(bestInStockListing.url);
               }}
               style={{
-                flexDirection: "row", alignItems: "center", gap: 4,
+                flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4,
                 paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14,
+                minHeight: 44,
                 backgroundColor: colors.primary + "22",
               }}
             >

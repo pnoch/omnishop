@@ -112,13 +112,15 @@ export const CatalogProductCard = memo(function CatalogProductCard({
           onPress={handleTag}
           style={{
             marginRight: 8,
-            padding: 6,
-            borderRadius: 16,
+            minWidth: 44,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 22,
             borderWidth: 1,
             borderColor: colors.border,
           }}
-          hitSlop={8}
-          accessibilityLabel="Add tags"
+          accessibilityLabel={`Add tags to ${product.name}`}
           accessibilityRole="button"
         >
           <IconSymbol name="tag.fill" size={20} color={colors.muted} />
@@ -130,14 +132,17 @@ export const CatalogProductCard = memo(function CatalogProductCard({
         style={{
           backgroundColor: isTracked ? colors.success : colors.primary,
           opacity: isAdding || isTracked ? 0.5 : 1,
-          borderRadius: 20,
-          width: 36,
-          height: 36,
+          borderRadius: 22,
+          width: 44,
+          height: 44,
           alignItems: "center",
           justifyContent: "center",
         }}
-        hitSlop={8}
-        accessibilityLabel={isTracked ? "Already in watchlist" : "Add to watchlist"}
+        accessibilityLabel={
+          isTracked
+            ? `Already in watchlist: ${product.name}`
+            : `Add ${product.name} to watchlist`
+        }
         accessibilityRole="button"
       >
         {isAdding ? (

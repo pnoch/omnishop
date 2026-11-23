@@ -42,6 +42,8 @@ export function AlertsHeader({
           style={{
             paddingHorizontal: 12,
             paddingVertical: 6,
+            minHeight: 44,
+            justifyContent: "center",
             borderRadius: 16,
             backgroundColor: colors.primary,
             flexShrink: 0,
