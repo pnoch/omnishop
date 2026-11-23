@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Animated } from "react-native";
-import { useReducedMotion } from "react-native-reanimated";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@shared/currency";

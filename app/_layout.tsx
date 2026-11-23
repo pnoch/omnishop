@@ -7,14 +7,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "react-native-reanimated";
 import {
   ActivityIndicator,
   Platform,
   View,
   useColorScheme,
 } from "react-native";
+import { GestureRoot } from "@/components/ui/gesture-root";
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { SettingsProvider } from "@/lib/settings-provider";
@@ -230,7 +229,7 @@ export default function RootLayout() {
 
   const content = (
     <SettingsProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureRoot style={{ flex: 1 }}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <WebDocumentTitle />
@@ -246,7 +245,7 @@ export default function RootLayout() {
           <StatusBar style="auto" />
         </QueryClientProvider>
       </trpc.Provider>
-      </GestureHandlerRootView>
+      </GestureRoot>
     </SettingsProvider>
   );
 

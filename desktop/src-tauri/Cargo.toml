@@ -1,6 +1,6 @@
 [package]
 name = "omnishop"
-version = "5.32.23"
+version = "5.32.24"
 edition = "2021"
 
 [lib]

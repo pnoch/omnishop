@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.24] - 2026-11-23
+
+### Performance
+
+- The watchlist swipe row now uses React Native's `PanResponder` and
+  `Animated` instead of `ReanimatedSwipeable`, and reduced-motion detection has
+  its own hook. The gesture-handler root is platform-split, so the web build no
+  longer ships `react-native-reanimated` or `react-native-gesture-handler`.
+  The shared chunk fell from 2.08 MB to 1.13 MB (504 KB → 310 KB gzip).
+- Swipe-to-reveal, drag-to-close, tap-to-close, remove, and undo behave as
+  before; a new test covers the swipe thresholds and the action wiring.
+
 ## [5.32.23] - 2026-11-23
 
 ### Performance

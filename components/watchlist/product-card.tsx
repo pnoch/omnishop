@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
-import { useReducedMotion } from "react-native-reanimated";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { Product, TagDefinition } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
 import { StockBadge } from "@/components/stock-badge";
