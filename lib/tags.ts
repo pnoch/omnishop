@@ -65,3 +65,28 @@ export function generateTagId(): string {
   }
   return `tag-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
+
+/** Copy for the tag manager: how many products carry this tag right now. */
+export function tagUsageLabel(count: number): string {
+  if (count <= 0) return "Not used yet";
+  return `Used by ${count} product${count === 1 ? "" : "s"}`;
+}
+
+/** Delete confirmation copy that names the blast radius before removal. */
+export function tagDeleteMessage(name: string, count: number): string {
+  if (count <= 0) return `Delete "${name}"? No products use it.`;
+  return `Delete "${name}"? It will be removed from ${count} product${count === 1 ? "" : "s"}. Their other tags stay.`;
+}
+
+/** Count of products per tag id, ignoring orphaned ids and duplicates. */
+export function countTagUsage(
+  products: readonly Pick<Product, "tags">[],
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const product of products) {
+    for (const id of new Set(product.tags ?? [])) {
+      counts[id] = (counts[id] ?? 0) + 1;
+    }
+  }
+  return counts;
+}

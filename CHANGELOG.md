@@ -4,6 +4,17 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.31] - 2026-11-23
+
+### Changed
+
+- The tag manager shows how many products use each tag (“Used by N products” or
+  “Not used yet”), and the delete confirmation names that count before removing
+  the tag. Counts reload whenever the sheet opens, so a shared tag is not
+  deleted blindly.
+- Deleting a tag still removes it from every product and stamps `tagsUpdatedAt`
+  so the tag-LWW sync cannot resurrect it on another device.
+
 ## [5.32.30] - 2026-11-23
 
 ### Changed

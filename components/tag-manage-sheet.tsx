@@ -16,10 +16,16 @@ import { useColors } from "@/hooks/use-colors";
 import {
   deleteTag,
   getTagDefinitions,
+  getWatchlist,
   renameTag,
   setTagColor,
 } from "@/lib/storage";
-import { TAG_PALETTE } from "@/lib/tags";
+import {
+  TAG_PALETTE,
+  countTagUsage,
+  tagDeleteMessage,
+  tagUsageLabel,
+} from "@/lib/tags";
 import { TagDefinition } from "@/lib/types";
 
 interface Props {
@@ -31,6 +37,7 @@ interface Props {
 export function TagManageSheet({ visible, onClose, onChanged }: Props) {
   const colors = useColors();
   const [defs, setDefs] = useState<Record<string, TagDefinition>>({});
+  const [usage, setUsage] = useState<Record<string, number>>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +54,12 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
   }, [visible, defs]);
 
   const refresh = useCallback(async () => {
-    setDefs(await getTagDefinitions());
+    const [definitions, products] = await Promise.all([
+      getTagDefinitions(),
+      getWatchlist().catch(() => []),
+    ]);
+    setDefs(definitions);
+    setUsage(countTagUsage(products));
     onChanged();
   }, [onChanged]);
 
@@ -75,7 +87,7 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
     };
     showAlert(
       "Delete Tag",
-      `Delete "${tag.name}"? Products keep their other tags.`,
+      tagDeleteMessage(tag.name, usage[tag.id] ?? 0),
       [
         { text: "Cancel", style: "cancel" },
         { text: "Delete", style: "destructive", onPress: doDelete },
@@ -101,8 +113,14 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
       title="Manage Tags"
       onShow={() => {
         setLoadFailed(false);
-        void getTagDefinitions()
-          .then(setDefs)
+        void Promise.all([
+          getTagDefinitions(),
+          getWatchlist().catch(() => []),
+        ])
+          .then(([definitions, products]) => {
+            setDefs(definitions);
+            setUsage(countTagUsage(products));
+          })
           .catch(() => setLoadFailed(true));
         setEditingId(null);
         setEditName("");
@@ -184,17 +202,25 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
                         marginRight: 8,
                       }}
                     />
-                    <Text
-                      style={{
-                        flex: 1,
-                        color: colors.foreground,
-                        fontSize: 15,
-                      }}
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                    >
-                      {tag.name}
-                    </Text>
+                    <View style={{ flex: 1, minWidth: 0 }}>
+                      <Text
+                        style={{
+                          color: colors.foreground,
+                          fontSize: 15,
+                        }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {tag.name}
+                      </Text>
+                      <Text
+                        style={{ color: colors.muted, fontSize: 11, marginTop: 1 }}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {tagUsageLabel(usage[tag.id] ?? 0)}
+                      </Text>
+                    </View>
                     <TouchableOpacity activeOpacity={0.7}
                       onPress={() => {
                         setEditingId(tag.id);

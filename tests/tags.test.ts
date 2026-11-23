@@ -3,10 +3,13 @@ import {
   TAG_PALETTE,
   generateTagId,
   getTagById,
+  countTagUsage,
   matchesTagFilter,
   matchesTagFilterMode,
   nextTagColor,
   tagColor,
+  tagDeleteMessage,
+  tagUsageLabel,
 } from "../lib/tags";
 import { Product, TagDefinition } from "../lib/types";
 
@@ -142,5 +145,33 @@ describe("matchesTagFilterMode", () => {
 describe("generateTagId", () => {
   it("returns a non-empty string", () => {
     expect(generateTagId()).toBeTruthy();
+  });
+});
+
+describe("tag usage copy", () => {
+  it("labels zero, one, and many products", () => {
+    expect(tagUsageLabel(0)).toBe("Not used yet");
+    expect(tagUsageLabel(1)).toBe("Used by 1 product");
+    expect(tagUsageLabel(3)).toBe("Used by 3 products");
+  });
+
+  it("names the blast radius before deleting", () => {
+    expect(tagDeleteMessage("Work", 0)).toBe(
+      'Delete "Work"? No products use it.',
+    );
+    expect(tagDeleteMessage("Work", 1)).toBe(
+      'Delete "Work"? It will be removed from 1 product. Their other tags stay.',
+    );
+    expect(tagDeleteMessage("Work", 4)).toContain("removed from 4 products");
+  });
+
+  it("counts each product once per tag", () => {
+    const counts = countTagUsage([
+      { tags: ["a", "b", "a"] },
+      { tags: ["a"] },
+      { tags: [] },
+      {},
+    ]);
+    expect(counts).toEqual({ a: 2, b: 1 });
   });
 });
