@@ -14,6 +14,7 @@ import {
   useColorScheme,
 } from "react-native";
 import { GestureRoot } from "@/components/ui/gesture-root";
+import { WebAlertHost } from "@/components/ui/web-alert-host";
 import "@/lib/_core/nativewind-pressable";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { SettingsProvider } from "@/lib/settings-provider";
@@ -222,6 +223,7 @@ export default function RootLayout() {
         <SettingsProvider>
           <WebPolish />
           <ConciergeScreen onComplete={() => setOnboardingState("app")} />
+          <WebAlertHost />
         </SettingsProvider>
       </ThemeProvider>
     );
@@ -242,6 +244,7 @@ export default function RootLayout() {
             <Stack.Screen name="oauth/callback" />
           </Stack>
           <WebViewFetchHost />
+          <WebAlertHost />
           <StatusBar style="auto" />
         </QueryClientProvider>
       </trpc.Provider>

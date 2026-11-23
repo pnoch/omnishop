@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AccessibilityInfo,
-  Alert,
   findNodeHandle,
-  Platform,
   ScrollView,
   Text,
   TextInput,
@@ -12,6 +10,7 @@ import {
 } from "react-native";
 
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { showAlert } from "@/lib/alert";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { useColors } from "@/hooks/use-colors";
 import {
@@ -74,18 +73,7 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
         }
       })();
     };
-    if (Platform.OS === "web") {
-      if (
-        typeof window !== "undefined" &&
-        window.confirm(
-          `Delete "${tag.name}"? Products keep their other tags.`,
-        )
-      ) {
-        doDelete();
-      }
-      return;
-    }
-    Alert.alert(
+    showAlert(
       "Delete Tag",
       `Delete "${tag.name}"? Products keep their other tags.`,
       [

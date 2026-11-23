@@ -8,65 +8,72 @@ vi.mock("react-native", () => ({
   Alert: { alert: alertMock },
 }));
 
+import {
+  dismissWebAlert,
+  getWebAlertSnapshot,
+  resetWebAlertsForTests,
+  resolveWebAlert,
+} from "../lib/web-alert-store";
+
 describe("showAlert on web", () => {
   beforeEach(() => {
-    alertMock.mockClear();
+    resetWebAlertsForTests();
     window.confirm = vi.fn(() => true);
     window.alert = vi.fn();
     window.prompt = vi.fn(() => "1");
   });
 
-  it("runs the destructive onPress when confirmed", () => {
+  it("queues a themed dialog instead of prompting", () => {
     const onPress = vi.fn();
     showAlert("Remove", "Remove this?", [
       { text: "Cancel", style: "cancel" },
       { text: "Remove", style: "destructive", onPress },
     ]);
-    expect(window.confirm).toHaveBeenCalledWith("Remove\n\nRemove this?");
-    expect(onPress).toHaveBeenCalled();
-    expect(alertMock).not.toHaveBeenCalled();
-  });
-
-  it("numbers every action when more than one is available", () => {
-    const share = vi.fn();
-    const remove = vi.fn();
-    (window.prompt as ReturnType<typeof vi.fn>).mockReturnValue("2");
-    showAlert("Choose", "What next?", [
-      { text: "Share", onPress: share },
-      { text: "Remove", style: "destructive", onPress: remove },
+    const current = getWebAlertSnapshot().current;
+    expect(current?.title).toBe("Remove");
+    expect(current?.message).toBe("Remove this?");
+    expect(current?.buttons.map((button) => button.text)).toEqual([
+      "Cancel",
+      "Remove",
     ]);
-    const promptText = (window.prompt as ReturnType<typeof vi.fn>).mock
-      .calls[0]![0] as string;
-    expect(promptText).toContain("1. Share");
-    expect(promptText).toContain("2. Remove");
-    expect(remove).toHaveBeenCalled();
-    expect(share).not.toHaveBeenCalled();
+    expect(window.confirm).not.toHaveBeenCalled();
+    expect(window.prompt).not.toHaveBeenCalled();
+    expect(onPress).not.toHaveBeenCalled();
+
+    resolveWebAlert(current!.buttons[1]);
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(getWebAlertSnapshot().current).toBeNull();
   });
 
-  it("runs the cancel action when the numbered prompt is dismissed", () => {
-    const share = vi.fn();
+  it("runs the cancel action when dismissed", () => {
     const cancel = vi.fn();
-    (window.prompt as ReturnType<typeof vi.fn>).mockReturnValue(null);
     showAlert("Choose", "What next?", [
-      { text: "Share", onPress: share },
-      { text: "Remove", style: "destructive" },
+      { text: "Share" },
       { text: "Cancel", style: "cancel", onPress: cancel },
     ]);
-    expect(cancel).toHaveBeenCalled();
-    expect(share).not.toHaveBeenCalled();
+    dismissWebAlert();
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(getWebAlertSnapshot().current).toBeNull();
   });
 
-  it("runs the cancel action on an out-of-range numbered answer", () => {
-    const share = vi.fn();
-    const cancel = vi.fn();
-    (window.prompt as ReturnType<typeof vi.fn>).mockReturnValue("9");
-    showAlert("Choose", "What next?", [
-      { text: "Share", onPress: share },
-      { text: "Remove", style: "destructive" },
-      { text: "Cancel", style: "cancel", onPress: cancel },
-    ]);
-    expect(cancel).toHaveBeenCalled();
-    expect(share).not.toHaveBeenCalled();
+  it("queues alerts one at a time and advances after each", () => {
+    showAlert("First", "One", [{ text: "OK" }]);
+    showAlert("Second", "Two", [{ text: "OK" }]);
+    let state = getWebAlertSnapshot();
+    expect(state.current?.title).toBe("First");
+    expect(state.pending).toBe(1);
+
+    resolveWebAlert(state.current!.buttons[0]);
+    state = getWebAlertSnapshot();
+    expect(state.current?.title).toBe("Second");
+    expect(state.pending).toBe(0);
+  });
+
+  it("defaults to an OK button when none are given", () => {
+    showAlert("Oops", "Something went wrong.");
+    expect(
+      getWebAlertSnapshot().current?.buttons.map((button) => button.text),
+    ).toEqual(["OK"]);
   });
 
   it("does nothing when the DOM window is unavailable", () => {
@@ -79,39 +86,13 @@ describe("showAlert on web", () => {
       expect(() =>
         showAlert("Choose", "What next?", [{ text: "A" }, { text: "B" }]),
       ).not.toThrow();
+      expect(getWebAlertSnapshot().current).toBeNull();
     } finally {
       Object.defineProperty(globalThis, "window", {
         value: original,
         configurable: true,
       });
     }
-  });
-
-  it("does not run the destructive onPress when cancelled", () => {
-    (window.confirm as ReturnType<typeof vi.fn>).mockReturnValue(false);
-    const onPress = vi.fn();
-    showAlert("Remove", "Remove this?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Remove", style: "destructive", onPress },
-    ]);
-    expect(onPress).not.toHaveBeenCalled();
-  });
-
-  it("shows an informational alert and runs the OK onPress", () => {
-    const onPress = vi.fn();
-    showAlert("Done", "All set.", [{ text: "OK", onPress }]);
-    expect(window.alert).toHaveBeenCalledWith("Done\n\nAll set.");
-    expect(onPress).toHaveBeenCalled();
-  });
-
-  it("shows an informational alert when no buttons are given", () => {
-    showAlert("Oops", "Something went wrong.");
-    expect(window.alert).toHaveBeenCalledWith("Oops\n\nSomething went wrong.");
-  });
-
-  it("falls back to the title when no message is given", () => {
-    showAlert("Just a title");
-    expect(window.alert).toHaveBeenCalledWith("Just a title");
   });
 });
 

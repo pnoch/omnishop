@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import * as Haptics from "expo-haptics";
 import { log } from "@shared/log";
 import {
@@ -13,6 +13,7 @@ import {
   removeFromWatchlist,
 } from "@/lib/storage";
 import { scheduleBackOrderReminder } from "@/lib/notifications";
+import { showAlert as showAppAlert } from "@/lib/alert";
 import type { BackOrderReminder, PriceAlert, Product } from "@/lib/types";
 
 type UseWatchlistRemoveOptions = {
@@ -92,16 +93,7 @@ export function useWatchlistRemove({
   const handleDelete = useCallback(
     (product: Product) => {
       const doRemove = () => void removeProductWithUndo(product);
-      if (Platform.OS === "web") {
-        if (
-          typeof window !== "undefined" &&
-          window.confirm(`Remove "${product.name}" from your watchlist?`)
-        ) {
-          doRemove();
-        }
-        return;
-      }
-      Alert.alert(
+      showAppAlert(
         "Remove Product",
         `Remove "${product.name}" from your watchlist?`,
         [
@@ -174,18 +166,7 @@ export function useWatchlistRemove({
         );
       }
     };
-    if (Platform.OS === "web") {
-      if (
-        typeof window !== "undefined" &&
-        window.confirm(
-          `Remove ${count} product${count !== 1 ? "s" : ""} from your watchlist?`,
-        )
-      ) {
-        void doRemove();
-      }
-      return;
-    }
-    Alert.alert(
+    showAppAlert(
       "Remove Products",
       `Remove ${count} product${count !== 1 ? "s" : ""} from your watchlist?`,
       [

@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.29] - 2026-11-23
+
+### Changed
+
+- Web alerts and confirmations are now themed in-app dialogs instead of
+  browser `alert`, `confirm`, and numbered `prompt` popups. Destructive actions
+  (remove product, remove selected products, delete tag) use the same dialog on
+  every platform, with Cancel and a red Remove/Delete.
+- The dialog queues overlapping alerts, focuses the cancel action, closes on
+  Escape or a backdrop press, and is announced as an alert. Native keeps the
+  system alert.
+
 ## [5.32.28] - 2026-11-23
 
 ### Changed
