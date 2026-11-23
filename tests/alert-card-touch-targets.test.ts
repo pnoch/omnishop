@@ -22,14 +22,19 @@ describe("compact alert-card actions use real touch targets", () => {
 });
 
 describe("IconActionButton renders a 44x44 target", () => {
-  it("declares min 44x44 and no hitSlop", () => {
-    const src = readFileSync(
-      join(ROOT, "components/ui/icon-action-button.tsx"),
-      "utf8",
-    );
-    expect(src).toMatch(/minHeight:\s*44/);
-    expect(src).toMatch(/minWidth:\s*44/);
+  const src = readFileSync(
+    join(ROOT, "components/ui/icon-action-button.tsx"),
+    "utf8",
+  );
+
+  it("asks the shared icon button for a 44px square and no hitSlop", () => {
+    expect(src).toMatch(/size=\{44\}/);
     expect(src).not.toMatch(/hitSlop\s*=/);
+  });
+
+  it("the shared icon button never expands its target with hitSlop", () => {
+    const button = readFileSync(join(ROOT, "components/ui/icon-button.tsx"), "utf8");
+    expect(button).not.toMatch(/hitSlop\s*=/);
   });
 });
 

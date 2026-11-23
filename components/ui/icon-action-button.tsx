@@ -1,10 +1,11 @@
-import { TouchableOpacity, type ViewStyle } from "react-native";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
+import type { IconSymbolName } from "@/components/ui/icon-symbol";
+import type { GestureResponderEvent, ViewStyle } from "react-native";
 
 type IconActionButtonProps = {
-  name: Parameters<typeof IconSymbol>[0]["name"];
+  name: IconSymbolName;
   color: string;
-  onPress: (e?: { stopPropagation?: () => void }) => void;
+  onPress: (e?: GestureResponderEvent) => void;
   accessibilityLabel: string;
   accessibilityHint?: string;
   size?: number;
@@ -17,6 +18,9 @@ type IconActionButtonProps = {
  * `hitSlop` is measured in dp and expands past neighbouring buttons — stacked
  * actions (edit/snooze/delete) then overlap and the last-rendered one swallows
  * every tap, making the earlier buttons unreachable.
+ *
+ * Delegates to IconButton so these dense actions share the hover/pressed tint
+ * and browser tooltip used by the rest of the app.
  */
 export function IconActionButton({
   name,
@@ -29,24 +33,17 @@ export function IconActionButton({
   accessibilityState,
 }: IconActionButtonProps) {
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
+    <IconButton
+      icon={name}
+      label={accessibilityLabel}
+      hint={accessibilityHint}
       onPress={onPress}
-      style={[
-        {
-          minHeight: 44,
-          minWidth: 44,
-          justifyContent: "center",
-          alignItems: "center",
-        },
-        style,
-      ]}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
-      accessibilityHint={accessibilityHint}
-      accessibilityState={accessibilityState}
-    >
-      <IconSymbol name={name} size={size} color={color} />
-    </TouchableOpacity>
+      size={44}
+      iconSize={size}
+      color={color}
+      disabled={accessibilityState?.disabled}
+      selected={accessibilityState?.selected}
+      style={style}
+    />
   );
 }

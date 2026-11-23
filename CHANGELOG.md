@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.27] - 2026-11-23
+
+### Changed
+
+- Watchlist rows show a price-alert action in the footer (outline bell, filled
+  when an alert exists), so setting or managing an alert no longer requires
+  discovering the swipe gesture.
+- Footer actions (alert, acquired, tags, delete) use the shared icon button, so
+  they gain the hover/pressed tint and desktop tooltip. The distributor/updated
+  text is now a two-line block, keeping four 44 px actions inside a 390 px card.
+- The shared icon button no longer sets `hitSlop`; its 44 px box is the target,
+  so adjacent actions in dense rows cannot overlap and swallow taps.
+
 ## [5.32.26] - 2026-11-23
 
 ### Changed

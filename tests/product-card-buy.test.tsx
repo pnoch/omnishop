@@ -118,6 +118,25 @@ describe("ProductCard buy button", () => {
     expect(onPress).not.toHaveBeenCalled();
   });
 
+  it("exposes the price-alert action in the footer", () => {
+    const onToggleAlert = vi.fn();
+    render(
+      <ProductCard
+        {...(base as any)}
+        product={inStock as any}
+        hasAlert
+        onToggleAlert={onToggleAlert}
+      />,
+    );
+    fireEvent.click(screen.getByLabelText("Manage price alert"));
+    expect(onToggleAlert).toHaveBeenCalledTimes(1);
+  });
+
+  it("labels the footer alert action by its current state", () => {
+    render(<ProductCard {...(base as any)} product={inStock as any} onToggleAlert={() => {}} />);
+    expect(screen.getByLabelText("Set price alert")).toBeTruthy();
+  });
+
   it("omits the buy button when the in-stock listing has no url", () => {
     const noUrl = {
       ...inStock,

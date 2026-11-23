@@ -73,6 +73,8 @@ export const WatchlistRow = memo(function WatchlistRow({
         hasIncompleteDiscovery={hasIncompleteDiscovery}
         tagDefinitions={tagDefinitions}
         onToggleAcquired={onToggleAcquired}
+        hasAlert={hasAlert}
+        onToggleAlert={onToggleAlert}
       />
     </SwipeableCard>
   );

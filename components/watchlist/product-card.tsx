@@ -43,6 +43,8 @@ export const ProductCard = memo(function ProductCard({
   findingProgress,
   hasIncompleteDiscovery = false,
   onToggleAcquired,
+  hasAlert = false,
+  onToggleAlert,
 }: {
   product: Product;
   onPress: () => void;
@@ -60,6 +62,8 @@ export const ProductCard = memo(function ProductCard({
   findingProgress?: { done: number; total: number };
   hasIncompleteDiscovery?: boolean;
   onToggleAcquired?: () => void;
+  hasAlert?: boolean;
+  onToggleAlert?: () => void;
 }) {
   const colors = useColors();
   const reduceMotion = useReduceMotion();
@@ -142,6 +146,16 @@ export const ProductCard = memo(function ProductCard({
       onTagPress();
     },
     [onTagPress],
+  );
+  const handleToggleAlertPress = useCallback(
+    (e?: { stopPropagation?: () => void }) => {
+      if (Platform.OS === "web") e?.stopPropagation?.();
+      if (Platform.OS !== "web") {
+        void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+      onToggleAlert?.();
+    },
+    [onToggleAlert],
   );
   const handleDeletePress = useCallback(
     (e?: { stopPropagation?: () => void }) => {
@@ -441,6 +455,8 @@ export const ProductCard = memo(function ProductCard({
         distributorCount={distributorCount}
         refreshColorKey={refreshColorKey}
         acquired={acquired}
+        hasAlert={hasAlert}
+        onToggleAlert={onToggleAlert ? handleToggleAlertPress : undefined}
         onToggleAcquired={onToggleAcquired}
         onToggleAcquiredPress={handleToggleAcquired}
         onTagPress={handleTagPress}

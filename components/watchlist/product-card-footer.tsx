@@ -3,6 +3,7 @@ import { IconActionButton } from "@/components/ui/icon-action-button";
 import { formatLastRefreshed } from "@/lib/last-refreshed";
 import type { Product } from "@/lib/types";
 import type { useColors } from "@/hooks/use-colors";
+import type { GestureResponderEvent } from "react-native";
 
 type Colors = ReturnType<typeof useColors>;
 
@@ -12,6 +13,8 @@ export function ProductCardFooter({
   distributorCount,
   refreshColorKey,
   acquired,
+  hasAlert = false,
+  onToggleAlert,
   onToggleAcquired,
   onToggleAcquiredPress,
   onTagPress,
@@ -22,10 +25,12 @@ export function ProductCardFooter({
   distributorCount: number;
   refreshColorKey: "green" | "yellow" | "red" | "gray";
   acquired: boolean;
+  hasAlert?: boolean;
+  onToggleAlert?: (e?: GestureResponderEvent) => void;
   onToggleAcquired?: () => void;
-  onToggleAcquiredPress: (e?: { stopPropagation?: () => void }) => void;
-  onTagPress: (e?: { stopPropagation?: () => void }) => void;
-  onDeletePress: (e?: { stopPropagation?: () => void }) => void;
+  onToggleAcquiredPress: (e?: GestureResponderEvent) => void;
+  onTagPress: (e?: GestureResponderEvent) => void;
+  onDeletePress: (e?: GestureResponderEvent) => void;
 }) {
   const colorMap = {
     green: colors.success,
@@ -45,14 +50,38 @@ export function ProductCardFooter({
         borderTopColor: colors.border,
       }}
     >
-      <Text style={{ color: colors.muted, fontSize: 12 }}>
-        {distributorCount > 0
-          ? `${distributorCount} distributor${distributorCount !== 1 ? "s" : ""} tracked`
-          : "No distributor prices yet"}
-      </Text>
-      <Text style={{ color: colorMap[refreshColorKey], fontSize: 11 }}>
-        Updated {formatLastRefreshed(product.lastRefreshed)}
-      </Text>
+      <View style={{ flex: 1, minWidth: 0, marginRight: 6 }}>
+        <Text
+          style={{ color: colors.muted, fontSize: 12 }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {distributorCount > 0
+            ? `${distributorCount} distributor${distributorCount !== 1 ? "s" : ""} tracked`
+            : "No distributor prices yet"}
+        </Text>
+        <Text
+          style={{ color: colorMap[refreshColorKey], fontSize: 11 }}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          Updated {formatLastRefreshed(product.lastRefreshed)}
+        </Text>
+      </View>
+      {onToggleAlert && (
+        <IconActionButton
+          name={hasAlert ? "bell.fill" : "bell"}
+          size={16}
+          color={hasAlert ? colors.primary : colors.muted}
+          onPress={onToggleAlert}
+          accessibilityLabel={
+            hasAlert ? "Manage price alert" : "Set price alert"
+          }
+          accessibilityHint="Opens this product to set a price alert"
+          accessibilityState={{ selected: hasAlert }}
+          style={{ marginRight: 4 }}
+        />
+      )}
       {onToggleAcquired && (
         <IconActionButton
           name="checkmark.circle.fill"

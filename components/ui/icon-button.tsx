@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Platform, Pressable, type ViewStyle } from "react-native";
+import { Platform, Pressable, type GestureResponderEvent, type ViewStyle } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol, type IconSymbolName } from "@/components/ui/icon-symbol";
 
@@ -17,16 +17,18 @@ export function IconButton({
   iconSize = 22,
   color,
   disabled = false,
+  selected,
   style,
 }: {
   icon: IconSymbolName;
   label: string;
   hint?: string;
-  onPress: () => void;
+  onPress: (event?: GestureResponderEvent) => void;
   size?: number;
   iconSize?: number;
   color?: string;
   disabled?: boolean;
+  selected?: boolean;
   style?: ViewStyle;
 }) {
   const colors = useColors();
@@ -46,7 +48,7 @@ export function IconButton({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={hint}
-      accessibilityState={{ disabled }}
+      accessibilityState={{ disabled, selected }}
       disabled={disabled}
       onPress={onPress}
       onHoverIn={() => setHovered(true)}
@@ -56,7 +58,6 @@ export function IconButton({
       }}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
-      hitSlop={6}
       style={{
         width: size,
         height: size,
