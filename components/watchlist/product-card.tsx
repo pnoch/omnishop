@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { Product, TagDefinition } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
 import { StockBadge } from "@/components/stock-badge";
@@ -62,7 +62,7 @@ export const ProductCard = memo(function ProductCard({
   onToggleAcquired?: () => void;
 }) {
   const colors = useColors();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReduceMotion();
   const acquired = isAcquired(product);
   const cardOpacity = useState(() => new Animated.Value(acquired ? 0.55 : 1))[0];
   useEffect(() => {

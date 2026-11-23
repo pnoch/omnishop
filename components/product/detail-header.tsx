@@ -1,8 +1,9 @@
-import { Animated, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Pressable, Text, View } from "react-native";
 import { StockBadge } from "@/components/stock-badge";
 import { getDistributorById } from "@shared/distributors";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import type { Product, StockStatus } from "@/lib/types";
 import type { BestDeal } from "@/lib/best-deal";
 
@@ -55,15 +56,15 @@ export function DetailHeader({
   const content = (
     <View style={{ padding: 16 }}>
       <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 4 }}>
-        <TouchableOpacity
+        <IconButton
+          icon="chevron.left"
+          label="Back"
           onPress={onBack}
-          accessibilityLabel="Back"
-          accessibilityRole="button"
-          hitSlop={10}
-          style={{ width: 32, height: 32, alignItems: "center", justifyContent: "center", marginLeft: -8 }}
-        >
-          <IconSymbol name="chevron.left" size={22} color={colors.primary} />
-        </TouchableOpacity>
+          size={36}
+          iconSize={22}
+          color={colors.primary}
+          style={{ marginLeft: -8 }}
+        />
         <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "700", flex: 1 }}>{product.name}</Text>
       </View>
       <Text style={{ color: colors.muted, fontSize: 13, marginTop: 4 }}>{product.brand} · {product.category} · {product.modelNumber}</Text>

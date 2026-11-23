@@ -10,7 +10,7 @@ vi.mock("react-native", () => ({
   },
 }));
 
-import { useReducedMotion } from "../hooks/use-reduced-motion";
+import { useReduceMotion } from "../hooks/use-reduce-motion";
 
 function mockMatchMedia(matches: boolean) {
   const listeners = new Set<(event: MediaQueryListEvent) => void>();
@@ -32,14 +32,14 @@ function mockMatchMedia(matches: boolean) {
   };
 }
 
-describe("useReducedMotion", () => {
+describe("useReduceMotion", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
   it("reads the web media query and follows changes", () => {
     const media = mockMatchMedia(true);
-    const { result } = renderHook(() => useReducedMotion());
+    const { result } = renderHook(() => useReduceMotion());
     expect(result.current).toBe(true);
     act(() => media.emit(false));
     expect(result.current).toBe(false);
@@ -47,7 +47,7 @@ describe("useReducedMotion", () => {
 
   it("starts false when the preference is not set", () => {
     mockMatchMedia(false);
-    const { result } = renderHook(() => useReducedMotion());
+    const { result } = renderHook(() => useReduceMotion());
     expect(result.current).toBe(false);
   });
 });

@@ -11,6 +11,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { updateProductDetails } from "@/lib/storage";
 import { showAlert } from "@/lib/alert";
 import type { Product } from "@/lib/types";
@@ -122,13 +123,14 @@ export function EditProductSheet({
             >
               Edit Product
             </Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={onClose} style={{ padding: 4 }} accessibilityLabel="Close" accessibilityRole="button">
-              <IconSymbol
-                name="xmark.circle.fill"
-                size={24}
-                color={colors.muted}
-              />
-            </TouchableOpacity>
+            <IconButton
+              icon="xmark.circle.fill"
+              label="Close"
+              onPress={onClose}
+              size={40}
+              iconSize={24}
+              color={colors.muted}
+            />
           </View>
 
           <ScrollView>

@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.26] - 2026-11-23
+
+### Changed
+
+- Icon-only desktop actions now share one `IconButton` with a hover tint, a
+  pressed tint, a 44 px default target, and a browser tooltip: page headers, product
+  detail (sticky and inline), compare, statistics, search/drops/you back
+  actions, diagnostics refresh, edit/close controls, and the note edit action.
+- eBay search results without a photo show the branded product-image
+  placeholder instead of nothing.
+- Reduced-motion detection is one hook again (`useReduceMotion`); it now also
+  honours the web `prefers-reduced-motion` setting. The duplicate hook added in
+  5.32.24 is gone.
+
 ## [5.32.25] - 2026-11-23
 
 ### Performance

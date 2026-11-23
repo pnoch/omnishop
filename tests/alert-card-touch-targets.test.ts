@@ -80,7 +80,7 @@ describe("mobile product detail exposes product editing", () => {
       "components/product/detail-sticky-header.tsx",
       "utf8",
     );
-    expect(header).toContain('accessibilityLabel="Edit product"');
+    expect(header).toContain('label="Edit product"');
   });
 
   it("refreshes the screen after a save", () => {

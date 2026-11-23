@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View, Animated } from "react-native";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@shared/currency";
@@ -19,7 +19,7 @@ export const BasketValueCard = memo(function BasketValueCard({
   onOpenAlert?: () => void;
 }) {
   const colors = useColors();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReduceMotion();
   const tickerOpacity = useState(() => new Animated.Value(1))[0];
   const tickerTranslate = useState(() => new Animated.Value(0))[0];
 

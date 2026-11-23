@@ -1,5 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import type { useColors } from "@/hooks/use-colors";
 
 type Colors = ReturnType<typeof useColors>;
@@ -27,16 +28,14 @@ export function DropsHeader({
       }}
     >
       {showBack && (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
+        <IconButton
+          icon="arrow.left"
+          label="Go back"
           onPress={onBack}
-          style={{ padding: 4 }}
-          hitSlop={12}
-        >
-          <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-        </TouchableOpacity>
+          size={40}
+          iconSize={24}
+          color={colors.foreground}
+        />
       )}
       <Text
         style={{

@@ -2,6 +2,7 @@ import { Platform, TouchableOpacity, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { Heading } from "@/components/ui/heading";
 
 export function SearchHeader({
@@ -28,16 +29,14 @@ export function SearchHeader({
       }}
     >
       {mode === "add" && (
-        <TouchableOpacity
-          activeOpacity={0.7}
+        <IconButton
+          icon="arrow.left"
+          label="Go back"
           onPress={onBack}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-          style={{ padding: 4 }}
-          hitSlop={12}
-        >
-          <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-        </TouchableOpacity>
+          size={40}
+          iconSize={24}
+          color={colors.foreground}
+        />
       )}
       <Heading
         level={1}

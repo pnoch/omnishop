@@ -6,6 +6,22 @@ import { convertPrice } from "@/lib/currency";
 import { getSettings } from "@/lib/storage";
 import { formatPrice } from "@shared/currency";
 import { EBAY_SEARCH_QUERY_MAX, type EbaySearchListing, type EbaySearchResult } from "@/shared/ebay-search";
+import { ProductImageFallback } from "@/components/ui/product-image-fallback";
+
+function ListingThumbnail({ url, title }: { url?: string | null; title: string }) {
+  const [failed, setFailed] = useState(false);
+  if (!url || failed) {
+    return <ProductImageFallback size={56} marginRight={0} />;
+  }
+  return (
+    <Image
+      source={{ uri: url }}
+      onError={() => setFailed(true)}
+      style={{ width: 56, height: 56, borderRadius: 8 }}
+      accessibilityLabel={title}
+    />
+  );
+}
 
 export function EbayResultsSection({ query, onTrack }: { query: string; onTrack: (listing: EbaySearchListing) => void }) {
   const colors = useColors();
@@ -96,7 +112,7 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
               : null;
           return (
             <View key={item.itemId} style={{ flexDirection: "row", gap: 10, borderBottomWidth: 0.5, borderBottomColor: colors.border, paddingVertical: 12 }}>
-          {item.imageUrl && <Image source={{ uri: item.imageUrl }} style={{ width: 56, height: 56, borderRadius: 8 }} accessibilityLabel={item.title} />}
+          <ListingThumbnail url={item.imageUrl} title={item.title} />
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.foreground, fontWeight: "600" }} numberOfLines={2}>{item.title}</Text>
             <Text style={{ color: colors.primary, paddingTop: 4 }}>{item.price !== null && item.currency ? formatPrice(item.price, item.currency) : "Price not available"}</Text>

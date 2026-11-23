@@ -759,7 +759,7 @@ describe("price-history CSV export lives on the Compare screen", () => {
       path.join(process.cwd(), "app/compare/[id].tsx"),
       "utf8",
     );
-    expect(page).toMatch(/accessibilityLabel="Export price history as CSV"/);
+    expect(page).toMatch(/label="Export price history as CSV"/);
   });
 
   it("no longer ships the unreachable PriceChartModal", () => {

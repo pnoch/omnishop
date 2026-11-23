@@ -13,6 +13,7 @@ vi.mock("react-native", async () => {
     TouchableOpacity: ({ children, onPress, accessibilityLabel, ...r }: any) =>
       React.createElement("button", { ...r, "aria-label": accessibilityLabel, onClick: onPress }, children),
     Animated: { View: ({ children, ...r }: any) => React.createElement("div", r, children) },
+    Platform: { OS: "ios" },
   };
 });
 vi.mock("@/hooks/use-colors", () => ({

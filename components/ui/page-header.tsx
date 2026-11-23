@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Text, View } from "react-native";
+import { IconButton } from "@/components/ui/icon-button";
 import { useColors } from "@/hooks/use-colors";
 import { Heading } from "@/components/ui/heading";
 
@@ -30,21 +30,13 @@ export function PageHeader({
       }}
     >
       {onBack && (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          accessibilityLabel={backLabel}
-          accessibilityRole="button"
+        <IconButton
+          icon="chevron.left"
+          label={backLabel}
           onPress={onBack}
-          style={{
-            width: 44,
-            height: 44,
-            alignItems: "center",
-            justifyContent: "center",
-            marginLeft: -12,
-          }}
-        >
-          <IconSymbol name="chevron.left" size={22} color={colors.primary} />
-        </TouchableOpacity>
+          color={colors.primary}
+          style={{ marginLeft: -12 }}
+        />
       )}
       <View style={{ flex: 1, minWidth: 0 }}>
         <Heading

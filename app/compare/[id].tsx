@@ -1,10 +1,4 @@
-import {
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
+import { ScrollView, View, Text, Animated } from "react-native";
 import { goBackOrHome } from "@/lib/navigation";
 import { useCompareScreen } from "@/hooks/use-compare-screen";
 
@@ -17,7 +11,7 @@ import { CrossAlertCTA } from "@/components/compare/cross-alert-cta";
 import { DistributorSelector } from "@/components/compare/distributor-selector";
 import { SkeletonChart, SkeletonList } from "@/components/ui/skeleton";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 
 // ─── Compare Screen ───────────────────────────────────────────────────────────
 export default function CompareScreen() {
@@ -109,12 +103,22 @@ export default function CompareScreen() {
               {productName}
             </Text>
             <View pointerEvents="auto" style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity activeOpacity={0.7} onPress={handleExportCsv} style={{ padding: 4, marginLeft: 8 }} accessibilityLabel="Export price history as CSV" accessibilityRole="button">
-                <IconSymbol name="square.and.arrow.down" size={18} color={colors.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.7} onPress={handleShare} style={{ padding: 4, marginLeft: 8 }} accessibilityLabel="Share comparison" accessibilityRole="button">
-                <IconSymbol name="square.and.arrow.up" size={18} color={colors.primary} />
-              </TouchableOpacity>
+              <IconButton
+                icon="square.and.arrow.down"
+                label="Export price history as CSV"
+                onPress={handleExportCsv}
+                size={36}
+                iconSize={18}
+                style={{ marginLeft: 8 }}
+              />
+              <IconButton
+                icon="square.and.arrow.up"
+                label="Share comparison"
+                onPress={handleShare}
+                size={36}
+                iconSize={18}
+                style={{ marginLeft: 4 }}
+              />
             </View>
           </Animated.View>
           <Animated.ScrollView

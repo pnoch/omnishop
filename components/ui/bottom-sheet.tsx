@@ -11,7 +11,7 @@ import {
   type ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { useColors } from "@/hooks/use-colors";
 
 type BottomSheetProps = {
@@ -46,7 +46,7 @@ export function BottomSheet({
 }: BottomSheetProps) {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReduceMotion();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const sheetAnim = useState(() => new Animated.Value(0))[0];
   const backdropAnim = useState(() => new Animated.Value(0))[0];

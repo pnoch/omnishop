@@ -82,7 +82,7 @@ describe("UX/UI Phase 1 guards", () => {
   });
 
   it("small image placeholders are icon-only", async () => {
-    const image = await read("components/search/product-image.tsx");
+    const image = await read("components/ui/product-image-fallback.tsx");
     expect(image).toContain("size >= 64 &&");
   });
 

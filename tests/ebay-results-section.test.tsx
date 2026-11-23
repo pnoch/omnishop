@@ -8,10 +8,13 @@ const state = vi.hoisted(() => ({ fetch: vi.fn(), openURL: vi.fn() }));
 vi.mock("@/lib/server-marketplace", () => ({ fetchEbaySearch: state.fetch }));
 vi.mock("@/lib/storage", () => ({ getSettings: vi.fn(async () => ({ displayCurrency: "USD" })) }));
 vi.mock("@/hooks/use-colors", () => ({ useColors: () => ({ foreground: "#111", muted: "#888", primary: "#00f", border: "#ddd", surface: "#fff" }) }));
+vi.mock("@/components/ui/icon-symbol", () => ({ IconSymbol: () => null }));
 vi.mock("react-native", async () => {
   const React = await import("react");
   return {
-    View: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+    View: ({ children, accessibilityLabel }: { children?: React.ReactNode; accessibilityLabel?: string }) => (
+      <div aria-label={accessibilityLabel}>{children}</div>
+    ),
     Text: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
     Image: () => null,
     ActivityIndicator: () => <span>loading</span>,
@@ -51,6 +54,8 @@ describe("eBay inline search", () => {
     fireEvent.click(screen.getByLabelText("Track eBay listing RTX5090"));
     expect(track).toHaveBeenCalledWith(listing);
     expect(screen.getByText("Seller: seller")).toBeTruthy();
+    // Listings without a photo still get the branded placeholder.
+    expect(screen.getByLabelText("Product image unavailable")).toBeTruthy();
   });
 
   it("shows the converted amount for a listing priced in another currency", async () => {

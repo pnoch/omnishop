@@ -1,6 +1,6 @@
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Text, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 
 export function DetailStickyHeader({
   productName,
@@ -41,16 +41,15 @@ export function DetailStickyHeader({
         opacity,
       }}
     >
-      <TouchableOpacity
-        activeOpacity={0.7}
+      <IconButton
+        icon="chevron.left"
+        label="Back"
         onPress={onBack}
-        style={{ padding: 4, marginRight: 4 }}
-        accessibilityLabel="Back"
-        accessibilityRole="button"
-        hitSlop={10}
-      >
-        <IconSymbol name="chevron.left" size={20} color={colors.primary} />
-      </TouchableOpacity>
+        size={40}
+        iconSize={20}
+        color={colors.primary}
+        style={{ marginRight: 4 }}
+      />
       <Text
         style={{
           color: colors.foreground,
@@ -66,44 +65,33 @@ export function DetailStickyHeader({
         pointerEvents="auto"
         style={{ flexDirection: "row", alignItems: "center" }}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
+        <IconButton
+          icon="pencil"
+          label="Edit product"
           onPress={onEdit}
-          style={{ padding: 4, marginLeft: 8 }}
-          accessibilityLabel="Edit product"
-          accessibilityRole="button"
-          hitSlop={10}
-        >
-          <IconSymbol name="pencil" size={18} color={colors.primary} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
+          size={36}
+          iconSize={18}
+          color={colors.primary}
+          style={{ marginLeft: 4 }}
+        />
+        <IconButton
+          icon="square.and.arrow.up"
+          label="Share product"
           onPress={onShare}
-          style={{ padding: 4, marginLeft: 8 }}
-          accessibilityLabel="Share product"
-          accessibilityRole="button"
-          hitSlop={10}
-        >
-          <IconSymbol
-            name="square.and.arrow.up"
-            size={18}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
+          size={36}
+          iconSize={18}
+          color={colors.primary}
+          style={{ marginLeft: 4 }}
+        />
+        <IconButton
+          icon="square.and.arrow.down"
+          label="Export CSV"
           onPress={onExportCsv}
-          style={{ padding: 4, marginLeft: 8 }}
-          accessibilityLabel="Export CSV"
-          accessibilityRole="button"
-          hitSlop={10}
-        >
-          <IconSymbol
-            name="square.and.arrow.down"
-            size={18}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
+          size={36}
+          iconSize={18}
+          color={colors.primary}
+          style={{ marginLeft: 4 }}
+        />
       </View>
     </Animated.View>
   );

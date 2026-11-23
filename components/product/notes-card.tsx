@@ -9,7 +9,7 @@ import {
 import { Card } from "@/components/ui/card";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { getProductNote, saveProductNote } from "@/lib/product-notes";
 
 export function NotesCard({ productId }: { productId: string }) {
@@ -57,9 +57,13 @@ export function NotesCard({ productId }: { productId: string }) {
       >
         <Text style={{ color: colors.muted, fontSize: 13 }}>My Note</Text>
         {!editing && (
-          <TouchableOpacity activeOpacity={0.85} onPress={startEditing} hitSlop={8} accessibilityLabel="Edit note" accessibilityRole="button">
-            <IconSymbol name="pencil" size={16} color={colors.primary} />
-          </TouchableOpacity>
+          <IconButton
+            icon="pencil"
+            label="Edit note"
+            onPress={startEditing}
+            size={32}
+            iconSize={16}
+          />
         )}
       </View>
 

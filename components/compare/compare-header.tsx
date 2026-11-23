@@ -2,6 +2,7 @@ import { Text, View, TouchableOpacity, Platform, ActivityIndicator } from "react
 import * as Haptics from "expo-haptics";
 import { showAlert } from "@/lib/alert";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { useColors } from "@/hooks/use-colors";
 
 interface CompareHeaderProps {
@@ -30,9 +31,14 @@ export function CompareHeader({
         gap: 12,
       }}
     >
-      <TouchableOpacity activeOpacity={0.7} onPress={onBack} style={{ padding: 4 }} accessibilityLabel="Go back" accessibilityRole="button">
-        <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-      </TouchableOpacity>
+      <IconButton
+        icon="arrow.left"
+        label="Go back"
+        onPress={onBack}
+        size={40}
+        iconSize={24}
+        color={colors.foreground}
+      />
       <View style={{ flex: 1 }}>
         <Text
           style={{

@@ -15,6 +15,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { useToast } from "@/components/ui/toast";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { getDeviceId } from "@/lib/device-id";
 import { goBackOrHome } from "@/lib/navigation";
 import { getPushConfiguration } from "@/lib/push-config";
@@ -264,15 +265,12 @@ export default function DiagnosticsScreen() {
           refreshing ? (
             <ActivityIndicator size="small" color={colors.primary} />
           ) : (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              accessibilityLabel="Refresh diagnostics"
-              accessibilityRole="button"
+            <IconButton
+              icon="arrow.clockwise"
+              label="Refresh diagnostics"
               onPress={() => void onRefresh()}
-              style={{ padding: 4 }}
-            >
-              <IconSymbol name="arrow.clockwise" size={22} color={colors.primary} />
-            </TouchableOpacity>
+              iconSize={22}
+            />
           )
         }
       />

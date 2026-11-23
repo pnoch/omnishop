@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, Text, Animated } from "react-native";
+import { View, Animated } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { ProductImageFallback } from "@/components/ui/product-image-fallback";
 import { fetchProductImage } from "@/lib/server-images";
 
 const imageCache = new Map<string, string | null>();
@@ -16,8 +17,6 @@ function setImageCache(key: string, value: string | null) {
   }
   imageCache.set(key, value);
 }
-
-const PLACEHOLDER_SIZE = 48;
 
 // ─── Concurrency-limited loader (max 3 in-flight) with idle deferral ───
 const MAX_CONCURRENT_IMAGE_FETCHES = 3;
@@ -52,32 +51,7 @@ function dequeueImageFetchOnComplete() {
   drainImageQueue();
 }
 
-function ImagePlaceholder({
-  colors,
-  marginRight = 12,
-}: {
-  colors: ReturnType<typeof useColors>;
-  marginRight?: number;
-}) {
-  return (
-    <View
-      style={{
-        width: PLACEHOLDER_SIZE,
-        height: PLACEHOLDER_SIZE,
-        borderRadius: 8,
-        marginRight,
-        backgroundColor: colors.primary + "12",
-        alignItems: "center",
-        justifyContent: "center",
-        borderWidth: 1,
-        borderColor: colors.primary + "22",
-      }}
-      accessibilityLabel="Product image unavailable"
-    >
-      <IconSymbol name="photo" size={20} color={colors.primary} />
-    </View>
-  );
-}
+export { ProductImageFallback } from "@/components/ui/product-image-fallback";
 
 export function ProductImage({
   productId,
@@ -174,32 +148,7 @@ export function ProductImage({
   }, [cacheKey]);
 
   if (!imageUrl || imageError) {
-    if (size !== PLACEHOLDER_SIZE) {
-      return (
-        <View
-          style={{
-            width: size,
-            height: size,
-            borderRadius: 8,
-            marginRight,
-            backgroundColor: colors.primary + "12",
-            alignItems: "center",
-            justifyContent: "center",
-            borderWidth: 1,
-            borderColor: colors.primary + "22",
-          }}
-          accessibilityLabel="Product image unavailable"
-        >
-          <IconSymbol name="photo" size={Math.max(14, size * 0.42)} color={colors.primary} />
-          {size >= 64 && (
-            <Text style={{ color: colors.muted, fontSize: 7, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
-              No image
-            </Text>
-          )}
-        </View>
-      );
-    }
-    return <ImagePlaceholder colors={colors} marginRight={marginRight} />;
+    return <ProductImageFallback size={size} marginRight={marginRight} />;
   }
 
   return (

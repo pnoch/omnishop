@@ -6,6 +6,7 @@ import { useColors } from "@/hooks/use-colors";
 import { useAuth } from "@/hooks/use-auth";
 import { goBackOrHome } from "@/lib/navigation";
 import { IconSymbol, type IconSymbolName } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 
 const ROWS: { icon: IconSymbolName; title: string; subtitle: string; href: "/stats" | "/(tabs)/rates" | "/health" | "/diagnostics" | "/connected-marketplaces" | "/(tabs)/settings" }[] = [
   { icon: "chart.bar.fill", title: "Statistics", subtitle: "Movers, basket, insights", href: "/stats" },
@@ -37,20 +38,18 @@ export default function YouScreen() {
             paddingTop: 16,
           }}
         >
-          <TouchableOpacity
-            activeOpacity={0.7}
-            accessibilityLabel="Go back"
-            accessibilityRole="button"
+          <IconButton
+            icon="arrow.left"
+            label="Go back"
             onPress={() => {
               if (Platform.OS !== "web")
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               goBackOrHome(router);
             }}
-            style={{ padding: 4 }}
-            hitSlop={12}
-          >
-            <IconSymbol name="arrow.left" size={24} color={colors.foreground} />
-          </TouchableOpacity>
+            size={40}
+            iconSize={24}
+            color={colors.foreground}
+          />
           <Text accessibilityRole="header" style={{ color: colors.foreground, fontSize: 28, fontWeight: "700" }}>
             You
           </Text>

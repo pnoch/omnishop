@@ -5,7 +5,6 @@ import {
   Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -14,7 +13,7 @@ import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
 import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
 import { getAlerts, getSettings, getWatchlist, getPriceDigestSnapshot, updateSettings } from "@/lib/storage";
 import { BasketAlertSheet } from "@/components/stats/basket-alert-sheet";
@@ -207,20 +206,12 @@ export default function StatsScreen() {
         actions={
           <>
             {refreshing && <ActivityIndicator size="small" color={colors.primary} />}
-            <TouchableOpacity
-              activeOpacity={0.7}
-              accessibilityLabel="Share statistics"
-              accessibilityRole="button"
+            <IconButton
+              icon="square.and.arrow.up"
+              label="Share statistics"
               onPress={handleShare}
-              style={{
-                width: 44,
-                height: 44,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <IconSymbol name="square.and.arrow.up" size={22} color={colors.primary} />
-            </TouchableOpacity>
+              iconSize={22}
+            />
           </>
         }
       />
