@@ -81,6 +81,7 @@ export function WatchlistFilterPanel({
       <View
         style={{
           flexDirection: "row",
+          flexWrap: "wrap",
           alignItems: "center",
           gap: 12,
           paddingHorizontal: 20,
@@ -116,7 +117,9 @@ export function WatchlistFilterPanel({
             flexDirection: "row",
             alignItems: "center",
             gap: 6,
-            flex: 1,
+            flexGrow: 1,
+            flexShrink: 1,
+            minWidth: 220,
           }}
         >
           <Text style={{ color: colors.muted, fontSize: 12 }}>

@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.42] - 2026-11-24
+
+### Fixed
+
+- Watchlist filters: the Min/Max price inputs overflowed the viewport at 320 and
+  390 px because the filter row could not wrap (the inputs started at x≈345).
+  The row wraps and the price group takes its own line on phones; the inputs
+  stay inside 320 / 390 / 768 px.
+- App-wide reflow audit: 25 routes at 320 / 390 / 768 px, 11 sheets and modals
+  at 320 / 390 px, and the scrolled product/compare headers — no clipped
+  controls or horizontal overflow remain.
+
 ## [5.32.41] - 2026-11-24
 
 ### Fixed
