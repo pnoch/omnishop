@@ -91,6 +91,8 @@ export function EmptyStateView({
             borderRadius: 20,
             paddingHorizontal: compact ? 18 : 24,
             paddingVertical: compact ? 8 : 12,
+            minHeight: 44,
+            justifyContent: "center",
             marginTop: compact ? 12 : 20,
           }}
         >
@@ -105,7 +107,7 @@ export function EmptyStateView({
           onPress={onSecondaryPress}
           accessibilityLabel={secondaryLabel}
           accessibilityRole="button"
-          style={{ marginTop: 12, padding: 8 }}
+          style={{ marginTop: 12, padding: 8, minHeight: 44, justifyContent: "center" }}
         >
           <Text style={{ color: colors.primary, fontWeight: "600" }}>{secondaryLabel}</Text>
         </TouchableOpacity>

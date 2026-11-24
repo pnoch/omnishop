@@ -1,5 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Text, View } from "react-native";
 import { IconButton } from "@/components/ui/icon-button";
 import type { useColors } from "@/hooks/use-colors";
 
@@ -47,20 +46,12 @@ export function DropsHeader({
       >
         Price Drops
       </Text>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        accessibilityLabel="Share price drops"
-        accessibilityRole="button"
+      <IconButton
+        icon="square.and.arrow.up"
+        label="Share price drops"
         onPress={onShare}
-        style={{ padding: 4 }}
-        hitSlop={12}
-      >
-        <IconSymbol
-          name="square.and.arrow.up"
-          size={22}
-          color={colors.primary}
-        />
-      </TouchableOpacity>
+        iconSize={22}
+      />
     </View>
   );
 }

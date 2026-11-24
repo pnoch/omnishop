@@ -18,7 +18,7 @@ export function ConnectedMarketplacesHeader({
           accessibilityRole="button"
           onPress={onBack}
           hitSlop={12}
-          style={{ marginRight: 12 }}
+          style={{ marginRight: 12, minHeight: 44, justifyContent: "center" }}
         >
           <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
         </TouchableOpacity>

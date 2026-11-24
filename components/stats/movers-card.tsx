@@ -101,6 +101,10 @@ export const MoversCard = memo(function MoversCard({
               style={{
                 paddingHorizontal: 10,
                 paddingVertical: 4,
+                minHeight: 44,
+                minWidth: 44,
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 12,
                 backgroundColor:
                   days === w.value ? colors.primary : "transparent",

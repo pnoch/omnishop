@@ -76,6 +76,10 @@ export default function HealthScreen() {
             style={{
               paddingHorizontal: 12,
               paddingVertical: 6,
+              minHeight: 44,
+              minWidth: 44,
+              alignItems: "center",
+              justifyContent: "center",
               borderRadius: 16,
               backgroundColor: filter === f ? colors.primary : colors.surface,
               borderWidth: 1,

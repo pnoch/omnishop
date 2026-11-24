@@ -126,6 +126,8 @@ export function MarketplaceConnectionCard({
           style={{
             paddingHorizontal: 14,
             paddingVertical: 8,
+            minHeight: 44,
+            justifyContent: "center",
             borderRadius: 999,
             backgroundColor: colors.primary,
             opacity: busy ? 0.5 : 1,
@@ -145,6 +147,8 @@ export function MarketplaceConnectionCard({
           style={{
             paddingHorizontal: 14,
             paddingVertical: 8,
+            minHeight: 44,
+            justifyContent: "center",
             borderRadius: 999,
             borderWidth: 1,
             borderColor: colors.border,
@@ -187,6 +191,8 @@ export function MarketplaceConnectionCard({
           style={{
             paddingHorizontal: 14,
             paddingVertical: 8,
+            minHeight: 44,
+            justifyContent: "center",
             borderRadius: 999,
             borderWidth: 1,
             borderColor: colors.error,
@@ -207,6 +213,8 @@ export function MarketplaceConnectionCard({
           style={{
             paddingHorizontal: 14,
             paddingVertical: 8,
+            minHeight: 44,
+            justifyContent: "center",
             borderRadius: 999,
             borderWidth: 1,
             borderColor: colors.border,

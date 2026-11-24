@@ -56,6 +56,10 @@ export function DropsControls({
             style={{
               paddingHorizontal: 12,
               paddingVertical: 6,
+              minHeight: 44,
+              minWidth: 44,
+              alignItems: "center",
+              justifyContent: "center",
               borderRadius: 8,
               backgroundColor: window === w ? colors.primary : colors.surface,
               borderWidth: 1,
@@ -96,6 +100,10 @@ export function DropsControls({
             style={{
               paddingHorizontal: 12,
               paddingVertical: 6,
+              minHeight: 44,
+              minWidth: 44,
+              alignItems: "center",
+              justifyContent: "center",
               borderRadius: 8,
               backgroundColor: sortBy === s.key ? colors.primary : colors.surface,
               borderWidth: 1,

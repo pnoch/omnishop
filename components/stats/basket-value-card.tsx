@@ -1,10 +1,10 @@
 import { memo, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View, Animated } from "react-native";
+import { Text, View, Animated } from "react-native";
 import { useReduceMotion } from "@/hooks/use-reduce-motion";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@shared/currency";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { IconButton } from "@/components/ui/icon-button";
 import type { BasketValueResult } from "@/lib/watchlist-stats";
 
 export const BasketValueCard = memo(function BasketValueCard({
@@ -54,13 +54,14 @@ export const BasketValueCard = memo(function BasketValueCard({
           Basket Value (best in-stock prices)
         </Text>
         {onOpenAlert && (
-          <TouchableOpacity activeOpacity={0.7} onPress={onOpenAlert} hitSlop={8} accessibilityLabel={alertThreshold ? "Edit basket alert" : "Set basket alert"} accessibilityRole="button">
-            <IconSymbol
-              name={alertThreshold ? "bell.fill" : "bell"}
-              size={15}
-              color={alertThreshold ? colors.primary : colors.muted}
-            />
-          </TouchableOpacity>
+          <IconButton
+            icon={alertThreshold ? "bell.fill" : "bell"}
+            label={alertThreshold ? "Edit basket alert" : "Set basket alert"}
+            onPress={onOpenAlert}
+            size={44}
+            iconSize={15}
+            color={alertThreshold ? colors.primary : colors.muted}
+          />
         )}
       </View>
       <Animated.Text

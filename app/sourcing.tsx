@@ -223,6 +223,7 @@ export default function SourcingScreen() {
                 backgroundColor: colors.primary,
                 borderRadius: 12,
                 paddingVertical: 10,
+                minHeight: 44,
               }}
             >
               <IconSymbol name="gearshape.fill" size={16} color="#fff" />

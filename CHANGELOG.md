@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.37] - 2026-11-24
+
+### Fixed
+
+- Remaining screens now meet the 44 px target: Statistics movers windows,
+  digest and basket-alert controls, Health filters, Sourcing/Build Order “Open
+  settings”, Drops share/window/sort chips, Connected Marketplaces actions, and
+  empty-state secondary actions.
+- Browser audit of the remaining routes (Stats, Health, Sourcing, Build Order,
+  Drops, Available, Diagnostics, Connected Marketplaces, Privacy, Restock
+  Watches, You, Distributor Analysis, reset/verify screens) at 390 px and
+  1440 px: no control below 40 px, no duplicate accessible names, no horizontal
+  overflow.
+
 ## [5.32.36] - 2026-11-24
 
 ### Fixed
