@@ -112,9 +112,14 @@ jobs:
         with:
           context: .
           push: false
-          load: false
+          load: true
+          tags: omnishop:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Verify the production image runs as node
+        run: |
+          test "$(docker run --rm --entrypoint /usr/bin/id omnishop:ci -un)" = "node"
+          test "$(docker run --rm --entrypoint /usr/bin/id omnishop:ci -u)" = "1000"
 
   # The desktop Rust backend (72 tests + clippy) ran only on developer machines;
   # nothing in CI compiled it, so a Rust regression could merge unchecked.
