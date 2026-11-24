@@ -22,6 +22,14 @@ export function ConnectionBadge({
   const colors = useColors();
   const c = CONFIG[status];
   const color = colors[c.color];
+  const textColor =
+    c.color === "success"
+      ? colors.successText
+      : c.color === "warning"
+        ? colors.warningText
+        : c.color === "error"
+          ? colors.errorText
+          : colors.muted;
   return (
     <TouchableOpacity activeOpacity={0.7}
       onPress={onPress}
@@ -54,7 +62,7 @@ export function ConnectionBadge({
           shadowOffset: { width: 0, height: 0 },
         }}
       />
-      <Text style={{ color: c.color === "muted" ? colors.muted : color, fontSize: 12, fontWeight: "700", letterSpacing: 0.2 }}>
+      <Text style={{ color: textColor, fontSize: 12, fontWeight: "700", letterSpacing: 0.2 }}>
         {c.label}
       </Text>
     </TouchableOpacity>

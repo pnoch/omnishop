@@ -4,6 +4,14 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.39] - 2026-11-24
+
+### Accessibility
+
+- The connection-status label uses the readable success/warning/error variant,
+  so the production-only “Offline” state (3.76:1) now meets WCAG AA. The status
+  dot keeps the brand color.
+
 ## [5.32.38] - 2026-11-24
 
 ### Accessibility
