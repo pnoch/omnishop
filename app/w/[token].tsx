@@ -228,21 +228,21 @@ export default function SharedWatchlistScreen() {
         {createdLabel && <Text style={{ color: colors.muted, marginTop: 4, fontSize: 12 }}>Last shared: {createdLabel}</Text>}
         {expiresLabel && <Text style={{ color: colors.muted, marginTop: 2, fontSize: 12 }}>Expires: {expiresLabel} (30d TTL)</Text>}
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-          <TouchableOpacity activeOpacity={0.85} onPress={handleBulkAdd} style={{ backgroundColor: colors.primary, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6 }} accessibilityLabel="Add all to watchlist" accessibilityRole="button">
+          <TouchableOpacity activeOpacity={0.85} onPress={handleBulkAdd} style={{ backgroundColor: colors.primary, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, minHeight: 44, justifyContent: "center", flexDirection: "row", alignItems: "center", gap: 6 }} accessibilityLabel="Add all to watchlist" accessibilityRole="button">
             <IconSymbol name="plus" size={16} color="#fff" />
             <Text style={{ color: "#fff", fontWeight: "600", fontSize: 13 }}>Add all to Watchlist</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.85} onPress={handleExportDetailedCsv} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6 }} accessibilityLabel="Export detailed CSV" accessibilityRole="button">
+          <TouchableOpacity activeOpacity={0.85} onPress={handleExportDetailedCsv} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, minHeight: 44, justifyContent: "center", flexDirection: "row", alignItems: "center", gap: 6 }} accessibilityLabel="Export detailed CSV" accessibilityRole="button">
             <IconSymbol name="square.and.arrow.up" size={16} color={colors.primaryText} />
             <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>Export CSV</Text>
           </TouchableOpacity>
           {isAuthenticated && !query.data?.isOwner && (
             query.data?.isMember ? (
-              <TouchableOpacity activeOpacity={0.85} onPress={handleLeave} disabled={leaveMutation.isPending} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6, opacity: leaveMutation.isPending ? 0.6 : 1 }} accessibilityLabel="Leave shared watchlist" accessibilityRole="button">
+              <TouchableOpacity activeOpacity={0.85} onPress={handleLeave} disabled={leaveMutation.isPending} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, minHeight: 44, justifyContent: "center", flexDirection: "row", alignItems: "center", gap: 6, opacity: leaveMutation.isPending ? 0.6 : 1 }} accessibilityLabel="Leave shared watchlist" accessibilityRole="button">
                 <Text style={{ color: colors.muted, fontWeight: "600", fontSize: 13 }}>{leaveMutation.isPending ? "Leaving" : "Leave"}</Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity activeOpacity={0.85} onPress={handleJoin} disabled={joinMutation.isPending} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.primary, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6, opacity: joinMutation.isPending ? 0.6 : 1 }} accessibilityLabel="Join shared watchlist" accessibilityRole="button">
+              <TouchableOpacity activeOpacity={0.85} onPress={handleJoin} disabled={joinMutation.isPending} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.primary, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, minHeight: 44, justifyContent: "center", flexDirection: "row", alignItems: "center", gap: 6, opacity: joinMutation.isPending ? 0.6 : 1 }} accessibilityLabel="Join shared watchlist" accessibilityRole="button">
                 <IconSymbol name="person.crop.circle.badge.plus" size={16} color={colors.primaryText} />
                 <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>{joinMutation.isPending ? "Joining" : "Join"}</Text>
               </TouchableOpacity>
@@ -292,7 +292,7 @@ export default function SharedWatchlistScreen() {
                 ) : (
                   <Text style={{ color: colors.muted, fontSize: 12, marginTop: 8 }}>No distributor prices yet</Text>
                 )}
-                <TouchableOpacity activeOpacity={0.7} onPress={() => handleExportHistoryCsv(product)} style={{ marginTop: 10, alignSelf: "flex-start", flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: colors.background, borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6 }} accessibilityLabel={`Export history for ${product.name}`} accessibilityRole="button">
+                <TouchableOpacity activeOpacity={0.7} onPress={() => handleExportHistoryCsv(product)} style={{ marginTop: 10, alignSelf: "flex-start", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4, backgroundColor: colors.background, borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 6, minHeight: 44 }} accessibilityLabel={`Export history for ${product.name}`} accessibilityRole="button">
                   <IconSymbol name="square.and.arrow.up" size={12} color={colors.muted} />
                   <Text style={{ color: colors.muted, fontSize: 11, fontWeight: "600" }}>Export History (CSV)</Text>
                 </TouchableOpacity>

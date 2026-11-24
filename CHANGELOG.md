@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.46] - 2026-11-24
+
+### Fixed
+
+- Shared watchlist screen (the last unaudited route): “Add all to Watchlist”,
+  “Export CSV”, Join/Leave, and the per-product “Export History” action now
+  have 44 px targets. The populated share was audited at 320/390/768/1440 px
+  and renders without clipping, overflow, or duplicate names; the not-found
+  state is now part of the CI layout route list.
+- Local join/leave interaction could not be exercised because the local export
+  runs in local-only mode (sign-in needs a non-loopback API base); the join and
+  leave mutations are covered by the server tests.
+
 ## [5.32.45] - 2026-11-24
 
 ### Security

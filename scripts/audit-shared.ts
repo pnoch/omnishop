@@ -33,6 +33,7 @@ export const ROUTES = [
   "/reset",
   "/reset-password",
   "/verify-email",
+  "/w/00000000-0000-4000-8000-000000000000",
 ] as const;
 
 export function requireWebExport(dist = "dist-web"): string {
