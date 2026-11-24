@@ -159,7 +159,7 @@ export function WatchlistHeader({
             accessibilityLabel="Share watchlist"
             accessibilityRole="button"
           >
-          <IconSymbol name="square.and.arrow.up" size={18} color={colors.primary} />
+          <IconSymbol name="square.and.arrow.up" size={18} color={colors.primaryText} />
         </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.85}
             style={{
@@ -180,7 +180,7 @@ export function WatchlistHeader({
             accessibilityLabel="Import CSV"
             accessibilityRole="button"
           >
-          <IconSymbol name="square.and.arrow.down" size={18} color={colors.primary} />
+          <IconSymbol name="square.and.arrow.down" size={18} color={colors.primaryText} />
         </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.85}
             style={{
@@ -227,11 +227,11 @@ export function WatchlistHeader({
           <IconSymbol
             name="chart.bar.xaxis"
             size={16}
-            color={colors.primary}
+            color={colors.primaryText}
           />
           {!isCompact && (
             <Text
-              style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}
+              style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}
             >
               Analysis
             </Text>
@@ -260,17 +260,17 @@ export function WatchlistHeader({
           accessibilityState={{ disabled: isRefreshingAny }}
         >
           {isRefreshingAny ? (
-            <ActivityIndicator size="small" color={colors.primary} />
+            <ActivityIndicator size="small" color={colors.primaryText} />
           ) : (
             <IconSymbol
               name="arrow.clockwise"
               size={16}
-              color={colors.primary}
+              color={colors.primaryText}
             />
           )}
           {!isCompact && (
             <Text
-              style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}
+              style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}
             >
               Refresh
             </Text>

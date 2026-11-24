@@ -39,7 +39,7 @@ export function ShippingOptionsCard({
         accessibilityRole="button"
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flex: 1 }}>
-          <IconSymbol name="globe" size={18} color={colors.primary} />
+          <IconSymbol name="globe" size={18} color={colors.primaryText} />
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.muted, fontSize: 11, fontWeight: "600", letterSpacing: 0.5 }}>
               SHIP TO

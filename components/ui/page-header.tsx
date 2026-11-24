@@ -34,7 +34,7 @@ export function PageHeader({
           icon="chevron.left"
           label={backLabel}
           onPress={onBack}
-          color={colors.primary}
+          color={colors.primaryText}
           style={{ marginLeft: -12 }}
         />
       )}

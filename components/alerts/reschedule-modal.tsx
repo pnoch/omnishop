@@ -125,7 +125,7 @@ export function RescheduleModal({
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
               >
-                <IconSymbol name="calendar" size={20} color={colors.primary} />
+                <IconSymbol name="calendar" size={20} color={colors.primaryText} />
                 <Text
                   style={{
                     color: colors.foreground,

@@ -36,7 +36,7 @@ export function ProductCardInsights({
             paddingVertical: 3,
           }}
         >
-          <Text style={{ color: colors.success, fontSize: 10, fontWeight: "700" }}>
+          <Text style={{ color: colors.successText, fontSize: 10, fontWeight: "700" }}>
             All-time low
           </Text>
         </View>
@@ -53,7 +53,7 @@ export function ProductCardInsights({
             paddingVertical: 3,
           }}
         >
-          <Text style={{ color: colors.primary, fontSize: 10, fontWeight: "700" }}>
+          <Text style={{ color: colors.primaryText, fontSize: 10, fontWeight: "700" }}>
             ▼ Dropping ×{insight.dropStreak}
           </Text>
         </View>
@@ -70,7 +70,7 @@ export function ProductCardInsights({
             paddingVertical: 3,
           }}
         >
-          <Text style={{ color: colors.warning, fontSize: 10, fontWeight: "700" }}>
+          <Text style={{ color: colors.warningText, fontSize: 10, fontWeight: "700" }}>
             {dealBandLabel(dealScore.band)}
           </Text>
         </View>

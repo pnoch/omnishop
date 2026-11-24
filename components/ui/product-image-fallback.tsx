@@ -33,7 +33,7 @@ export function ProductImageFallback({
       <IconSymbol
         name="photo"
         size={Math.max(14, size * 0.42)}
-        color={colors.primary}
+        color={colors.primaryText}
       />
       {size >= 64 && (
         <Text

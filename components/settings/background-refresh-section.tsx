@@ -117,7 +117,7 @@ export function BackgroundRefreshSection({
       {permissionRequired && (
         <Text
           accessibilityLiveRegion="polite"
-          style={{ color: colors.warning, fontSize: 13, paddingHorizontal: 16, paddingBottom: 12 }}
+          style={{ color: colors.warningText, fontSize: 13, paddingHorizontal: 16, paddingBottom: 12 }}
         >
           Allow display over other apps in Android settings, then turn background refresh on again.
         </Text>
@@ -155,7 +155,7 @@ export function BackgroundRefreshSection({
           <IconSymbol
             name="exclamationmark.triangle.fill"
             size={18}
-            color={colors.warning}
+            color={colors.warningText}
           />
           <Text style={{ flex: 1, color: colors.foreground, fontSize: 13 }}>
             Background monitoring may have stopped
@@ -173,7 +173,7 @@ export function BackgroundRefreshSection({
           >
             <Text
               style={{
-                color: colors.warning,
+                color: colors.warningText,
                 fontSize: 13,
                 fontWeight: "600",
               }}

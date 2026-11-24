@@ -19,7 +19,7 @@ export const InsightsCard = memo(function InsightsCard({ result }: { result: Pro
       <View style={{ flexDirection: "row", gap: 8 }}>
         <View style={{ flex: 1 }}>
           <Text
-            style={{ color: colors.success, fontSize: 18, fontWeight: "700" }}
+            style={{ color: colors.successText, fontSize: 18, fontWeight: "700" }}
           >
             {result.allTimeLows}
           </Text>
@@ -29,7 +29,7 @@ export const InsightsCard = memo(function InsightsCard({ result }: { result: Pro
         </View>
         <View style={{ flex: 1 }}>
           <Text
-            style={{ color: colors.primary, fontSize: 18, fontWeight: "700" }}
+            style={{ color: colors.primaryText, fontSize: 18, fontWeight: "700" }}
           >
             {result.droppingCount}
           </Text>
@@ -64,7 +64,7 @@ export const InsightsCard = memo(function InsightsCard({ result }: { result: Pro
             <Text
               key={p.productId}
               style={{
-                color: colors.success,
+                color: colors.successText,
                 fontSize: 12,
                 paddingVertical: 2,
               }}

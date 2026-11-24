@@ -96,7 +96,7 @@ export function ConciergeWelcome({
                   justifyContent: "center",
                 }}
               >
-                <IconSymbol name={point.icon} size={18} color={colors.primary} />
+                <IconSymbol name={point.icon} size={18} color={colors.primaryText} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.foreground, fontSize: 14, fontWeight: "700" }}>

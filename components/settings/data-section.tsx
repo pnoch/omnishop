@@ -251,7 +251,7 @@ export function DataSection() {
               accessibilityRole="button"
             >
               <Text
-                style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+                style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
               >
                 {busy ? "…" : "Export"}
               </Text>
@@ -279,7 +279,7 @@ export function DataSection() {
               accessibilityRole="button"
             >
               <Text
-                style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+                style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
               >
                 Import
               </Text>
@@ -307,7 +307,7 @@ export function DataSection() {
               accessibilityRole="button"
             >
               <Text
-                style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+                style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
               >
                 {busy ? "…" : "Export"}
               </Text>

@@ -152,7 +152,7 @@ export function PriceAlertModal({
                 >
                   <Text
                     style={{
-                      color: colors.primary,
+                      color: colors.primaryText,
                       fontSize: 12,
                       fontWeight: "600",
                     }}

@@ -62,7 +62,7 @@ export function DeviceRow({
             >
               <Text
                 style={{
-                  color: colors.primary,
+                  color: colors.primaryText,
                   fontSize: 10,
                   fontWeight: "600",
                 }}
@@ -102,7 +102,7 @@ export function DeviceRow({
         >
           <Text
             style={{
-              color: colors.primary,
+              color: colors.primaryText,
               fontSize: 13,
               fontWeight: "600",
             }}
@@ -124,7 +124,7 @@ export function DeviceRow({
           >
             <Text
               style={{
-                color: colors.error,
+                color: colors.errorText,
                 fontSize: 13,
                 fontWeight: "600",
               }}

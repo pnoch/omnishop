@@ -114,10 +114,10 @@ export function SearchListHeader({
           <IconSymbol
             name="slider.horizontal.3"
             size={16}
-            color={colors.primary}
+            color={colors.primaryText}
           />
           <Text
-            style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+            style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
           >
             Filters{selectedCategory || selectedBrand ? " · active" : ""}
           </Text>

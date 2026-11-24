@@ -84,7 +84,7 @@ export function NotificationPermissionBanner() {
         borderColor: colors.warning + "44",
       }}
     >
-      <IconSymbol name="bell.slash.fill" size={20} color={colors.warning} />
+      <IconSymbol name="bell.slash.fill" size={20} color={colors.warningText} />
       <View style={{ flex: 1 }}>
         <Text style={{ color: colors.foreground, fontSize: 13, fontWeight: "600" }}>
           Notifications are off

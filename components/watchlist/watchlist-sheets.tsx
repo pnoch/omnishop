@@ -97,7 +97,7 @@ export function WatchlistSheets({
           >
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontSize: 13,
                 fontWeight: "700",
               }}

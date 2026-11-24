@@ -47,7 +47,7 @@ export function DetailStickyHeader({
         onPress={onBack}
         size={44}
         iconSize={20}
-        color={colors.primary}
+        color={colors.primaryText}
         style={{ marginRight: 4 }}
       />
       <Text
@@ -71,7 +71,7 @@ export function DetailStickyHeader({
           onPress={onEdit}
           size={44}
           iconSize={18}
-          color={colors.primary}
+          color={colors.primaryText}
           style={{ marginLeft: 4 }}
         />
         <IconButton
@@ -80,7 +80,7 @@ export function DetailStickyHeader({
           onPress={onShare}
           size={44}
           iconSize={18}
-          color={colors.primary}
+          color={colors.primaryText}
           style={{ marginLeft: 4 }}
         />
         <IconButton
@@ -89,7 +89,7 @@ export function DetailStickyHeader({
           onPress={onExportCsv}
           size={44}
           iconSize={18}
-          color={colors.primary}
+          color={colors.primaryText}
           style={{ marginLeft: 4 }}
         />
       </View>

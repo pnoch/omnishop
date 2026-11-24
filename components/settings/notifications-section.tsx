@@ -107,7 +107,7 @@ export function NotificationsSection({
             {webNotificationHint && (
               <Text
                 style={{
-                  color: colors.warning,
+                  color: colors.warningText,
                   fontSize: 13,
                   paddingHorizontal: 16,
                   paddingBottom: 12,
@@ -255,7 +255,7 @@ export function NotificationsSection({
             <IconSymbol
               name="bell.badge.fill"
               size={18}
-              color={colors.success}
+              color={colors.successText}
             />
           </View>
           <View style={{ flex: 1 }}>
@@ -299,7 +299,7 @@ export function NotificationsSection({
             <IconSymbol
               name="bell.badge.fill"
               size={18}
-              color={colors.primary}
+              color={colors.primaryText}
             />
           </View>
           <View style={{ flex: 1 }}>

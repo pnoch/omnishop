@@ -117,7 +117,7 @@ export function ReminderDatePickerModal({
               <IconSymbol
                 name="calendar"
                 size={20}
-                color={colors.primary}
+                color={colors.primaryText}
               />
               <Text
                 style={{

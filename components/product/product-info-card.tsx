@@ -174,7 +174,7 @@ export function ProductInfoCard({
         >
           <Text
             style={{
-              color: colors.primary,
+              color: colors.primaryText,
               fontWeight: "600",
               fontSize: 13,
             }}
@@ -271,7 +271,7 @@ export function ProductInfoCard({
           </Text>
           <Text
             style={{
-              color: colors.primary,
+              color: colors.primaryText,
               fontWeight: "700",
               fontSize: 20,
             }}
@@ -338,7 +338,7 @@ export function ProductInfoCard({
           >
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontSize: 12,
                 fontWeight: "700",
               }}

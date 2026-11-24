@@ -26,7 +26,7 @@ export function SearchEmptyState({ query, selectedTagIds, hasMarketplaceResults 
           borderColor: colors.primary + "22",
         }}
       >
-        <IconSymbol name="magnifyingglass" size={30} color={colors.primary} />
+        <IconSymbol name="magnifyingglass" size={30} color={colors.primaryText} />
       </View>
       <Text
         style={{
@@ -74,7 +74,7 @@ export function SearchEmptyState({ query, selectedTagIds, hasMarketplaceResults 
             gap: 8,
           }}
         >
-          <IconSymbol name="lightbulb.fill" size={16} color={colors.warning} />
+          <IconSymbol name="lightbulb.fill" size={16} color={colors.warningText} />
           <Text style={{ color: colors.muted, fontSize: 12, flex: 1, textAlign: "center" }}>
             Try searching for RTX 4090, Pi 5, CRS326, or AirPods Max
           </Text>

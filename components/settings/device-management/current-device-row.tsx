@@ -43,7 +43,7 @@ export function CurrentDeviceRow({
       }
       right={
         bindingAction ? (
-          <ActivityIndicator size="small" color={colors.primary} />
+          <ActivityIndicator size="small" color={colors.primaryText} />
         ) : binding && binding.userId !== userId ? (
           <TouchableOpacity activeOpacity={0.85}
             onPress={onBind}
@@ -58,7 +58,7 @@ export function CurrentDeviceRow({
           >
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontSize: 13,
                 fontWeight: "600",
               }}

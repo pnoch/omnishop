@@ -37,7 +37,7 @@ export function PillPicker({
             marginRight: 12,
           }}
         >
-          <IconSymbol name={icon} size={18} color={colors.primary} />
+          <IconSymbol name={icon} size={18} color={colors.primaryText} />
         </View>
         <Text
           style={{

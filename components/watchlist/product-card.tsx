@@ -345,7 +345,7 @@ export const ProductCard = memo(function ProductCard({
               accessibilityRole="button"
               style={{ alignSelf: "flex-start", marginTop: 6, minHeight: 44, justifyContent: "center", opacity: findingPrices ? 0.5 : 1 }}
             >
-              <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>
+              <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>
                 {findingPrices
                   ? findingProgress
                     ? `Finding prices… ${findingProgress.done}/${findingProgress.total}`
@@ -378,7 +378,7 @@ export const ProductCard = memo(function ProductCard({
               >
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontSize: 12,
                     fontWeight: "600",
                   }}
@@ -397,7 +397,7 @@ export const ProductCard = memo(function ProductCard({
           {availability && <ScarcityBadge scarcity={availability.scarcity} />}
           {bestPrice && (
             <Text
-              style={{ color: colors.primary, fontWeight: "700", fontSize: 16 }}
+              style={{ color: colors.primaryText, fontWeight: "700", fontSize: 16 }}
             >
               {formatPrice(bestPrice.price, bestPrice.currency)}
             </Text>
@@ -419,8 +419,8 @@ export const ProductCard = memo(function ProductCard({
                 backgroundColor: colors.primary + "22",
               }}
             >
-              <IconSymbol name="cart.fill" size={13} color={colors.primary} />
-              <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 12 }}>Buy</Text>
+              <IconSymbol name="cart.fill" size={13} color={colors.primaryText} />
+              <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 12 }}>Buy</Text>
             </TouchableOpacity>
           )}
           {sparklineData && (

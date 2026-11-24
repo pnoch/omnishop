@@ -198,7 +198,7 @@ export function WatchlistFilterPanel({
           accessibilityRole="button"
         >
           <Text
-            style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+            style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
           >
             Clear all
           </Text>

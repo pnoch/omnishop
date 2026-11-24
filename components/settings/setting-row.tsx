@@ -38,7 +38,7 @@ export function SettingRow({
           marginRight: 12,
         }}
       >
-        <IconSymbol name={icon} size={18} color={colors.primary} />
+        <IconSymbol name={icon} size={18} color={colors.primaryText} />
       </View>
       <View style={{ flex: 1 }}>
         <Text

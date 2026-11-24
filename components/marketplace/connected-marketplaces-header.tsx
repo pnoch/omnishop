@@ -20,7 +20,7 @@ export function ConnectedMarketplacesHeader({
           hitSlop={12}
           style={{ marginRight: 12, minHeight: 44, justifyContent: "center" }}
         >
-          <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
+          <Text style={{ color: colors.primaryText, fontSize: 16 }}>‹ Back</Text>
         </TouchableOpacity>
         <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}>
           Connected marketplaces

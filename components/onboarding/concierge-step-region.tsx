@@ -67,7 +67,7 @@ export function ConciergeStepRegion({
         accessibilityRole="button"
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-          <IconSymbol name="globe" size={20} color={colors.primary} />
+          <IconSymbol name="globe" size={20} color={colors.primaryText} />
           <Text
             style={{
               color: country ? colors.foreground : colors.muted,

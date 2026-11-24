@@ -205,7 +205,7 @@ export function NotificationCenter({
               <TouchableOpacity activeOpacity={0.7} onPress={handleMarkAll} style={{ padding: 4 }} accessibilityLabel="Mark all as read" accessibilityRole="button">
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontSize: 13,
                     fontWeight: "600",
                   }}
@@ -234,7 +234,7 @@ export function NotificationCenter({
                 borderColor: colors.primary + "22",
               }}
             >
-              <IconSymbol name="bell.fill" size={26} color={colors.primary} />
+              <IconSymbol name="bell.fill" size={26} color={colors.primaryText} />
             </View>
             <Text style={{ color: colors.foreground, fontWeight: "600", fontSize: 16, marginTop: 14 }}>
               No notifications yet

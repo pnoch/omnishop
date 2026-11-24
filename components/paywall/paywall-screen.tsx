@@ -107,7 +107,7 @@ export function PaywallScreen({
                 marginRight: 12,
               }}
             >
-              <IconSymbol name="crown.fill" size={22} color={colors.primary} />
+              <IconSymbol name="crown.fill" size={22} color={colors.primaryText} />
             </View>
             <Text
               style={{
@@ -162,7 +162,7 @@ export function PaywallScreen({
                   <IconSymbol
                     name="checkmark.circle.fill"
                     size={18}
-                    color={colors.success}
+                    color={colors.successText}
                   />
                   <Text
                     style={{
@@ -181,7 +181,7 @@ export function PaywallScreen({
             {error ? (
               <Text
                 style={{
-                  color: colors.error,
+                  color: colors.errorText,
                   fontSize: 13,
                   marginBottom: 12,
                   textAlign: "center",

@@ -34,10 +34,10 @@ function StatusIcon({ device }: { device: PushStatusDevice }) {
   }
   if (device.outcome.status === "ok") {
     return (
-      <IconSymbol name="checkmark.circle.fill" size={28} color={colors.success} />
+      <IconSymbol name="checkmark.circle.fill" size={28} color={colors.successText} />
     );
   }
-  return <IconSymbol name="xmark.circle.fill" size={28} color={colors.error} />;
+  return <IconSymbol name="xmark.circle.fill" size={28} color={colors.errorText} />;
 }
 
 function DeviceCard({
@@ -87,7 +87,7 @@ function DeviceCard({
               paddingVertical: 3,
             }}
           >
-            <Text style={{ color: colors.success, fontSize: 11, fontWeight: "700" }}>
+            <Text style={{ color: colors.successText, fontSize: 11, fontWeight: "700" }}>
               This device
             </Text>
           </View>
@@ -153,8 +153,8 @@ function DeviceCard({
           opacity: testing ? 0.6 : 1,
         }}
       >
-        {testing && <ActivityIndicator size="small" color={colors.primary} />}
-        <Text style={{ color: colors.primary, fontSize: 14, fontWeight: "600" }}>
+        {testing && <ActivityIndicator size="small" color={colors.primaryText} />}
+        <Text style={{ color: colors.primaryText, fontSize: 14, fontWeight: "600" }}>
           {testing ? "Sending…" : "Send test push"}
         </Text>
       </TouchableOpacity>
@@ -263,7 +263,7 @@ export default function DiagnosticsScreen() {
         }}
         actions={
           refreshing ? (
-            <ActivityIndicator size="small" color={colors.primary} />
+            <ActivityIndicator size="small" color={colors.primaryText} />
           ) : (
             <IconButton
               icon="arrow.clockwise"
@@ -295,7 +295,7 @@ export default function DiagnosticsScreen() {
 
       {devices === null && !loadError ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 60 }}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
           <Text style={{ color: colors.muted, fontSize: 14, marginTop: 12 }}>
             Loading diagnostics...
           </Text>
@@ -312,7 +312,7 @@ export default function DiagnosticsScreen() {
               alignItems: "center",
             }}
           >
-            <IconSymbol name="exclamationmark.triangle" size={28} color={colors.error} />
+            <IconSymbol name="exclamationmark.triangle" size={28} color={colors.errorText} />
             <Text style={{ color: colors.foreground, fontSize: 15, fontWeight: "600", marginTop: 8 }}>
               Couldn&apos;t load diagnostics
             </Text>

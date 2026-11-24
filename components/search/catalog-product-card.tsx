@@ -92,7 +92,7 @@ export const CatalogProductCard = memo(function CatalogProductCard({
           >
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontSize: 11,
                 fontWeight: "600",
               }}

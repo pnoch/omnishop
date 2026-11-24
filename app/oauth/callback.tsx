@@ -103,7 +103,7 @@ export default function OAuthCallback() {
       >
         <ActivityIndicator
           size="large"
-          color={colors.primary}
+          color={colors.primaryText}
           accessibilityLabel="Signing in"
         />
         <Text style={{ marginTop: 12, color: colors.muted }}>Signing you in…</Text>

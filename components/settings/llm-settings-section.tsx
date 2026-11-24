@@ -104,7 +104,7 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
       />
 
       {provider === "forge" && builtInAvailable === false && (
-        <Text style={{ fontSize: 12, color: colors.error, marginTop: 8 }}>
+        <Text style={{ fontSize: 12, color: colors.errorText, marginTop: 8 }}>
           {"Built-in AI isn't configured on this server. Choose OpenAI or Ollama Cloud and add an API key to use AI discovery."}
         </Text>
       )}
@@ -130,8 +130,8 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
             opacity: testing ? 0.6 : 1,
           }}
         >
-          {testing && <ActivityIndicator size="small" color={colors.primary} />}
-          <Text style={{ color: colors.primary, fontSize: 14, fontWeight: "600" }}>
+          {testing && <ActivityIndicator size="small" color={colors.primaryText} />}
+          <Text style={{ color: colors.primaryText, fontSize: 14, fontWeight: "600" }}>
             {testing ? "Testing…" : "Test connection"}
           </Text>
         </TouchableOpacity>
@@ -168,7 +168,7 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
               accessibilityLabel={showApiKey ? "Hide API key" : "Show API key"}
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.primary, fontSize: 13 }}>
+              <Text style={{ color: colors.primaryText, fontSize: 13 }}>
                 {showApiKey ? "Hide" : "Show"}
               </Text>
             </TouchableOpacity>
@@ -228,7 +228,7 @@ export function LlmSettingsSection({ settings, onUpdate }: Props) {
               accessibilityLabel={showApiKey ? "Hide API key" : "Show API key"}
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.primary, fontSize: 13 }}>
+              <Text style={{ color: colors.primaryText, fontSize: 13 }}>
                 {showApiKey ? "Hide" : "Show"}
               </Text>
             </TouchableOpacity>

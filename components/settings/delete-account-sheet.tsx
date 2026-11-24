@@ -47,7 +47,7 @@ export function DeleteAccountSheet({
         <View style={{ flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.4)" }}>
           <View style={{ backgroundColor: colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 }}>
             <View style={{ width: 40, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: "center", marginBottom: 20 }} />
-            <Text style={{ fontSize: 18, fontWeight: "700", color: colors.error, marginBottom: 8 }}>Delete Account & Data</Text>
+            <Text style={{ fontSize: 18, fontWeight: "700", color: colors.errorText, marginBottom: 8 }}>Delete Account & Data</Text>
             <Text style={{ fontSize: 14, color: colors.muted, marginBottom: 16 }}>This will permanently delete your account and all associated data (GDPR Art.17). This cannot be undone.</Text>
             {deleteStep === 1 ? (
               <>
@@ -85,7 +85,7 @@ export function DeleteAccountSheet({
                   {deleting ? <ActivityIndicator color="#fff" /> : <Text style={{ color: "#fff", fontSize: 16, fontWeight: "600" }}>Delete Account & Data</Text>}
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => onDeleteStep(1)} style={{ alignItems: "center", marginBottom: 12 }} accessibilityLabel="Back" accessibilityRole="button">
-                  <Text style={{ color: colors.primary, fontSize: 14 }}>Back</Text>
+                  <Text style={{ color: colors.primaryText, fontSize: 14 }}>Back</Text>
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={0.7} onPress={onClose} style={{ alignItems: "center" }} accessibilityLabel="Cancel delete account step 2" accessibilityRole="button">
                   <Text style={{ color: colors.muted, fontSize: 14 }}>Cancel</Text>

@@ -60,7 +60,7 @@ export const ReminderCard = memo(function ReminderCard({
           })}
         </Text>
         {isPast && (
-          <Text style={{ color: colors.warning, fontSize: 11, fontWeight: "700" }}>
+          <Text style={{ color: colors.warningText, fontSize: 11, fontWeight: "700" }}>
             · Past due
           </Text>
         )}
@@ -100,8 +100,8 @@ export const ReminderCard = memo(function ReminderCard({
           accessibilityLabel={`Reschedule reminder for ${reminder.productName}`}
           accessibilityRole="button"
         >
-          <IconSymbol name="pencil" size={14} color={colors.primary} />
-          <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>
+          <IconSymbol name="pencil" size={14} color={colors.primaryText} />
+          <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>
             Reschedule
           </Text>
         </TouchableOpacity>
@@ -118,8 +118,8 @@ export const ReminderCard = memo(function ReminderCard({
           accessibilityLabel={`Delete reminder for ${reminder.productName}`}
           accessibilityRole="button"
         >
-          <IconSymbol name="trash.fill" size={14} color={colors.error} />
-          <Text style={{ color: colors.error, fontSize: 12, fontWeight: "600" }}>
+          <IconSymbol name="trash.fill" size={14} color={colors.errorText} />
+          <Text style={{ color: colors.errorText, fontSize: 12, fontWeight: "600" }}>
             Delete
           </Text>
         </TouchableOpacity>

@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.38] - 2026-11-24
+
+### Accessibility
+
+- Added scheme-aware foreground variants (`primaryText`, `successText`,
+  `warningText`, `errorText`) and slightly darkened the dark-mode primary fill.
+  Foreground uses that failed WCAG AA now pass: light-mode success/amber/red text
+  was 2.1–3.8:1 on white, and dark-mode white-on-blue buttons were 4.1:1.
+- The active tab label/icon uses the readable primary variant in dark mode.
+- A browser contrast audit of Home, Watchlist, Alerts, Settings, and Rates in
+  light and dark mode reports zero failures (4.5:1 normal text, 3:1 large text).
+
 ## [5.32.37] - 2026-11-24
 
 ### Fixed

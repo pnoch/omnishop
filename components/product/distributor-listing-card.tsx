@@ -135,7 +135,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
         <View>
           <Text
             style={{
-              color: colors.primary,
+              color: colors.primaryText,
               fontWeight: "700",
               fontSize: 18,
             }}
@@ -168,7 +168,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
               <Pressable
                 onPress={handleOpenChart}
                 hitSlop={8}
-                android_ripple={{ color: colors.primary + "22", borderless: false, radius: 24 }}
+                android_ripple={{ color: colors.primaryText + "22", borderless: false, radius: 24 }}
                 style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, borderRadius: 8, overflow: "hidden", minHeight: 44, minWidth: 44, justifyContent: "center", alignItems: "center" })}
                 accessibilityLabel={`Open price chart for ${distributorName}`}
                 accessibilityRole="button"
@@ -185,7 +185,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
           <Pressable
             onPress={handleVisit}
             hitSlop={8}
-            android_ripple={{ color: colors.primary + "22", borderless: false }}
+            android_ripple={{ color: colors.primaryText + "22", borderless: false }}
             style={({ pressed }) => ({
               backgroundColor: colors.primary + "22",
               borderRadius: 20,
@@ -208,7 +208,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
           >
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontWeight: "600",
                 fontSize: 13,
               }}
@@ -218,7 +218,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
             <IconSymbol
               name="arrow.up.right.square"
               size={14}
-              color={colors.primary}
+              color={colors.primaryText}
             />
           </Pressable>
         </View>
@@ -296,7 +296,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
           {onRemind && (
             <Pressable
               onPress={handleRemind}
-              android_ripple={{ color: colors.primary + "22" }}
+              android_ripple={{ color: colors.primaryText + "22" }}
               style={({ pressed }) => ({
                 flexDirection: "row",
                 alignItems: "center",
@@ -313,10 +313,10 @@ export const DistributorListingCard = memo(function DistributorListingCard({
               accessibilityLabel="Set reminder"
               accessibilityRole="button"
             >
-              <IconSymbol name="calendar" size={15} color={colors.primary} />
+              <IconSymbol name="calendar" size={15} color={colors.primaryText} />
               <Text
                 style={{
-                  color: colors.primary,
+                  color: colors.primaryText,
                   fontSize: 13,
                   fontWeight: "600",
                 }}

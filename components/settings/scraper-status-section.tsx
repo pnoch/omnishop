@@ -23,12 +23,12 @@ function getDistributorHealth(
   const hoursSince =
     (Date.now() - new Date(lastSuccess).getTime()) / (1000 * 60 * 60);
   if (hoursSince < 24) {
-    return { label: "OK", color: colors.success };
+    return { label: "OK", color: colors.successText };
   }
   if (hoursSince < 168) {
-    return { label: "Stale", color: colors.warning };
+    return { label: "Stale", color: colors.warningText };
   }
-  return { label: "Failed", color: colors.error };
+  return { label: "Failed", color: colors.errorText };
 }
 
 export function ScraperStatusSection({
@@ -168,7 +168,7 @@ export function ScraperStatusSection({
                 >
                   <Text
                     style={{
-                      color: colors.primary,
+                      color: colors.primaryText,
                       fontSize: 12,
                       fontWeight: "600",
                     }}
@@ -220,7 +220,7 @@ export function ScraperStatusSection({
         accessibilityRole="button"
       >
         <Text
-          style={{ color: colors.primary, fontWeight: "600", fontSize: 14 }}
+          style={{ color: colors.primaryText, fontWeight: "600", fontSize: 14 }}
         >
           View Health Dashboard
         </Text>

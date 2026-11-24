@@ -56,7 +56,7 @@ export function BestDealEstimateCard({
         >
           {distrib?.countryCode} {distrib?.name ?? bestDeal.distributorId}
         </Text>
-        <Text style={{ color: colors.primary, fontSize: 18, fontWeight: "700" }}>
+        <Text style={{ color: colors.primaryText, fontSize: 18, fontWeight: "700" }}>
           {destination
             ? formatEstimate(bestDeal.total, bestDeal.currency)
             : formatPrice(bestDeal.total, bestDeal.currency)}

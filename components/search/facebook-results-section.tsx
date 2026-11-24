@@ -295,7 +295,7 @@ export function FacebookResultsSection({
           : observedScopeLabel(observedScope)}
       </Text>
       {areaMismatch && (
-        <Text style={{ color: colors.warning, fontSize: 12, marginBottom: 10 }}>
+        <Text style={{ color: colors.warningText, fontSize: 12, marginBottom: 10 }}>
           Facebook searched {observedArea}, not your requested {requestedArea}.
           Change the location in Facebook to match.
         </Text>
@@ -335,7 +335,7 @@ export function FacebookResultsSection({
           {item.price != null ? (
             <Text
               style={{
-                color: colors.primary,
+                color: colors.primaryText,
                 fontSize: 14,
                 fontWeight: "700",
                 marginLeft: 12,
@@ -356,7 +356,7 @@ export function FacebookResultsSection({
         }}
         style={{ paddingTop: 12 }}
       >
-        <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}>
+        <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>
           See all on Facebook →
         </Text>
       </TouchableOpacity>

@@ -109,7 +109,7 @@ export function EmptyState({
             gap: 8,
           }}
         >
-          <IconSymbol name="lightbulb.fill" size={16} color={colors.warning} />
+          <IconSymbol name="lightbulb.fill" size={16} color={colors.warningText} />
           <Text style={{ color: colors.muted, fontSize: 12, flex: 1 }}>
             Tip: Search for MikroTik CRS, Ubiquiti U7, RTX 4090, Pi 5, etc.
           </Text>

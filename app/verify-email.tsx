@@ -113,13 +113,13 @@ export default function VerifyEmailScreen() {
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 24 }}>
         {state === "verifying" && (
           <>
-            <ActivityIndicator size="large" color={colors.primary} accessibilityLabel="Verifying" />
+            <ActivityIndicator size="large" color={colors.primaryText} accessibilityLabel="Verifying" />
             <Text style={{ color: colors.muted, fontSize: 14, marginTop: 12 }}>Verifying your email…</Text>
           </>
         )}
         {state === "success" && (
           <>
-            <Text style={{ color: colors.success, fontSize: 18, fontWeight: "700", textAlign: "center" }}>Email Verified</Text>
+            <Text style={{ color: colors.successText, fontSize: 18, fontWeight: "700", textAlign: "center" }}>Email Verified</Text>
             <Text style={{ color: colors.muted, fontSize: 14, marginTop: 8, textAlign: "center" }}>
               Your email address has been confirmed.
             </Text>
@@ -127,7 +127,7 @@ export default function VerifyEmailScreen() {
         )}
         {state === "error" && (
           <>
-            <Text style={{ color: colors.error, fontSize: 18, fontWeight: "700", textAlign: "center" }}>Verification Failed</Text>
+            <Text style={{ color: colors.errorText, fontSize: 18, fontWeight: "700", textAlign: "center" }}>Verification Failed</Text>
             <Text
               accessibilityRole="alert"
               style={{ color: colors.muted, fontSize: 14, marginTop: 8, textAlign: "center" }}

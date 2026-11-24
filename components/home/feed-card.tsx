@@ -74,7 +74,7 @@ export const AlertFiredCard = memo(function AlertFiredCard({
                 accessibilityLabel={`View ${names.get(alert.productId) ?? "product"}`}
                 accessibilityRole="button"
               >
-                <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+                <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
                   View
                 </Text>
               </TouchableOpacity>
@@ -83,7 +83,7 @@ export const AlertFiredCard = memo(function AlertFiredCard({
                 accessibilityLabel="Re-arm alert"
                 accessibilityRole="button"
               >
-                <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+                <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
                   Re-arm
                 </Text>
               </TouchableOpacity>
@@ -139,7 +139,7 @@ export const DropCard = memo(function DropCard({
               </Text>
             </View>
             <View style={{ alignItems: "flex-end" }}>
-              <Text style={{ fontSize: 14, fontWeight: "700", color: colors.success }}>
+              <Text style={{ fontSize: 14, fontWeight: "700", color: colors.successText }}>
                 {formatDropPct(drop.dropPct)}
               </Text>
               <Text style={{ fontSize: 11, color: colors.muted, marginTop: 2 }}>
@@ -155,7 +155,7 @@ export const DropCard = memo(function DropCard({
         accessibilityRole="button"
         style={{ marginTop: 8, alignSelf: "flex-end", minHeight: 44, justifyContent: "center" }}
       >
-        <Text style={{ fontSize: 13, fontWeight: "600", color: colors.primary }}>
+        <Text style={{ fontSize: 13, fontWeight: "600", color: colors.primaryText }}>
           See all →
         </Text>
       </TouchableOpacity>
@@ -200,7 +200,7 @@ export const RestockCard = memo(function RestockCard({
               >
                 {names.get(id) ?? "Unknown Product"}
               </Text>
-              <Text style={{ color: colors.success, fontSize: 12, marginTop: 2 }}>
+              <Text style={{ color: colors.successText, fontSize: 12, marginTop: 2 }}>
                 Back in stock
               </Text>
             </View>
@@ -220,7 +220,7 @@ export const QuietCard = memo(function QuietCard({
   const colors = useColors();
   return (
     <Card style={{ marginBottom: 12, alignItems: "center" }}>
-      <IconSymbol name="checkmark.circle.fill" size={28} color={colors.success} />
+      <IconSymbol name="checkmark.circle.fill" size={28} color={colors.successText} />
       <Text style={{ color: colors.foreground, fontSize: 16, fontWeight: "700", marginTop: 8 }}>
         All quiet
       </Text>

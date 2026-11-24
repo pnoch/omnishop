@@ -51,15 +51,15 @@ export function ConnectionSection() {
             accessibilityRole="button"
           >
             {connection.isRefreshing ? (
-              <ActivityIndicator size="small" color={colors.primary} />
+              <ActivityIndicator size="small" color={colors.primaryText} />
             ) : (
               <IconSymbol
                 name="arrow.clockwise"
                 size={18}
-                color={colors.primary}
+                color={colors.primaryText}
               />
             )}
-            <Text style={{ color: colors.primary, fontWeight: "600" }}>
+            <Text style={{ color: colors.primaryText, fontWeight: "600" }}>
               Check Now
             </Text>
           </TouchableOpacity>

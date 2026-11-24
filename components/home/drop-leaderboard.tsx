@@ -59,7 +59,7 @@ function DropRow({ drop, onPress }: { drop: PriceDrop; onPress: () => void }) {
           </Text>
         </View>
         <View style={{ alignItems: "flex-end" }}>
-          <Text style={{ fontSize: 14, fontWeight: "700", color: colors.success }}>
+          <Text style={{ fontSize: 14, fontWeight: "700", color: colors.successText }}>
             {pctText}
           </Text>
           <Text style={{ fontSize: 11, color: colors.muted, marginTop: 2 }}>
@@ -215,10 +215,10 @@ export const DropLeaderboard = memo(function DropLeaderboard() {
         accessibilityLabel="See all price drops"
         accessibilityRole="button"
       >
-        <Text style={{ fontSize: 13, fontWeight: "600", color: colors.primary, marginRight: 4 }}>
+        <Text style={{ fontSize: 13, fontWeight: "600", color: colors.primaryText, marginRight: 4 }}>
           See all
         </Text>
-        <Text style={{ fontSize: 13, color: colors.primary }}>→</Text>
+        <Text style={{ fontSize: 13, color: colors.primaryText }}>→</Text>
       </TouchableOpacity>
     </View>
   );

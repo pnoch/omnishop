@@ -82,7 +82,7 @@ export function HomeWatchlistPreview({
               {bestPrice ? (
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontWeight: "700",
                     fontSize: 15,
                   }}
@@ -111,7 +111,7 @@ export function HomeWatchlistPreview({
           accessibilityRole="button"
           style={{ alignItems: "center", paddingVertical: 8 }}
         >
-          <Text style={{ color: colors.primary, fontWeight: "600" }}>
+          <Text style={{ color: colors.primaryText, fontWeight: "600" }}>
             View all {watchlist.length} product
             {watchlist.length === 1 ? "" : "s"} →
           </Text>

@@ -11,20 +11,20 @@ export const StockHealthCard = memo(function StockHealthCard({ health }: { healt
       {
         label: "Listings in stock",
         value: `${health.inStockPct}%`,
-        color: colors.success,
+        color: colors.successText,
       },
       {
         label: "Fully out of stock",
         value: `${health.fullyOutOfStock}`,
-        color: colors.error,
+        color: colors.errorText,
       },
       {
         label: "Back-order everywhere",
         value: `${health.backOrderOnly}`,
-        color: colors.warning,
+        color: colors.warningText,
       },
     ],
-    [health.inStockPct, health.fullyOutOfStock, health.backOrderOnly, colors.success, colors.error, colors.warning],
+    [health.inStockPct, health.fullyOutOfStock, health.backOrderOnly, colors.successText, colors.errorText, colors.warningText],
   );
 
   return (

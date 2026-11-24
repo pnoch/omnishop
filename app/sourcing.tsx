@@ -129,7 +129,7 @@ function LineCard({
         accessibilityLabel={`Set sell price for ${line.productName}`}
         style={{ marginTop: 8 }}
       >
-        <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+        <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
           Set sell price
         </Text>
       </TouchableOpacity>

@@ -72,7 +72,7 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
   return (
     <View style={{ marginHorizontal: 16, marginBottom: 16, padding: 14, borderRadius: 16, backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 }}>
       <Text style={{ color: colors.foreground, fontSize: 17, fontWeight: "700" }}>eBay listings</Text>
-      {loading && <View style={{ flexDirection: "row", gap: 8, paddingVertical: 12 }}><ActivityIndicator color={colors.primary} /><Text style={{ color: colors.muted }}>Searching eBay…</Text></View>}
+      {loading && <View style={{ flexDirection: "row", gap: 8, paddingVertical: 12 }}><ActivityIndicator color={colors.primaryText} /><Text style={{ color: colors.muted }}>Searching eBay…</Text></View>}
       {result?.kind === "empty" && <Text style={{ color: colors.muted, paddingTop: 8 }}>No eBay matches for this search.</Text>}
       {result?.kind === "unavailable" && <View style={{ paddingTop: 8 }}>
         <Text style={{ color: colors.muted }}>{result.reason === "not_configured"
@@ -86,7 +86,7 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
                 : result.reason === "credentials"
                   ? "eBay search is temporarily unavailable. Try again later."
                 : "Could not reach the search service. Check your connection and try again."}</Text>
-        {result.reason !== "not_configured" && <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retry eBay search" onPress={() => setRetry((value) => value + 1)} style={{ paddingVertical: 12 }}><Text style={{ color: colors.primary }}>Retry</Text></TouchableOpacity>}
+        {result.reason !== "not_configured" && <TouchableOpacity accessibilityRole="button" accessibilityLabel="Retry eBay search" onPress={() => setRetry((value) => value + 1)} style={{ paddingVertical: 12 }}><Text style={{ color: colors.primaryText }}>Retry</Text></TouchableOpacity>}
         {result.reason === "blocked" && (
           <TouchableOpacity
             accessibilityRole="link"
@@ -97,7 +97,7 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
             }}
             style={{ paddingVertical: 12 }}
           >
-            <Text style={{ color: colors.primary }}>Open on eBay</Text>
+            <Text style={{ color: colors.primaryText }}>Open on eBay</Text>
           </TouchableOpacity>
         )}
       </View>}
@@ -115,13 +115,13 @@ export function EbayResultsSection({ query, onTrack }: { query: string; onTrack:
           <ListingThumbnail url={item.imageUrl} title={item.title} />
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.foreground, fontWeight: "600" }} numberOfLines={2}>{item.title}</Text>
-            <Text style={{ color: colors.primary, paddingTop: 4 }}>{item.price !== null && item.currency ? formatPrice(item.price, item.currency) : "Price not available"}</Text>
+            <Text style={{ color: colors.primaryText, paddingTop: 4 }}>{item.price !== null && item.currency ? formatPrice(item.price, item.currency) : "Price not available"}</Text>
             {converted !== null && <Text style={{ color: colors.muted, fontSize: 12 }}>≈ {formatPrice(converted, displayCurrency)}</Text>}
             {item.condition && <Text style={{ color: colors.muted, fontSize: 12 }}>{item.condition}</Text>}
             {item.seller && <Text style={{ color: colors.muted, fontSize: 12 }}>Seller: {item.seller}</Text>}
             {item.shipping && <Text style={{ color: colors.muted, fontSize: 12 }}>Shipping: {item.shipping}</Text>}
           </View>
-          <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Track eBay listing ${item.title}`} onPress={() => onTrack(item)} style={{ alignSelf: "center", padding: 10 }}><Text style={{ color: colors.primary, fontWeight: "700" }}>Track</Text></TouchableOpacity>
+          <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Track eBay listing ${item.title}`} onPress={() => onTrack(item)} style={{ alignSelf: "center", padding: 10 }}><Text style={{ color: colors.primaryText, fontWeight: "700" }}>Track</Text></TouchableOpacity>
             </View>
           );
         })}

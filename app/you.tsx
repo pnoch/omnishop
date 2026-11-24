@@ -79,7 +79,7 @@ export default function YouScreen() {
               marginRight: 12,
             }}
           >
-            <IconSymbol name="person.crop.circle.fill" size={28} color={colors.primary} />
+            <IconSymbol name="person.crop.circle.fill" size={28} color={colors.primaryText} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.foreground, fontWeight: "600", fontSize: 17 }}>
@@ -153,7 +153,7 @@ export default function YouScreen() {
                   marginRight: 12,
                 }}
               >
-                <IconSymbol name={row.icon} size={18} color={colors.primary} />
+                <IconSymbol name={row.icon} size={18} color={colors.primaryText} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.foreground, fontWeight: "500", fontSize: 15 }}>

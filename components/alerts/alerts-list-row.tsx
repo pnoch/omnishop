@@ -79,11 +79,11 @@ export function AlertsListRow({
           borderColor: colors.success + "44",
         }}
       >
-        <IconSymbol name="star.fill" size={24} color={colors.success} />
+        <IconSymbol name="star.fill" size={24} color={colors.successText} />
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              color: colors.success,
+              color: colors.successText,
               fontWeight: "700",
               fontSize: 15,
             }}
@@ -116,7 +116,7 @@ export function AlertsListRow({
         <IconSymbol
           name="checkmark.circle.fill"
           size={16}
-          color={colors.success}
+          color={colors.successText}
         />
         <Text
           style={{

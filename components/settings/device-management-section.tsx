@@ -64,7 +64,7 @@ export function DeviceManagementSection({
         />
         {devicesLoading ? (
           <View style={{ alignItems: "center", paddingVertical: 20 }}>
-            <ActivityIndicator size="small" color={colors.primary} />
+            <ActivityIndicator size="small" color={colors.primaryText} />
           </View>
         ) : devices === null ? (
           <View
@@ -82,7 +82,7 @@ export function DeviceManagementSection({
             <TouchableOpacity activeOpacity={0.7} onPress={loadDevices} accessibilityLabel="Retry loading devices" accessibilityRole="button">
               <Text
                 style={{
-                  color: colors.primary,
+                  color: colors.primaryText,
                   fontSize: 13,
                   fontWeight: "600",
                 }}

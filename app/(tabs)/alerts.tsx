@@ -206,7 +206,7 @@ export default function AlertsScreen() {
                     <IconSymbol
                       name="eye.fill"
                       size={15}
-                      color={colors.warning}
+                      color={colors.warningText}
                     />
                     <Text
                       style={{
@@ -240,7 +240,7 @@ export default function AlertsScreen() {
                   <IconSymbol
                     name="calendar"
                     size={15}
-                    color={colors.primary}
+                    color={colors.primaryText}
                   />
                   <Text
                     style={{

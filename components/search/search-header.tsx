@@ -60,7 +60,7 @@ export function SearchHeader({
         }}
         style={{ width: 44, height: 44, alignItems: "center", justifyContent: "center" }}
       >
-        <IconSymbol name="wand.and.stars" size={22} color={colors.primary} />
+        <IconSymbol name="wand.and.stars" size={22} color={colors.primaryText} />
       </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={0.7}
@@ -76,7 +76,7 @@ export function SearchHeader({
         <IconSymbol
           name="square.and.arrow.down"
           size={22}
-          color={colors.primary}
+          color={colors.primaryText}
         />
       </TouchableOpacity>
     </View>

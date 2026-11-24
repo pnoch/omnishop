@@ -201,7 +201,7 @@ export function SwipeableCard({
           <ActionButton
             label={hasAlert ? "Muted" : "Alert"}
             icon="bell.fill"
-            color={colors.primary}
+            color={colors.primaryText}
             background={colors.primary + "1A"}
             accessibilityLabel={
               hasAlert ? "Manage price alert" : "Set price alert"
@@ -217,7 +217,7 @@ export function SwipeableCard({
           <ActionButton
             label={isAcquired ? "Owned" : "Want"}
             icon="checkmark.circle.fill"
-            color={colors.success}
+            color={colors.successText}
             background={colors.success + "1A"}
             accessibilityLabel={
               isAcquired ? "Mark as not acquired" : "Mark as acquired"

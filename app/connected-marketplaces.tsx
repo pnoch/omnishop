@@ -47,7 +47,7 @@ export default function ConnectedMarketplacesScreen() {
 
       {!loaded ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 40 }}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}>

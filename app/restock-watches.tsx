@@ -161,7 +161,7 @@ export default function RestockWatchesScreen() {
                     hitSlop={8}
                     style={{ padding: 8 }}
                   >
-                    <Text style={{ color: colors.error, fontSize: 13 }}>
+                    <Text style={{ color: colors.errorText, fontSize: 13 }}>
                       Remove
                     </Text>
                   </TouchableOpacity>

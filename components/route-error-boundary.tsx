@@ -35,7 +35,7 @@ function ThemedFallback({
           marginBottom: 16,
         }}
       >
-        <IconSymbol name="exclamationmark.triangle.fill" size={32} color={colors.error} />
+        <IconSymbol name="exclamationmark.triangle.fill" size={32} color={colors.errorText} />
       </View>
       <Text style={{ fontSize: 18, fontWeight: "700", color: colors.foreground }}>
         We couldn&apos;t load this screen
@@ -91,7 +91,7 @@ function ThemedFallback({
           if (router.canGoBack()) router.back();
           else router.replace("/(tabs)");
         }}
-        android_ripple={{ color: colors.primary + "22" }}
+        android_ripple={{ color: colors.primaryText + "22" }}
         style={({ pressed }) => ({
           marginTop: 10,
           borderWidth: 1,
@@ -106,7 +106,7 @@ function ThemedFallback({
         accessibilityLabel="Go Back"
         accessibilityRole="button"
       >
-        <Text style={{ color: colors.primary, fontWeight: "600" }}>Go Back</Text>
+        <Text style={{ color: colors.primaryText, fontWeight: "600" }}>Go Back</Text>
       </Pressable>
     </View>
   );

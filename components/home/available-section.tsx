@@ -63,7 +63,7 @@ const AvailableRow = memo(function AvailableRow({
           </Text>
         </View>
         <Text
-          style={{ color: colors.primary, fontSize: 15, fontWeight: "700" }}
+          style={{ color: colors.primaryText, fontSize: 15, fontWeight: "700" }}
         >
           {formatPrice(product.bestPrice, product.bestCurrency)}
         </Text>
@@ -142,7 +142,7 @@ export const AvailableSection = memo(function AvailableSection() {
           hitSlop={8}
           style={{ minHeight: 44, justifyContent: "center" }}
         >
-          <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+          <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
             See all
           </Text>
         </Pressable>

@@ -99,7 +99,7 @@ export function TargetTableCard({
               >
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontSize: 15,
                     fontWeight: "700",
                   }}

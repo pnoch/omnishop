@@ -32,7 +32,7 @@ export function ProSection({ onUpgrade }: { onUpgrade: () => void }) {
               <IconSymbol
                 name="chevron.right"
                 size={16}
-                color={colors.primary}
+                color={colors.primaryText}
               />
             }
           />

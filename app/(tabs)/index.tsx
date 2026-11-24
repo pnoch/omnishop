@@ -136,7 +136,7 @@ export default function HomeScreen() {
                   borderColor: colors.error + "22",
                 }}
               >
-                <IconSymbol name="exclamationmark.triangle.fill" size={24} color={colors.error} />
+                <IconSymbol name="exclamationmark.triangle.fill" size={24} color={colors.errorText} />
               </View>
               <Text style={{ color: colors.foreground, fontWeight: "600", marginTop: 12, textAlign: "center" }}>
                 Couldn&apos;t load watchlist
@@ -179,7 +179,7 @@ export default function HomeScreen() {
                 <IconSymbol
                   name="magnifyingglass"
                   size={36}
-                  color={colors.primary}
+                  color={colors.primaryText}
                 />
               </View>
               <Text className="text-foreground font-semibold mt-4 text-base">
@@ -202,7 +202,7 @@ export default function HomeScreen() {
                   gap: 8,
                 }}
               >
-                <IconSymbol name="lightbulb.fill" size={16} color={colors.warning} />
+                <IconSymbol name="lightbulb.fill" size={16} color={colors.warningText} />
                 <Text style={{ color: colors.muted, fontSize: 12, flex: 1 }}>
                   Try: RTX 4090, Pi 5, CRS326, or U7 Pro Max
                 </Text>
@@ -244,7 +244,7 @@ export default function HomeScreen() {
                   router.push("/welcome");
                 }}
               >
-                <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}>
+                <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>
                   Pick popular products
                 </Text>
               </TouchableOpacity>

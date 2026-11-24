@@ -85,7 +85,7 @@ export function MarketplaceCard({ product, onUpdated }: { product: Product; onUp
       {listing && <Text style={{ color: colors.muted }}>Entered {new Date(listing.lastChecked).toLocaleString()} · {listing.priceHistory.length} manual price records</Text>}
       <Text style={{ color: colors.muted }}>Monitoring: {marketplace.monitoringStatus.replace("_", " ")}. {brand === "Shopee" ? "Shopee may require login. " : ""}{brand === "Facebook Marketplace" ? "Facebook requires login. " : ""}Price and stock are not automatically verified; automatic alerts are unavailable.</Text>
       <TouchableOpacity accessibilityRole="link" accessibilityLabel={visitLabel} onPress={() => { void Linking.openURL(marketplace.canonicalUrl).catch(() => showAlert(`Couldn't open ${brand}`, "Please try again.")); }}>
-        <Text style={{ color: colors.primary }}>{visitLabel}</Text>
+        <Text style={{ color: colors.primaryText }}>{visitLabel}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         accessibilityRole="button"
@@ -100,14 +100,14 @@ export function MarketplaceCard({ product, onUpdated }: { product: Product; onUp
           });
         }}
       >
-        <Text style={{ color: colors.primary }}>{connectLabel} {brand} session</Text>
+        <Text style={{ color: colors.primaryText }}>{connectLabel} {brand} session</Text>
       </TouchableOpacity>
       <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Check current ${brand} price`} disabled={checking} onPress={() => void check()}>
-        <Text style={{ color: colors.primary }}>{checking ? "Checking…" : "Check current price"}</Text>
+        <Text style={{ color: colors.primaryText }}>{checking ? "Checking…" : "Check current price"}</Text>
       </TouchableOpacity>
       <TextInput accessibilityLabel={`Updated manual ${marketplaceCurrency(marketplace.platform)} price`} placeholder={`New manual price (${marketplaceCurrency(marketplace.platform)})`} placeholderTextColor={colors.muted} keyboardType="decimal-pad" value={price} onChangeText={setPrice} style={{ color: colors.foreground, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 12 }} />
       <TouchableOpacity accessibilityRole="button" accessibilityLabel="Save manual price" disabled={saving || parseManualPrice(price) === null} onPress={() => void save()} style={{ opacity: saving || parseManualPrice(price) === null ? 0.5 : 1 }}>
-        <Text style={{ color: colors.primary }}>{saving ? "Saving…" : "Save manual price"}</Text>
+        <Text style={{ color: colors.primaryText }}>{saving ? "Saving…" : "Save manual price"}</Text>
       </TouchableOpacity>
     </View>
   );

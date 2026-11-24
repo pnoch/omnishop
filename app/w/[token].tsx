@@ -74,7 +74,7 @@ export default function SharedWatchlistScreen() {
     return (
       <ScreenContainer>
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 24 }}>
-          <Text style={{ color: colors.error, fontWeight: "700", fontSize: 16 }}>Invalid link</Text>
+          <Text style={{ color: colors.errorText, fontWeight: "700", fontSize: 16 }}>Invalid link</Text>
           <Text style={{ color: colors.muted, marginTop: 8, textAlign: "center" }}>
             This share link is missing its token.
           </Text>
@@ -87,7 +87,7 @@ export default function SharedWatchlistScreen() {
     return (
       <ScreenContainer>
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
         </View>
       </ScreenContainer>
     );
@@ -105,7 +105,7 @@ export default function SharedWatchlistScreen() {
     return (
       <ScreenContainer>
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 24 }}>
-          <Text style={{ color: colors.error, fontWeight: "700", fontSize: 16 }}>{title}</Text>
+          <Text style={{ color: colors.errorText, fontWeight: "700", fontSize: 16 }}>{title}</Text>
           <Text style={{ color: colors.muted, marginTop: 8, textAlign: "center" }}>{detail}</Text>
         </View>
       </ScreenContainer>
@@ -221,7 +221,7 @@ export default function SharedWatchlistScreen() {
         <Text accessibilityRole="header" style={{ color: colors.foreground, fontSize: 22, fontWeight: "800" }}>{data?.title ?? "Shared Watchlist"}</Text>
         <Text style={{ color: colors.muted, marginTop: 4 }}>{products.length} product{products.length === 1 ? "" : "s"}{truncated ? " (first 500)" : ""}</Text>
         {truncated && (
-          <Text style={{ color: colors.warning, marginTop: 4, fontSize: 12 }}>
+          <Text style={{ color: colors.warningText, marginTop: 4, fontSize: 12 }}>
             This share is larger than the 500-product limit — only the first 500 are shown.
           </Text>
         )}
@@ -233,8 +233,8 @@ export default function SharedWatchlistScreen() {
             <Text style={{ color: "#fff", fontWeight: "600", fontSize: 13 }}>Add all to Watchlist</Text>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.85} onPress={handleExportDetailedCsv} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6 }} accessibilityLabel="Export detailed CSV" accessibilityRole="button">
-            <IconSymbol name="square.and.arrow.up" size={16} color={colors.primary} />
-            <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}>Export CSV</Text>
+            <IconSymbol name="square.and.arrow.up" size={16} color={colors.primaryText} />
+            <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>Export CSV</Text>
           </TouchableOpacity>
           {isAuthenticated && !query.data?.isOwner && (
             query.data?.isMember ? (
@@ -243,8 +243,8 @@ export default function SharedWatchlistScreen() {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity activeOpacity={0.85} onPress={handleJoin} disabled={joinMutation.isPending} style={{ backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.primary, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, flexDirection: "row", alignItems: "center", gap: 6, opacity: joinMutation.isPending ? 0.6 : 1 }} accessibilityLabel="Join shared watchlist" accessibilityRole="button">
-                <IconSymbol name="person.crop.circle.badge.plus" size={16} color={colors.primary} />
-                <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 13 }}>{joinMutation.isPending ? "Joining" : "Join"}</Text>
+                <IconSymbol name="person.crop.circle.badge.plus" size={16} color={colors.primaryText} />
+                <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>{joinMutation.isPending ? "Joining" : "Join"}</Text>
               </TouchableOpacity>
             )
           )}
@@ -273,7 +273,7 @@ export default function SharedWatchlistScreen() {
                       {product.brand ?? ""} {product.modelNumber ?? ""} {product.category ? `· ${product.category}` : ""}
                     </Text>
                   </View>
-                  {best && <Text style={{ color: colors.primary, fontWeight: "700", fontSize: 13 }}>{formatPrice(best.price, best.currency)}</Text>}
+                  {best && <Text style={{ color: colors.primaryText, fontWeight: "700", fontSize: 13 }}>{formatPrice(best.price, best.currency)}</Text>}
                 </View>
                 {(product.listings ?? []).length > 0 ? (
                   <View style={{ marginTop: 10, gap: 8 }}>

@@ -121,7 +121,7 @@ export function AwaySummaryCard({
           accessibilityRole="button"
           style={{ marginTop: 10 }}
         >
-          <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+          <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
             {expanded ? "See less" : "See all"}
           </Text>
         </Pressable>

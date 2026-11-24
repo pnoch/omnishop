@@ -122,7 +122,7 @@ export default function RatesScreen() {
             : "Using built-in rates — live rates update hourly"}
         </Text>
         {refreshError && (
-          <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 13, marginBottom: 12 }}>
+          <Text accessibilityRole="alert" style={{ color: colors.errorText, fontSize: 13, marginBottom: 12 }}>
             {refreshError}
           </Text>
         )}

@@ -186,7 +186,7 @@ export const DropCalendarCard = memo(function DropCalendarCard({
               </Text>
               <Text
                 style={{
-                  color: colors.success,
+                  color: colors.successText,
                   fontSize: 12,
                   fontWeight: "600",
                 }}

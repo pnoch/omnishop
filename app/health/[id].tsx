@@ -109,7 +109,7 @@ export default function HealthDetailScreen() {
           style={{ marginRight: 12 }}
           hitSlop={12}
         >
-          <Text style={{ color: colors.primary, fontSize: 16 }}>‹ Back</Text>
+          <Text style={{ color: colors.primaryText, fontSize: 16 }}>‹ Back</Text>
         </TouchableOpacity>
         <Text
           style={{ color: colors.foreground, fontSize: 20, fontWeight: "700" }}
@@ -127,7 +127,7 @@ export default function HealthDetailScreen() {
             paddingTop: 60,
           }}
         >
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
           <Text style={{ color: colors.muted, fontSize: 14, marginTop: 12 }}>
             Loading health history...
           </Text>

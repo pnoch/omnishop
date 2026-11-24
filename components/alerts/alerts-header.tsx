@@ -73,9 +73,9 @@ export function AlertsHeader({
             paddingVertical: 3,
           }}
         >
-          <IconSymbol name="bell.fill" size={12} color={colors.primary} />
+          <IconSymbol name="bell.fill" size={12} color={colors.primaryText} />
           <Text
-            style={{ color: colors.primary, fontSize: 12, fontWeight: "700" }}
+            style={{ color: colors.primaryText, fontSize: 12, fontWeight: "700" }}
           >
             {tabCount.alerts} alert{tabCount.alerts === 1 ? "" : "s"}
           </Text>
@@ -91,9 +91,9 @@ export function AlertsHeader({
             paddingVertical: 3,
           }}
         >
-          <IconSymbol name="calendar" size={12} color={colors.warning} />
+          <IconSymbol name="calendar" size={12} color={colors.warningText} />
           <Text
-            style={{ color: colors.warning, fontSize: 12, fontWeight: "700" }}
+            style={{ color: colors.warningText, fontSize: 12, fontWeight: "700" }}
           >
             {tabCount.reminders} reminder{tabCount.reminders === 1 ? "" : "s"}
           </Text>

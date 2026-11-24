@@ -80,7 +80,7 @@ export function DisplaySection({
               marginRight: 12,
             }}
           >
-            <IconSymbol name="location.fill" size={18} color={colors.primary} />
+            <IconSymbol name="location.fill" size={18} color={colors.primaryText} />
           </View>
           <View style={{ flex: 1 }}>
             <Text

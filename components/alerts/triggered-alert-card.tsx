@@ -128,7 +128,7 @@ export const TriggeredAlertCard = memo(function TriggeredAlertCard({
         <Action
           icon="arrow.clockwise"
           label="Watch again"
-          color={colors.primary}
+          color={colors.primaryText}
           onPress={handleRearm}
           accessibilityLabel={`Watch again for ${productName}`}
           filled
@@ -136,7 +136,7 @@ export const TriggeredAlertCard = memo(function TriggeredAlertCard({
         <Action
           icon="trash.fill"
           label="Delete"
-          color={colors.error}
+          color={colors.errorText}
           onPress={handleDelete}
           accessibilityLabel={`Delete triggered alert for ${productName}`}
         />

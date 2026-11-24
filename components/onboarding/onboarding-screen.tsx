@@ -145,7 +145,7 @@ export function OnboardingScreen({
             accessibilityRole="button"
           >
             <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-              <IconSymbol name="globe" size={20} color={colors.primary} />
+              <IconSymbol name="globe" size={20} color={colors.primaryText} />
               <Text
                 style={{
                   color: selected ? colors.foreground : colors.muted,
@@ -276,7 +276,7 @@ export function OnboardingScreen({
                 justifyContent: "center",
               }}
             >
-              <IconSymbol name={item.icon} size={44} color={colors.primary} />
+              <IconSymbol name={item.icon} size={44} color={colors.primaryText} />
             </View>
             <Text
               style={{

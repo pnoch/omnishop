@@ -107,7 +107,7 @@ export function SessionAssistModal({
             </Text>
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel="Done" onPress={onDone} hitSlop={12}>
-            <Text style={{ color: colors.primary, fontWeight: "700", fontSize: 16 }}>Done</Text>
+            <Text style={{ color: colors.primaryText, fontWeight: "700", fontSize: 16 }}>Done</Text>
           </Pressable>
         </View>
         <Text style={{ color: colors.muted, fontSize: 12, paddingHorizontal: 12, paddingTop: 8 }}>
@@ -139,7 +139,7 @@ export function SessionAssistModal({
               hitSlop={8}
               style={{ alignSelf: "flex-start", marginTop: 8, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10, borderWidth: 1, borderColor: colors.primary }}
             >
-              <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "700" }}>
+              <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "700" }}>
                 Open in browser
               </Text>
             </Pressable>

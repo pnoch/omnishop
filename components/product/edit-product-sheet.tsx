@@ -151,7 +151,7 @@ export function EditProductSheet({
             />
             {modelChanged && (
               <Text
-                style={{ color: colors.warning, fontSize: 11, marginTop: -8, marginBottom: 10 }}
+                style={{ color: colors.warningText, fontSize: 11, marginTop: -8, marginBottom: 10 }}
               >
                 Model changed — listings will re-match on next refresh.
               </Text>

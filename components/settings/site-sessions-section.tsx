@@ -130,7 +130,7 @@ export function SiteSessionsSection() {
               hitSlop={8}
               style={{ paddingHorizontal: 10, paddingVertical: 6, borderRadius: 12, borderWidth: 1, borderColor: colors.error }}
             >
-              <Text style={{ color: colors.error, fontSize: 12, fontWeight: "700" }}>Clear</Text>
+              <Text style={{ color: colors.errorText, fontSize: 12, fontWeight: "700" }}>Clear</Text>
             </Pressable>
           </View>
         );
@@ -156,7 +156,7 @@ export function SiteSessionsSection() {
           hitSlop={8}
           style={{ paddingHorizontal: 12, paddingVertical: 8, minHeight: 44, justifyContent: "center", borderRadius: 10, borderWidth: 1, borderColor: colors.error, opacity: busy ? 0.5 : 1 }}
         >
-          <Text style={{ color: colors.error, fontSize: 13, fontWeight: "700" }}>
+          <Text style={{ color: colors.errorText, fontSize: 13, fontWeight: "700" }}>
             Clear all sessions
           </Text>
         </Pressable>

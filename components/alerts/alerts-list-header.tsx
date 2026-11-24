@@ -31,9 +31,9 @@ export function AlertsListHeader({
           <IconSymbol
             name="exclamationmark.triangle.fill"
             size={16}
-            color={colors.error}
+            color={colors.errorText}
           />
-          <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 13, flex: 1 }}>
+          <Text accessibilityRole="alert" style={{ color: colors.errorText, fontSize: 13, flex: 1 }}>
             {loadError}
           </Text>
           <TouchableOpacity
@@ -49,7 +49,7 @@ export function AlertsListHeader({
             }}
           >
             <Text
-              style={{ color: colors.error, fontWeight: "600", fontSize: 13 }}
+              style={{ color: colors.errorText, fontWeight: "600", fontSize: 13 }}
             >
               Retry
             </Text>
@@ -71,9 +71,9 @@ export function AlertsListHeader({
           <IconSymbol
             name="info.circle.fill"
             size={18}
-            color={colors.primary}
+            color={colors.primaryText}
           />
-          <Text style={{ color: colors.primary, fontSize: 13, flex: 1 }}>
+          <Text style={{ color: colors.primaryText, fontSize: 13, flex: 1 }}>
             You&apos;ll be notified when a product restocks or drops below your
             target.
           </Text>

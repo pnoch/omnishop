@@ -65,19 +65,19 @@ export function SummaryCard({
               key: "in_stock",
               label: "In Stock",
               value: summary.inStock,
-              color: colors.success,
+              color: colors.successText,
             },
             {
               key: "back_order",
               label: "Back Order",
               value: summary.backOrder,
-              color: colors.warning,
+              color: colors.warningText,
             },
             {
               key: "out_of_stock",
               label: "Out of Stock",
               value: summary.outOfStock,
-              color: colors.error,
+              color: colors.errorText,
             },
           ] as const
         ).map((col) => (
@@ -148,11 +148,11 @@ export function SummaryCard({
         accessibilityRole="button"
       >
         <Text
-          style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}
+          style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}
         >
           View statistics
         </Text>
-        <IconSymbol name="chevron.right" size={12} color={colors.primary} />
+        <IconSymbol name="chevron.right" size={12} color={colors.primaryText} />
       </TouchableOpacity>
     </View>
   );

@@ -1,5 +1,9 @@
 export const themeColors: {
   primary: { light: string; dark: string };
+  primaryText: { light: string; dark: string };
+  successText: { light: string; dark: string };
+  warningText: { light: string; dark: string };
+  errorText: { light: string; dark: string };
   background: { light: string; dark: string };
   surface: { light: string; dark: string };
   foreground: { light: string; dark: string };

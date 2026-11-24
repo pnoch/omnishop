@@ -50,7 +50,7 @@ export default function TabLayout() {
   const sidebarBackground = () => <SidebarBrand colors={colors} />;
 
   const screenOptions = {
-    tabBarActiveTintColor: colors.tint,
+    tabBarActiveTintColor: colors.primaryText,
     tabBarInactiveTintColor: colors.muted,
     headerShown: false,
     tabBarButton: HapticTab,

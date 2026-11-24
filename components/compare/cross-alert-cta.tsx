@@ -51,11 +51,11 @@ export function CrossAlertCTA({
       accessibilityLabel="Set cross-distributor alert"
       accessibilityRole="button"
     >
-      <IconSymbol name="bell.fill" size={18} color={colors.primary} />
+      <IconSymbol name="bell.fill" size={18} color={colors.primaryText} />
       <View style={{ flex: 1 }}>
         <Text
           style={{
-            color: colors.primary,
+            color: colors.primaryText,
             fontWeight: "700",
             fontSize: 13,
           }}
@@ -72,7 +72,7 @@ export function CrossAlertCTA({
           {formatPrice(alertPrice, displayCurrency)} (5% below current best of {formatPrice(best, displayCurrency)})
         </Text>
       </View>
-      <IconSymbol name="chevron.right" size={16} color={colors.primary} />
+      <IconSymbol name="chevron.right" size={16} color={colors.primaryText} />
     </TouchableOpacity>
   );
 }

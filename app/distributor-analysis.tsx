@@ -108,7 +108,7 @@ export default function DistributorAnalysisScreen() {
               accessibilityLabel="Export CSV"
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+              <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
                 Export CSV
               </Text>
             </TouchableOpacity>
@@ -184,7 +184,7 @@ export default function DistributorAnalysisScreen() {
                 </View>
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontSize: 16,
                     fontWeight: "700",
                   }}

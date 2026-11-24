@@ -73,7 +73,7 @@ export const StatsShareCard = forwardRef<
               }}
             />
             <Text
-              style={{ color: colors.success, fontSize: 12, fontWeight: "700" }}
+              style={{ color: colors.successText, fontSize: 12, fontWeight: "700" }}
             >
               ▼ TOP DROPS
             </Text>
@@ -99,7 +99,7 @@ export const StatsShareCard = forwardRef<
                   {drop.name}
                 </Text>
                 <Text
-                  style={{ color: colors.success, fontSize: 12, fontWeight: "700" }}
+                  style={{ color: colors.successText, fontSize: 12, fontWeight: "700" }}
                 >
                   {drop.pct}%
                 </Text>

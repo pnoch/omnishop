@@ -53,7 +53,7 @@ export default function ResetPasswordScreen() {
     return (
       <ScreenContainer>
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", padding: 24 }}>
-          <Text style={{ color: colors.error, fontSize: 16, fontWeight: "700", textAlign: "center" }}>Invalid Reset Link</Text>
+          <Text style={{ color: colors.errorText, fontSize: 16, fontWeight: "700", textAlign: "center" }}>Invalid Reset Link</Text>
           <Text style={{ color: colors.muted, fontSize: 14, marginTop: 8, textAlign: "center" }}>
             No token found. Please open the link from your reset email, or request a new link from Settings → Sign in → Forgot password.
           </Text>
@@ -122,7 +122,7 @@ export default function ResetPasswordScreen() {
           accessibilityLabel="Confirm new password"
         />
 
-        {error && <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 13, marginBottom: 12 }}>{error}</Text>}
+        {error && <Text accessibilityRole="alert" style={{ color: colors.errorText, fontSize: 13, marginBottom: 12 }}>{error}</Text>}
 
         <TouchableOpacity
           onPress={handleReset}
@@ -148,7 +148,7 @@ export default function ResetPasswordScreen() {
           accessibilityLabel="Back to settings"
           accessibilityRole="button"
         >
-          <Text style={{ color: colors.primary, fontSize: 14 }}>Back to Settings</Text>
+          <Text style={{ color: colors.primaryText, fontSize: 14 }}>Back to Settings</Text>
         </TouchableOpacity>
       </ScrollView>
     </ScreenContainer>

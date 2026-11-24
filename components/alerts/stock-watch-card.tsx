@@ -84,8 +84,8 @@ export const StockWatchCard = memo(function StockWatchCard({
           accessibilityLabel={`Stop watching ${watch.productName}`}
           accessibilityRole="button"
         >
-          <IconSymbol name="trash.fill" size={14} color={colors.error} />
-          <Text style={{ color: colors.error, fontSize: 12, fontWeight: "600" }}>
+          <IconSymbol name="trash.fill" size={14} color={colors.errorText} />
+          <Text style={{ color: colors.errorText, fontSize: 12, fontWeight: "600" }}>
             Stop watching
           </Text>
         </TouchableOpacity>

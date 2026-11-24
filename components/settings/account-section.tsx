@@ -90,7 +90,7 @@ export function AccountSection({
               <View style={{ alignItems: "flex-end", gap: 4 }}>
                 <Text
                   style={{
-                    color: colors.success,
+                    color: colors.successText,
                     fontSize: 12,
                     fontWeight: "600",
                   }}
@@ -133,7 +133,7 @@ export function AccountSection({
               >
                 <Text
                   style={{
-                    color: colors.primary,
+                    color: colors.primaryText,
                     fontSize: 13,
                     fontWeight: "600",
                   }}
@@ -170,7 +170,7 @@ export function AccountSection({
               }}
               accessibilityLabel="Email verification banner"
             >
-              <IconSymbol name="exclamationmark.triangle.fill" size={16} color={colors.warning} />
+              <IconSymbol name="exclamationmark.triangle.fill" size={16} color={colors.warningText} />
               <Text style={{ flex: 1, color: colors.foreground, fontSize: 13, fontWeight: "500" }}>
                 Verify your email — check your inbox
               </Text>
@@ -235,11 +235,11 @@ export function AccountSection({
                   accessibilityRole="button"
                 >
                   {syncing ? (
-                    <ActivityIndicator size="small" color={colors.primary} />
+                    <ActivityIndicator size="small" color={colors.primaryText} />
                   ) : (
                     <Text
                       style={{
-                        color: colors.primary,
+                        color: colors.primaryText,
                         fontSize: 13,
                         fontWeight: "600",
                       }}
@@ -274,7 +274,7 @@ export function AccountSection({
                 >
                   <Text
                     style={{
-                      color: colors.error,
+                      color: colors.errorText,
                       fontSize: 13,
                       fontWeight: "600",
                     }}
@@ -320,7 +320,7 @@ export function AccountSection({
                 accessibilityLabel="Delete Account & Data"
                 accessibilityRole="button"
               >
-                <Text style={{ color: colors.error, fontSize: 13, fontWeight: "600" }}>Delete Account & Data</Text>
+                <Text style={{ color: colors.errorText, fontSize: 13, fontWeight: "600" }}>Delete Account & Data</Text>
               </TouchableOpacity>
             </View>
           </>

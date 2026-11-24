@@ -202,7 +202,7 @@ export function LoginModal({
 
                 {mode === "login" && (
                   <TouchableOpacity activeOpacity={0.7} onPress={openForgot} style={{ alignSelf: "flex-end", marginBottom: 16 }} accessibilityLabel="Forgot password" accessibilityRole="button">
-                    <Text style={{ color: colors.primary, fontSize: 13 }}>Forgot password?</Text>
+                    <Text style={{ color: colors.primaryText, fontSize: 13 }}>Forgot password?</Text>
                   </TouchableOpacity>
                 )}
 
@@ -212,7 +212,7 @@ export function LoginModal({
                   <Text
                     accessibilityRole="alert"
                     style={{
-                      color: colors.error,
+                      color: colors.errorText,
                       fontSize: 13,
                       marginBottom: 12,
                     }}
@@ -252,7 +252,7 @@ export function LoginModal({
                 </TouchableOpacity>
 
                 <TouchableOpacity activeOpacity={0.7} onPress={switchMode} style={{ alignItems: "center" }} accessibilityLabel={mode === "login" ? "Switch to sign up" : "Switch to sign in"} accessibilityRole="button">
-                  <Text style={{ color: colors.primary, fontSize: 14 }}>
+                  <Text style={{ color: colors.primaryText, fontSize: 14 }}>
                     {mode === "login"
                       ? "Don't have an account? Sign up"
                       : "Already have an account? Sign in"}

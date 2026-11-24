@@ -57,7 +57,7 @@ export function DropRow({
           marginRight: 12,
         }}
       >
-        <Text style={{ fontSize: 15, fontWeight: "700", color: colors.primary }}>
+        <Text style={{ fontSize: 15, fontWeight: "700", color: colors.primaryText }}>
           {initials(drop.productName)}
         </Text>
       </View>
@@ -84,7 +84,7 @@ export function DropRow({
             }}
           >
             <Text
-              style={{ fontSize: 11, fontWeight: "700", color: colors.success }}
+              style={{ fontSize: 11, fontWeight: "700", color: colors.successText }}
             >
               {drop.distributorName}
             </Text>
@@ -95,7 +95,7 @@ export function DropRow({
         </View>
       </View>
       <View style={{ alignItems: "flex-end" }}>
-        <Text style={{ fontSize: 15, fontWeight: "700", color: colors.success }}>
+        <Text style={{ fontSize: 15, fontWeight: "700", color: colors.successText }}>
           {pctText}
         </Text>
         <Text style={{ fontSize: 11, color: colors.muted, marginTop: 2 }}>

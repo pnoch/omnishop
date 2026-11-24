@@ -111,7 +111,7 @@ export function HomeHeader({
               <IconSymbol
                 name="exclamationmark.triangle.fill"
                 size={18}
-                color={colors.warning}
+                color={colors.warningText}
               />
               <Text
                 style={{ flex: 1, color: colors.foreground, fontSize: 13 }}

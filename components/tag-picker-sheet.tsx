@@ -215,7 +215,7 @@ export function TagPickerSheet({
               }}
             />
             {error && (
-              <Text style={{ color: colors.error, fontSize: 12, marginTop: 6 }}>
+              <Text style={{ color: colors.errorText, fontSize: 12, marginTop: 6 }}>
                 {error}
               </Text>
             )}

@@ -94,7 +94,7 @@ export function NotesCard({ productId }: { productId: string }) {
             }}
           />
           {saveError ? (
-            <Text accessibilityRole="alert" style={{ color: colors.error, fontSize: 12, marginBottom: 8 }}>
+            <Text accessibilityRole="alert" style={{ color: colors.errorText, fontSize: 12, marginBottom: 8 }}>
               {saveError}
             </Text>
           ) : null}

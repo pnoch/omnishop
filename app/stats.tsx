@@ -205,7 +205,7 @@ export default function StatsScreen() {
         }}
         actions={
           <>
-            {refreshing && <ActivityIndicator size="small" color={colors.primary} />}
+            {refreshing && <ActivityIndicator size="small" color={colors.primaryText} />}
             <IconButton
               icon="square.and.arrow.up"
               label="Share statistics"
@@ -218,7 +218,7 @@ export default function StatsScreen() {
 
       {!loaded ? (
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 60 }}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
           <Text style={{ color: colors.muted, fontSize: 14, marginTop: 12 }}>Loading statistics...</Text>
         </View>
       ) : loadError ? (

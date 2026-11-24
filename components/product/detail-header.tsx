@@ -62,7 +62,7 @@ export function DetailHeader({
           onPress={onBack}
           size={44}
           iconSize={22}
-          color={colors.primary}
+          color={colors.primaryText}
           style={{ marginLeft: -8 }}
         />
         <Text style={{ color: colors.foreground, fontSize: 20, fontWeight: "700", flex: 1 }}>{product.name}</Text>

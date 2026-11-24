@@ -104,7 +104,7 @@ export function ProductCardFooter({
       <IconActionButton
         name="trash.fill"
         size={16}
-        color={colors.error}
+        color={colors.errorText}
         onPress={onDeletePress}
         accessibilityLabel="Delete product"
         accessibilityHint="Removes this product from your watchlist"

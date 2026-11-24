@@ -60,7 +60,7 @@ export function SharedLinksList() {
   };
 
   if (listQuery.isLoading) {
-    return <ActivityIndicator size="small" color={colors.primary} />;
+    return <ActivityIndicator size="small" color={colors.primaryText} />;
   }
   if (listQuery.isError || links.length === 0) return null;
 

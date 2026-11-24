@@ -165,7 +165,7 @@ export const AlertCard = memo(function AlertCard({
           <AlertAction
             icon="pencil"
             label="Edit"
-            color={colors.primary}
+            color={colors.primaryText}
             onPress={handleEdit}
             accessibilityLabel={`Edit alert for ${productName}`}
           />
@@ -182,7 +182,7 @@ export const AlertCard = memo(function AlertCard({
         <AlertAction
           icon="trash.fill"
           label="Delete"
-          color={colors.error}
+          color={colors.errorText}
           onPress={handleDelete}
           accessibilityLabel={`Delete alert for ${productName}`}
         />

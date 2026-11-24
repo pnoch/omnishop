@@ -84,7 +84,7 @@ export function WatchlistListHeader({
     accessibilityLabel={`Offline — ${queuedCount} edits queued`}
     accessibilityRole="alert"
   >
-    <IconSymbol name="wifi.slash" size={16} color={colors.warning} />
+    <IconSymbol name="wifi.slash" size={16} color={colors.warningText} />
     <Text style={{ color: colors.foreground, fontSize: 13, fontWeight: "600", flex: 1 }}>
       Offline — {queuedCount} edit{queuedCount !== 1 ? "s" : ""} queued
     </Text>
@@ -129,7 +129,7 @@ export function WatchlistListHeader({
       accessibilityLabel="Plan order"
       accessibilityRole="button"
     >
-      <IconSymbol name="cart.fill" size={20} color={colors.primary} />
+      <IconSymbol name="cart.fill" size={20} color={colors.primaryText} />
       <View style={{ flex: 1 }}>
         <Text
           style={{ color: colors.foreground, fontSize: 15, fontWeight: "600" }}
@@ -176,7 +176,7 @@ export function WatchlistListHeader({
       <IconSymbol
         name="dollarsign.circle.fill"
         size={20}
-        color={colors.primary}
+        color={colors.primaryText}
       />
       <View style={{ flex: 1 }}>
         <Text

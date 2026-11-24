@@ -103,7 +103,7 @@ export function FacebookSearchSheet({ visible, onClose, initialQuery = "" }: { v
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
             <Text accessibilityRole="header" style={{ color: colors.foreground, fontSize: 28, fontWeight: "700" }}>Facebook Marketplace</Text>
             <TouchableOpacity accessibilityRole="button" accessibilityLabel="Close" onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
-              <Text style={{ color: colors.primary, fontSize: 16 }}>Done</Text>
+              <Text style={{ color: colors.primaryText, fontSize: 16 }}>Done</Text>
             </TouchableOpacity>
           </View>
           <Text style={{ color: colors.muted, fontSize: 14, marginBottom: 12 }}>
@@ -163,7 +163,7 @@ export function FacebookSearchSheet({ visible, onClose, initialQuery = "" }: { v
             </Text>
           </TouchableOpacity>
           <TouchableOpacity accessibilityRole="button" accessibilityLabel="Open in browser" onPress={openExternally} style={{ padding: 12, alignItems: "center" }}>
-            <Text style={{ color: colors.primary, fontSize: 14 }}>Open in system browser instead</Text>
+            <Text style={{ color: colors.primaryText, fontSize: 14 }}>Open in system browser instead</Text>
           </TouchableOpacity>
         </View>
       </Modal>

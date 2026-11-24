@@ -91,7 +91,7 @@ export function CheapestRegionCard({ listings, displayCurrency = "USD" }: { list
                 <Text
                   style={{
                     fontSize: 10,
-                    color: colors.warning,
+                    color: colors.warningText,
                     fontWeight: "700",
                     letterSpacing: 0.6,
                   }}

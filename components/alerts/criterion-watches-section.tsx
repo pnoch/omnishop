@@ -25,7 +25,7 @@ export function CriterionWatchesSection({
           marginBottom: 10,
         }}
       >
-        <IconSymbol name="bookmark.fill" size={15} color={colors.success} />
+        <IconSymbol name="bookmark.fill" size={15} color={colors.successText} />
         <Text
           style={{
             color: colors.foreground,
@@ -70,7 +70,7 @@ export function CriterionWatchesSection({
           <IconActionButton
             name="trash.fill"
             size={16}
-            color={colors.error}
+            color={colors.errorText}
             onPress={() => onRemove(watch.id)}
             accessibilityLabel="Remove watched search"
             accessibilityHint="Double tap to remove"

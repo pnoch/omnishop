@@ -138,7 +138,7 @@ export const MoversCard = memo(function MoversCard({
           {movers.drops.length > 0 && (
             <Text
               style={{
-                color: colors.success,
+                color: colors.successText,
                 fontSize: 12,
                 fontWeight: "600",
                 marginTop: 4,
@@ -151,13 +151,13 @@ export const MoversCard = memo(function MoversCard({
             <MoveRow
               key={`${move.productId}-${move.distributorId}`}
               move={move}
-              color={colors.success}
+              color={colors.successText}
             />
           ))}
           {movers.gainers.length > 0 && (
             <Text
               style={{
-                color: colors.error,
+                color: colors.errorText,
                 fontSize: 12,
                 fontWeight: "600",
                 marginTop: 8,
@@ -170,7 +170,7 @@ export const MoversCard = memo(function MoversCard({
             <MoveRow
               key={`${move.productId}-${move.distributorId}`}
               move={move}
-              color={colors.error}
+              color={colors.errorText}
             />
           ))}
         </>

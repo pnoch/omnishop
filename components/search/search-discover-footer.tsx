@@ -37,7 +37,7 @@ export function SearchDiscoverFooter({
     <View style={{ paddingHorizontal: 16 }}>
       {discovering ? (
         <View style={{ alignItems: "center", padding: 24 }}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
           <Text style={{ color: colors.muted, marginTop: 8 }}>
             Discovering product...
           </Text>
@@ -61,10 +61,10 @@ export function SearchDiscoverFooter({
             backgroundColor: colors.primary + "11",
           }}
         >
-          <IconSymbol name="wand.and.stars" size={20} color={colors.primary} />
+          <IconSymbol name="wand.and.stars" size={20} color={colors.primaryText} />
           <Text
             style={{
-              color: colors.primary,
+              color: colors.primaryText,
               fontWeight: "600",
               fontSize: 14,
             }}

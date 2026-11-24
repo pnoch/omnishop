@@ -68,7 +68,7 @@ export function ManualAddDraftStep({
   return (
     <ScrollView>
       {aiFailed && (
-        <Text style={{ color: colors.warning, fontSize: 12, marginBottom: 10 }}>
+        <Text style={{ color: colors.warningText, fontSize: 12, marginBottom: 10 }}>
           Couldn&apos;t reach the AI — please fill in the details manually.
         </Text>
       )}

@@ -162,7 +162,7 @@ export const TrendingSection = memo(function TrendingSection({
               accessibilityLabel="Retry loading trending"
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>Retry</Text>
+              <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>Retry</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -196,7 +196,7 @@ export const TrendingSection = memo(function TrendingSection({
             accessibilityLabel="Retry loading trending"
             accessibilityRole="button"
           >
-            <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>Retry</Text>
+            <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>Retry</Text>
           </TouchableOpacity>
         </View>
         <TrendingSkeletonCard />

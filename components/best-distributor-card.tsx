@@ -179,9 +179,9 @@ function BestDistributorCard({
             borderColor: derivedColors.success44,
           }}
         >
-          <IconSymbol name="star.fill" size={14} color={colors.success} />
+          <IconSymbol name="star.fill" size={14} color={colors.successText} />
           <Text
-            style={{ color: colors.success, fontSize: 12, fontWeight: "700" }}
+            style={{ color: colors.successText, fontSize: 12, fontWeight: "700" }}
           >
             Lowest Price Ever
           </Text>
@@ -248,7 +248,7 @@ function BestDistributorCard({
       >
         <View>
           <Text
-            style={{ color: colors.primary, fontWeight: "700", fontSize: 22 }}
+            style={{ color: colors.primaryText, fontWeight: "700", fontSize: 22 }}
           >
             {formatPrice(listing.price, listing.currency)}
           </Text>
@@ -306,7 +306,7 @@ function BestDistributorCard({
         return (
           <Pressable
             onPress={() => onSetAlert(suggestedPrice)}
-            android_ripple={{ color: colors.primary + "22" }}
+            android_ripple={{ color: colors.primaryText + "22" }}
             style={({ pressed }) => ({
               marginTop: 10,
               flexDirection: "row",
@@ -325,8 +325,8 @@ function BestDistributorCard({
             accessibilityLabel={`Set alert at ${formatPrice(suggestedPrice, listing.currency)}`}
             accessibilityRole="button"
           >
-            <IconSymbol name="bell.fill" size={14} color={colors.primary} />
-            <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+            <IconSymbol name="bell.fill" size={14} color={colors.primaryText} />
+            <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
               Set Alert at {formatPrice(suggestedPrice, listing.currency)} (−5%)
             </Text>
           </Pressable>

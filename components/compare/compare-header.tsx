@@ -75,9 +75,9 @@ export function CompareHeader({
         accessibilityRole="button"
       >
         {isRefreshing ? (
-          <ActivityIndicator size="small" color={colors.primary} />
+          <ActivityIndicator size="small" color={colors.primaryText} />
         ) : (
-          <IconSymbol name="arrow.clockwise" size={20} color={colors.primary} />
+          <IconSymbol name="arrow.clockwise" size={20} color={colors.primaryText} />
         )}
       </TouchableOpacity>
     </View>

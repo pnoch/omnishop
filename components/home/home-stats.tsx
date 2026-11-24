@@ -16,10 +16,10 @@ export function HomeStats({
   const counts = countStockStatuses(watchlist);
 
   const tiles = [
-    { label: "Tracked", value: watchlist.length, color: colors.primary },
-    { label: "In stock", value: counts.inStock, color: colors.success },
-    { label: "Back order", value: counts.backOrder, color: colors.warning },
-    { label: "Price alerts", value: alertCount, color: colors.primary },
+    { label: "Tracked", value: watchlist.length, color: colors.primaryText },
+    { label: "In stock", value: counts.inStock, color: colors.successText },
+    { label: "Back order", value: counts.backOrder, color: colors.warningText },
+    { label: "Price alerts", value: alertCount, color: colors.primaryText },
   ];
 
   return (

@@ -261,7 +261,7 @@ export function AboutSection({ onDataCleared }: { onDataCleared?: () => void } =
             description="Clear local data and delete server account if signed in"
             right={
               deleting ? (
-                <ActivityIndicator size="small" color={colors.error} />
+                <ActivityIndicator size="small" color={colors.errorText} />
               ) : (
                 <IconSymbol
                   name="chevron.right"
@@ -304,7 +304,7 @@ export function AboutSection({ onDataCleared }: { onDataCleared?: () => void } =
                 <IconSymbol
                   name="chevron.right"
                   size={16}
-                  color={colors.primary}
+                  color={colors.primaryText}
                 />
               }
             />

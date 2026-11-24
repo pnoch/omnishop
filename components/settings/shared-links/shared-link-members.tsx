@@ -89,7 +89,7 @@ export function SharedLinkMembers({
               accessibilityLabel={`Remove ${label}`}
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.error, fontSize: 12, fontWeight: "600" }}>Remove</Text>
+              <Text style={{ color: colors.errorText, fontSize: 12, fontWeight: "600" }}>Remove</Text>
             </TouchableOpacity>
           </View>
         );
@@ -133,7 +133,7 @@ export function SharedLinkMembers({
             opacity: busy || !email.trim() ? 0.5 : 1,
           }}
         >
-          <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>Invite</Text>
+          <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>Invite</Text>
         </TouchableOpacity>
       </View>
     </View>

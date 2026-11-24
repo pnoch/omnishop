@@ -129,7 +129,7 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
     >
           {error && (
             <Text
-              style={{ color: colors.error, fontSize: 12, marginBottom: 8 }}
+              style={{ color: colors.errorText, fontSize: 12, marginBottom: 8 }}
             >
               {error}
             </Text>
@@ -179,7 +179,7 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
                       <IconSymbol
                         name="checkmark"
                         size={18}
-                        color={colors.success}
+                        color={colors.successText}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity activeOpacity={0.7}
@@ -246,7 +246,7 @@ export function TagManageSheet({ visible, onClose, onChanged }: Props) {
                       <IconSymbol
                         name="trash.fill"
                         size={16}
-                        color={colors.error}
+                        color={colors.errorText}
                       />
                     </TouchableOpacity>
                   </View>

@@ -109,7 +109,7 @@ export function EmptyStateView({
           accessibilityRole="button"
           style={{ marginTop: 12, padding: 8, minHeight: 44, justifyContent: "center" }}
         >
-          <Text style={{ color: colors.primary, fontWeight: "600" }}>{secondaryLabel}</Text>
+          <Text style={{ color: colors.primaryText, fontWeight: "600" }}>{secondaryLabel}</Text>
         </TouchableOpacity>
       )}
     </View>

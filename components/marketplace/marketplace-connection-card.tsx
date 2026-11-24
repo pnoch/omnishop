@@ -84,7 +84,7 @@ export function MarketplaceConnectionCard({
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-        <IconSymbol name="globe" size={20} color={colors.primary} />
+        <IconSymbol name="globe" size={20} color={colors.primaryText} />
         <Text style={{ color: colors.foreground, fontWeight: "700", fontSize: 16, flex: 1 }}>
           {label}
         </Text>
@@ -107,7 +107,7 @@ export function MarketplaceConnectionCard({
         </Text>
       )}
       {verification.kind === "unverified" && (
-        <Text style={{ color: colors.warning, fontSize: 12 }}>
+        <Text style={{ color: colors.warningText, fontSize: 12 }}>
           {verification.reason === "missing-context"
             ? MISSING_CONTEXT_GUIDANCE
             : `Reason: ${verification.reason}`}
@@ -176,7 +176,7 @@ export function MarketplaceConnectionCard({
               opacity: busy ? 0.5 : 1,
             }}
           >
-            <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "700" }}>
+            <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "700" }}>
               Retry
             </Text>
           </TouchableOpacity>
@@ -199,7 +199,7 @@ export function MarketplaceConnectionCard({
             opacity: busy || !canDisconnect ? 0.5 : 1,
           }}
         >
-          <Text style={{ color: colors.error, fontSize: 13, fontWeight: "600" }}>
+          <Text style={{ color: colors.errorText, fontSize: 13, fontWeight: "600" }}>
             Disconnect
           </Text>
         </TouchableOpacity>
@@ -221,7 +221,7 @@ export function MarketplaceConnectionCard({
             alignSelf: "flex-start",
           }}
         >
-          <Text style={{ color: colors.primary, fontSize: 13, fontWeight: "600" }}>
+          <Text style={{ color: colors.primaryText, fontSize: 13, fontWeight: "600" }}>
             Search Facebook Marketplace…
           </Text>
         </TouchableOpacity>

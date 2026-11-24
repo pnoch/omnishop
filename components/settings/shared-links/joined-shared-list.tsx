@@ -65,7 +65,7 @@ export function JoinedSharedList() {
               accessibilityRole="button"
               style={actionStyle}
             >
-              <Text style={{ color: colors.primary, fontSize: 12, fontWeight: "600" }}>Open</Text>
+              <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>Open</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.85}
               onPress={() => void leave(s.token)}
@@ -74,7 +74,7 @@ export function JoinedSharedList() {
               accessibilityRole="button"
               style={{ ...actionStyle, opacity: busy ? 0.5 : 1 }}
             >
-              <Text style={{ color: colors.error, fontSize: 12, fontWeight: "600" }}>Leave</Text>
+              <Text style={{ color: colors.errorText, fontSize: 12, fontWeight: "600" }}>Leave</Text>
             </TouchableOpacity>
           </View>
         </View>

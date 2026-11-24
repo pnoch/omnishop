@@ -65,7 +65,7 @@ export function DropsScreen({ showBack = true }: { showBack?: boolean }) {
             paddingTop: 60,
           }}
         >
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color={colors.primaryText} />
           <Text style={{ color: colors.muted, fontSize: 14, marginTop: 12 }}>
             Loading drops...
           </Text>
