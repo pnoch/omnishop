@@ -62,7 +62,10 @@ export function ConnectionBadge({
           shadowOffset: { width: 0, height: 0 },
         }}
       />
-      <Text style={{ color: textColor, fontSize: 12, fontWeight: "700", letterSpacing: 0.2 }}>
+      <Text
+        accessibilityLiveRegion="polite"
+        style={{ color: textColor, fontSize: 12, fontWeight: "700", letterSpacing: 0.2 }}
+      >
         {c.label}
       </Text>
     </TouchableOpacity>

@@ -62,6 +62,7 @@ export function WatchlistSheets({
       />
       {undoProduct && (
         <View
+          accessibilityLiveRegion="polite"
           style={{
             position: "absolute",
             left: 16,
@@ -94,6 +95,13 @@ export function WatchlistSheets({
             onPress={onUndo}
             accessibilityLabel="Undo remove"
             accessibilityRole="button"
+            style={{
+              minHeight: 44,
+              minWidth: 44,
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 4,
+            }}
           >
             <Text
               style={{

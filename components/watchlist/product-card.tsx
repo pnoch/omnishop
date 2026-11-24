@@ -345,7 +345,10 @@ export const ProductCard = memo(function ProductCard({
               accessibilityRole="button"
               style={{ alignSelf: "flex-start", marginTop: 6, minHeight: 44, justifyContent: "center", opacity: findingPrices ? 0.5 : 1 }}
             >
-              <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>
+              <Text
+                accessibilityLiveRegion="polite"
+                style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}
+              >
                 {findingPrices
                   ? findingProgress
                     ? `Finding prices… ${findingProgress.done}/${findingProgress.total}`
@@ -377,6 +380,7 @@ export const ProductCard = memo(function ProductCard({
                 }}
               >
                 <Text
+                  accessibilityLiveRegion="polite"
                   style={{
                     color: colors.primaryText,
                     fontSize: 12,

@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.40] - 2026-11-24
+
+### Accessibility
+
+- The undo snackbar is a polite live region, so “Removed …” and Undo are
+  announced, and Undo is a 44 px target.
+- Connection status changes and “Finding prices…” progress are announced to
+  screen readers instead of only changing visually.
+
+### Verification
+
+- `pnpm verify` passes end to end: typecheck, lint, 4,329 tests, desktop checks
+  and tests, Rust tests, and the Android JS bundle.
+
 ## [5.32.39] - 2026-11-24
 
 ### Accessibility

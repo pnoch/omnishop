@@ -280,7 +280,10 @@ export function DistributorListingSection({
               accessibilityLabel="Find more prices"
               accessibilityRole="button"
             >
-              <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}>
+              <Text
+                accessibilityLiveRegion="polite"
+                style={{ color: colors.primaryText, fontWeight: "600", fontSize: 13 }}
+              >
                 {findingPrices ? "Finding more…" : "Find more prices"}
               </Text>
             </TouchableOpacity>
