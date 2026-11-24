@@ -106,8 +106,7 @@ export default function HealthDetailScreen() {
             if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             goBackOrHome(router, "/health");
           }}
-          style={{ marginRight: 12 }}
-          hitSlop={12}
+          style={{ marginRight: 12, minHeight: 44, justifyContent: "center" }}
         >
           <Text style={{ color: colors.primaryText, fontSize: 16 }}>‹ Back</Text>
         </TouchableOpacity>

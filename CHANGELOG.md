@@ -4,6 +4,25 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.44] - 2026-11-24
+
+### Added
+
+- Browser gates in CI: `pnpm audit:layout` checks every route at 320/390/768/1440
+  for off-screen or clipped controls, tap targets below 40 px, duplicate
+  accessible names, and horizontal overflow; `pnpm audit:contrast` checks WCAG
+  AA text contrast in light and dark mode. The audits seed a product, alert,
+  and reminder so card-heavy screens render.
+
+### Fixed
+
+- Regressions the new gates caught: Home’s empty-state “Add your first product”
+  (unique name, 44 px), watchlist header actions, compare header/sort/refresh
+  actions, the health detail back link, search filter/sort chips (44 px plus
+  contextual names), stock/scarcity/price-change/status text colors, the alert
+  tab badge, and drop-calendar cells/country codes (including the off-screen
+  share card).
+
 ## [5.32.43] - 2026-11-24
 
 ### Fixed

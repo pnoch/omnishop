@@ -238,9 +238,9 @@ export const DistributorListingCard = memo(function DistributorListingCard({
       )}
       {(() => {
         const colorMap = {
-          green: colors.success,
-          yellow: colors.warning,
-          red: colors.error,
+          green: colors.successText,
+          yellow: colors.warningText,
+          red: colors.errorText,
           gray: colors.muted,
         };
         return (
@@ -260,7 +260,7 @@ export const DistributorListingCard = memo(function DistributorListingCard({
         <View style={{ gap: 8, marginTop: 10 }}>
           <Pressable
             onPress={handleToggleWatch}
-            android_ripple={{ color: (isWatching ? colors.warning : colors.muted) + "22" }}
+            android_ripple={{ color: (isWatching ? colors.warningText : colors.muted) + "22" }}
             style={({ pressed }) => ({
               flexDirection: "row",
               alignItems: "center",
@@ -281,11 +281,11 @@ export const DistributorListingCard = memo(function DistributorListingCard({
             <IconSymbol
               name={isWatching ? "eye.fill" : "eye.slash.fill"}
               size={15}
-              color={isWatching ? colors.warning : colors.muted}
+              color={isWatching ? colors.warningText : colors.muted}
             />
             <Text
               style={{
-                color: isWatching ? colors.warning : colors.muted,
+                color: isWatching ? colors.warningText : colors.muted,
                 fontSize: 13,
                 fontWeight: "600",
               }}

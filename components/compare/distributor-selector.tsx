@@ -73,6 +73,10 @@ export const DistributorSelector = memo(function DistributorSelector({
               style={{
                 paddingHorizontal: 8,
                 paddingVertical: 4,
+                minHeight: 44,
+                minWidth: 44,
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 8,
                 backgroundColor:
                   sortBy === s ? colors.primary : colors.border + "44",

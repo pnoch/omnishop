@@ -107,7 +107,7 @@ export default function CompareScreen() {
                 icon="square.and.arrow.down"
                 label="Export price history as CSV"
                 onPress={handleExportCsv}
-                size={36}
+                size={44}
                 iconSize={18}
                 style={{ marginLeft: 8 }}
               />
@@ -115,7 +115,7 @@ export default function CompareScreen() {
                 icon="square.and.arrow.up"
                 label="Share comparison"
                 onPress={handleShare}
-                size={36}
+                size={44}
                 iconSize={18}
                 style={{ marginLeft: 4 }}
               />

@@ -20,9 +20,9 @@ export function PriceVsAvgCard({ data, displayCurrency = "USD" }: { data: PriceV
   const colors = useColors();
   const color =
     data.verdict === "below"
-      ? colors.success
+      ? colors.successText
       : data.verdict === "above"
-        ? colors.error
+        ? colors.errorText
         : colors.muted;
   const a11yLabel = `${VERDICT_ICON[data.verdict]} ${data.percentVsAvg > 0 ? "+" : ""}${data.percentVsAvg.toFixed(1)}% versus 30-day average — ${VERDICT_COPY[data.verdict]}`;
 

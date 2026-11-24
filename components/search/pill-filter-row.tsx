@@ -30,12 +30,15 @@ export function PillFilterRow({
         style={{
           paddingHorizontal: 12,
           paddingVertical: 6,
+          minHeight: 44,
+          justifyContent: "center",
           borderRadius: 16,
           backgroundColor: selected === null ? colors.primary : colors.surface,
           borderWidth: 1,
           borderColor: colors.border,
         }}
         accessibilityRole="radio"
+        accessibilityLabel={`All ${label.toLowerCase()}`}
         accessibilityState={{ selected: selected === null }}
       >
         <Text style={{ color: selected === null ? "#fff" : colors.foreground, fontSize: 13, fontWeight: "600" }}>All</Text>
@@ -52,12 +55,15 @@ export function PillFilterRow({
             style={{
               paddingHorizontal: 12,
               paddingVertical: 6,
+              minHeight: 44,
+              justifyContent: "center",
               borderRadius: 16,
               backgroundColor: active ? colors.primary : colors.surface,
               borderWidth: 1,
               borderColor: colors.border,
             }}
             accessibilityRole="radio"
+            accessibilityLabel={`${label}: ${opt}`}
             accessibilityState={{ selected: active }}
           >
             <Text style={{ color: active ? "#fff" : colors.foreground, fontSize: 13, fontWeight: "600" }}>{opt}</Text>

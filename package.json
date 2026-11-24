@@ -1,6 +1,6 @@
 {
   "name": "omnishop",
-  "version": "5.32.43",
+  "version": "5.32.44",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -23,6 +23,8 @@
     "verify": "pnpm check && pnpm lint && pnpm test:coverage && pnpm check:desktop && pnpm --dir desktop test && pnpm check:rust && pnpm test:rust && pnpm build:android-js && pnpm build:desktop",
     "smoke:web": "tsx scripts/smoke-web.ts",
     "smoke:a11y": "tsx scripts/smoke-a11y.ts",
+    "audit:layout": "tsx scripts/audit-layout.ts",
+    "audit:contrast": "tsx scripts/audit-contrast.ts",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "db:migrate": "drizzle-kit migrate",
     "db:check-migrations": "node scripts/check-migration-drift.mjs",

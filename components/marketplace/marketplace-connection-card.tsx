@@ -35,11 +35,11 @@ function verificationTime(verification: Verification): string | null {
 function statusColor(verification: Verification, colors: Colors): string {
   switch (verification.kind) {
     case "ready":
-      return colors.success;
+      return colors.successText;
     case "checking":
-      return colors.primary;
+      return colors.primaryText;
     case "unverified":
-      return colors.warning;
+      return colors.warningText;
     case "unavailable":
       return colors.muted;
     default:

@@ -1,7 +1,6 @@
-import { Text, View, TouchableOpacity, Platform, ActivityIndicator } from "react-native";
+import { Text, View, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
 import { showAlert } from "@/lib/alert";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { IconButton } from "@/components/ui/icon-button";
 import { useColors } from "@/hooks/use-colors";
 
@@ -35,7 +34,7 @@ export function CompareHeader({
         icon="arrow.left"
         label="Go back"
         onPress={onBack}
-        size={40}
+        size={44}
         iconSize={24}
         color={colors.foreground}
       />
@@ -57,29 +56,25 @@ export function CompareHeader({
           {productName}
         </Text>
       </View>
-      <TouchableOpacity activeOpacity={0.7}
-        onPress={async () => {
-          if (Platform.OS !== "web")
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          const ok = await onRefresh();
-          if (!ok) {
-            showAlert(
-              "Couldn't refresh prices",
-              "The server is unreachable. Showing saved prices.",
-            );
-          }
+      <IconButton
+        icon="arrow.clockwise"
+        label="Refresh prices"
+        onPress={() => {
+          void (async () => {
+            if (Platform.OS !== "web")
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            const ok = await onRefresh();
+            if (!ok) {
+              showAlert(
+                "Couldn't refresh prices",
+                "The server is unreachable. Showing saved prices.",
+              );
+            }
+          })();
         }}
         disabled={isRefreshing}
-        style={{ padding: 4 }}
-        accessibilityLabel="Refresh prices"
-        accessibilityRole="button"
-      >
-        {isRefreshing ? (
-          <ActivityIndicator size="small" color={colors.primaryText} />
-        ) : (
-          <IconSymbol name="arrow.clockwise" size={20} color={colors.primaryText} />
-        )}
-      </TouchableOpacity>
+        iconSize={20}
+      />
     </View>
   );
 }

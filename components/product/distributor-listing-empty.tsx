@@ -78,7 +78,7 @@ export function DistributorListingEmpty({
           accessibilityLabel={watchingAny ? "Stop watching all distributors" : "Watch for restock across all distributors"}
           accessibilityRole="button"
         >
-          <Text style={{ color: watchingAny ? colors.success : colors.primary, fontWeight: "600", fontSize: 13 }}>
+          <Text style={{ color: watchingAny ? colors.successText : colors.primaryText, fontWeight: "600", fontSize: 13 }}>
             {watchingAny ? "Watching — tap to stop" : "Watch anyway"}
           </Text>
         </TouchableOpacity>

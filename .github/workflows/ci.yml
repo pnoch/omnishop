@@ -89,6 +89,11 @@ jobs:
       # explicitly or chromium.launch() fails on a clean runner.
       - run: npx patchright install --with-deps chromium
       - run: pnpm smoke:web
+      # Layout and contrast regressions: clipping/off-screen controls, tap
+      # targets below 40px, duplicate accessible names, and WCAG AA failures in
+      # light and dark mode across every route and phone/tablet/desktop width.
+      - run: pnpm audit:layout
+      - run: pnpm audit:contrast
 
   # The production image is the deploy artifact; nothing built it in CI, so a
   # broken Dockerfile (or a secret copied into the context) could ship unseen.

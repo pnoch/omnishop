@@ -433,7 +433,7 @@ export const ProductCard = memo(function ProductCard({
           {priceChange && (
             <Animated.Text
               style={{
-                color: priceChange.isDown ? colors.success : colors.error,
+                color: priceChange.isDown ? colors.successText : colors.errorText,
                 fontSize: 11,
                 fontWeight: "600",
                 opacity: sparklineOpacity,

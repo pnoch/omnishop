@@ -77,18 +77,18 @@ export function ProductInfoCard({
         : product.lastRefreshed;
     const refreshColor = getLastRefreshedColor(refreshTime);
     const colorMap = {
-      green: colors.success,
-      yellow: colors.warning,
-      red: colors.error,
+      green: colors.successText,
+      yellow: colors.warningText,
+      red: colors.errorText,
       gray: colors.muted,
     };
     return { refreshTime, refreshColor, colorMap };
   }, [
     lastUpdatedAt,
     product.lastRefreshed,
-    colors.success,
-    colors.warning,
-    colors.error,
+    colors.successText,
+    colors.warningText,
+    colors.errorText,
     colors.muted,
   ]);
 
@@ -257,7 +257,7 @@ export function ProductInfoCard({
           </Text>
           <Text
             style={{
-              color: inStockCount > 0 ? colors.success : colors.muted,
+              color: inStockCount > 0 ? colors.successText : colors.muted,
               fontWeight: "700",
               fontSize: 20,
             }}

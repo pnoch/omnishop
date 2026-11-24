@@ -208,7 +208,7 @@ export default function HomeScreen() {
                 </Text>
               </View>
               <TouchableOpacity activeOpacity={0.85}
-                accessibilityLabel="Add product"
+                accessibilityLabel="Add your first product"
                 accessibilityRole="button"
                 style={{
                   backgroundColor: colors.primary,
@@ -224,7 +224,7 @@ export default function HomeScreen() {
                 }}
               >
                 <Text style={{ color: "#fff", fontWeight: "600" }}>
-                  Add Product
+                  Add your first product
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.7}
@@ -236,6 +236,8 @@ export default function HomeScreen() {
                   borderRadius: 20,
                   paddingHorizontal: 20,
                   paddingVertical: 10,
+                  minHeight: 44,
+                  justifyContent: "center",
                   marginTop: 10,
                 }}
                 onPress={() => {

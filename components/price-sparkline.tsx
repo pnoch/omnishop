@@ -58,7 +58,7 @@ export function PriceSparkline({
 
   if (!points) return null;
 
-  const lineColor = points.isFlat ? colors.muted : points.trend === "down" ? colors.success : colors.error;
+  const lineColor = points.isFlat ? colors.muted : points.trend === "down" ? colors.successText : colors.errorText;
 
   const a11yProps = interactive
     ? {}

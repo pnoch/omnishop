@@ -28,7 +28,7 @@ const MoveRow = memo(function MoveRow({ move, color }: { move: PriceMove; color:
         gap: 8,
       }}
     >
-      <Text style={{ fontSize: 14 }}>{move.countryCode}</Text>
+      <Text style={{ color: colors.muted, fontSize: 14 }}>{move.countryCode}</Text>
       <View style={{ flex: 1 }}>
         <Text
           style={{ color: colors.foreground, fontSize: 14, fontWeight: "500" }}

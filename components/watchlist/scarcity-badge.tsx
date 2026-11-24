@@ -9,7 +9,16 @@ export function ScarcityBadge({
   scarcity: Scarcity;
 }): JSX.Element {
   const colors = useColors();
-  const color = colors[scarcityColorToken(scarcity)];
+  const token = scarcityColorToken(scarcity);
+  const color = colors[token];
+  const textColor =
+    token === "success"
+      ? colors.successText
+      : token === "warning"
+        ? colors.warningText
+        : token === "error"
+          ? colors.errorText
+          : colors.muted;
   const label = scarcityLabel(scarcity);
 
   return (
@@ -24,7 +33,7 @@ export function ScarcityBadge({
       accessibilityLabel={`Availability: ${label}`}
     >
       <Text
-        style={{ color, fontSize: 12, fontWeight: "600" }}
+        style={{ color: textColor, fontSize: 12, fontWeight: "600" }}
         numberOfLines={1}
       >
         {label}

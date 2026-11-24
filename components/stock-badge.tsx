@@ -13,17 +13,17 @@ export function StockBadge({
   const config: Record<string, { bg: string; text: string; label: string }> = {
     in_stock: {
       bg: colors.success + "22",
-      text: colors.success,
+      text: colors.successText,
       label: "In Stock",
     },
     back_order: {
       bg: colors.warning + "22",
-      text: colors.warning,
+      text: colors.warningText,
       label: `Back Order${expectedDate ? ` · ${expectedDate}` : ""}`,
     },
     out_of_stock: {
       bg: colors.error + "22",
-      text: colors.error,
+      text: colors.errorText,
       label: "Out of Stock",
     },
     unknown: { bg: colors.muted + "22", text: colors.muted, label: "No data" },

@@ -33,9 +33,9 @@ export function ProductCardFooter({
   onDeletePress: (e?: GestureResponderEvent) => void;
 }) {
   const colorMap = {
-    green: colors.success,
-    yellow: colors.warning,
-    red: colors.error,
+    green: colors.successText,
+    yellow: colors.warningText,
+    red: colors.errorText,
     gray: colors.muted,
   };
   return (

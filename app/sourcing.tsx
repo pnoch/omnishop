@@ -112,7 +112,7 @@ function LineCard({
         <Text style={{ color: colors.muted, fontSize: 12 }}>Margin / unit</Text>
         <Text
           style={{
-            color: line.marginUnit != null && line.marginUnit < 0 ? colors.error : colors.success,
+            color: line.marginUnit != null && line.marginUnit < 0 ? colors.errorText : colors.successText,
             fontSize: 12,
             fontWeight: "600",
           }}

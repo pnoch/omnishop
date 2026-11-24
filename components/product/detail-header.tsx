@@ -113,11 +113,11 @@ export function DetailHeader({
           paddingVertical: 7,
           borderRadius: 16,
           borderWidth: 1,
-          borderColor: watchingAny ? colors.success : colors.primary,
+          borderColor: watchingAny ? colors.successText : colors.primaryText,
         }}
       >
-        <IconSymbol name={watchingAny ? "bell.fill" : "bell"} size={14} color={watchingAny ? colors.success : colors.primary} />
-        <Text style={{ color: watchingAny ? colors.success : colors.primary, fontWeight: "600", fontSize: 13 }}>
+        <IconSymbol name={watchingAny ? "bell.fill" : "bell"} size={14} color={watchingAny ? colors.successText : colors.primaryText} />
+        <Text style={{ color: watchingAny ? colors.successText : colors.primaryText, fontWeight: "600", fontSize: 13 }}>
           {watchingAny ? "Watching — tap to stop" : "Watch for restock"}
         </Text>
       </Pressable>}
@@ -137,11 +137,11 @@ export function DetailHeader({
           paddingVertical: 7,
           borderRadius: 16,
           borderWidth: 1,
-          borderColor: acquired ? colors.success : colors.primary,
+          borderColor: acquired ? colors.successText : colors.primaryText,
         }}
       >
-        <IconSymbol name="checkmark.circle.fill" size={14} color={acquired ? colors.success : colors.primary} />
-        <Text style={{ color: acquired ? colors.success : colors.primary, fontWeight: "600", fontSize: 13 }}>
+        <IconSymbol name="checkmark.circle.fill" size={14} color={acquired ? colors.successText : colors.primaryText} />
+        <Text style={{ color: acquired ? colors.successText : colors.primaryText, fontWeight: "600", fontSize: 13 }}>
           {acquired ? "Acquired — tap to undo" : "Mark as acquired"}
         </Text>
       </Pressable>

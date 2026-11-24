@@ -87,7 +87,7 @@ export const StatsShareCard = forwardRef<
                   gap: 8,
                 }}
               >
-                <Text style={{ fontSize: 13 }}>{drop.countryCode}</Text>
+                <Text style={{ color: colors.muted, fontSize: 13 }}>{drop.countryCode}</Text>
                 <Text
                   style={{
                     color: colors.foreground,

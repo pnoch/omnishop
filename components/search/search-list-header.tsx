@@ -196,12 +196,15 @@ export function SearchListHeader({
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 6,
+                minHeight: 44,
+                justifyContent: "center",
                 borderRadius: 16,
                 backgroundColor: active ? colors.primary : colors.surface,
                 borderWidth: 1,
                 borderColor: active ? colors.primary : colors.border,
               }}
               accessibilityRole="radio"
+              accessibilityLabel={`Sort by ${opt.label.toLowerCase()}`}
               accessibilityState={{ selected: active }}
             >
               <Text

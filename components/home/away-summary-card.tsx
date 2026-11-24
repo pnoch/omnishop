@@ -102,7 +102,7 @@ export function AwaySummaryCard({
             {pct !== undefined ? (
               <Text
                 style={{
-                  color: pct < 0 ? colors.success : colors.error,
+                  color: pct < 0 ? colors.successText : colors.errorText,
                   fontSize: 14,
                   fontWeight: "600",
                 }}

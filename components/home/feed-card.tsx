@@ -45,7 +45,7 @@ export const AlertFiredCard = memo(function AlertFiredCard({
   const colors = useColors();
   return (
     <Card accent={colors.error} style={{ marginBottom: 12 }}>
-      <CardTitle icon="bell.fill" iconColor={colors.error} title="Alerts fired" />
+      <CardTitle icon="bell.fill" iconColor={colors.errorText} title="Alerts fired" />
       <View style={{ marginTop: 8 }}>
         {alerts.map((alert, index) => (
           <View
@@ -104,7 +104,7 @@ export const DropCard = memo(function DropCard({
   const router = useRouter();
   return (
     <Card accent={colors.success} style={{ marginBottom: 12 }}>
-      <CardTitle icon="chart.line.downtrend.xyaxis" iconColor={colors.success} title="Biggest drops · 7D" />
+      <CardTitle icon="chart.line.downtrend.xyaxis" iconColor={colors.successText} title="Biggest drops · 7D" />
       <View style={{ marginTop: 8 }}>
         {drops.map((drop, index) => (
           <TouchableOpacity
@@ -175,7 +175,7 @@ export const RestockCard = memo(function RestockCard({
   const colors = useColors();
   return (
     <Card accent={colors.success} style={{ marginBottom: 12 }}>
-      <CardTitle icon="checkmark.circle.fill" iconColor={colors.success} title="Back in stock" />
+      <CardTitle icon="checkmark.circle.fill" iconColor={colors.successText} title="Back in stock" />
       <View style={{ marginTop: 8 }}>
         {productIds.map((id, index) => (
           <TouchableOpacity

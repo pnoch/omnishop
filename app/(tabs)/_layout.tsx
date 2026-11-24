@@ -132,8 +132,8 @@ export default function TabLayout() {
           ),
           tabBarBadge: alertBadgeCount > 0 ? alertBadgeCount : undefined,
           tabBarBadgeStyle: {
-            backgroundColor: colors.error,
-            color: "#fff",
+            backgroundColor: colors.errorText,
+            color: colors.background,
             fontSize: 11,
           },
         }}

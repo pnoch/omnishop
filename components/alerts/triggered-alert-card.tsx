@@ -96,7 +96,7 @@ export const TriggeredAlertCard = memo(function TriggeredAlertCard({
         <IconSymbol
           name={alert.direction === "rise" ? "arrow.up" : "arrow.down"}
           size={13}
-          color={alert.direction === "rise" ? colors.error : colors.success}
+          color={alert.direction === "rise" ? colors.errorText : colors.successText}
         />
         <Text
           style={{ color: colors.muted, fontSize: 12, flexShrink: 1 }}

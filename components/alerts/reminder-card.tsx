@@ -42,11 +42,11 @@ export const ReminderCard = memo(function ReminderCard({
         <IconSymbol
           name="calendar"
           size={13}
-          color={isPast ? colors.warning : colors.primary}
+          color={isPast ? colors.warningText : colors.primaryText}
         />
         <Text
           style={{
-            color: isPast ? colors.warning : colors.primary,
+            color: isPast ? colors.warningText : colors.primaryText,
             fontSize: 12,
             fontWeight: "600",
           }}

@@ -74,7 +74,7 @@ export function TargetTableCard({
             {alert && deltaPct !== null ? (
               <Text
                 style={{
-                  color: met ? colors.success : colors.error,
+                  color: met ? colors.successText : colors.errorText,
                   fontSize: 12,
                   fontWeight: "700",
                 }}

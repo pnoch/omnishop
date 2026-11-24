@@ -30,6 +30,7 @@ vi.mock("react-native", async () => {
     accessibilityRole,
     disabled,
     activeOpacity: _activeOpacity,
+    dataSet: _dataSet,
     ...rest
   }: any) =>
     React.createElement(
@@ -48,6 +49,7 @@ vi.mock("react-native", async () => {
     View: view,
     Text: text,
     TouchableOpacity: pressable,
+    Platform: { OS: "web" },
     useWindowDimensions: () => ({ width: 390, height: 844 }),
   };
 });
@@ -60,6 +62,8 @@ vi.mock("@/hooks/use-colors", () => ({
     border: "#E2E8F0",
     primary: "#0F52BA",
     success: "#00C896",
+    successText: "#047857",
+    background: "#F8FAFC",
   }),
 }));
 

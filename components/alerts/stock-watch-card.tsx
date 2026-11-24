@@ -17,10 +17,10 @@ export const StockWatchCard = memo(function StockWatchCard({
   const colors = useColors();
   const statusColor =
     watch.lastKnownStatus === "in_stock"
-      ? colors.success
+      ? colors.successText
       : watch.lastKnownStatus === "unknown"
         ? colors.muted
-        : colors.warning;
+        : colors.warningText;
   const statusLabel =
     watch.scope === "any" || watch.distributorId === "*"
       ? "Watching all distributors"
@@ -37,7 +37,7 @@ export const StockWatchCard = memo(function StockWatchCard({
       style={{
         padding: 10,
         marginBottom: 10,
-        borderColor: colors.warning + "44",
+        borderColor: colors.warningText + "44",
       }}
     >
       <Text
