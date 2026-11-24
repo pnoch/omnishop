@@ -5,6 +5,9 @@ FROM node:22-bookworm-slim
 
 ENV PNPM_HOME=/pnpm
 ENV PATH=$PNPM_HOME:$PATH
+# Install/run Chromium outside root's home so the non-root runtime user can
+# read it.
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # Xvfb + xauth provide the virtual display; patchright's --with-deps installs
 # the Chromium shared libraries.
@@ -31,6 +34,13 @@ RUN npx patchright install --with-deps chromium
 COPY . .
 RUN pnpm build
 
+# Run as the image's non-root `node` user: Chromium launches with --no-sandbox,
+# cookies live under $HOME/.cache (set below), and Xvfb only needs /tmp.
 ENV NODE_ENV=production
+ENV HOME=/home/node
+RUN mkdir -p /tmp/.X11-unix /home/node/.cache \
+  && chmod 1777 /tmp/.X11-unix \
+  && chown -R node:node /app /ms-playwright /home/node/.cache
+USER node
 EXPOSE 3000
 CMD ["bash", "scripts/start-production.sh"]
