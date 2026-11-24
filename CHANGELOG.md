@@ -4,6 +4,18 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.43] - 2026-11-24
+
+### Fixed
+
+- The Manual Add sheet had no scroll container: on a short screen (320×568) the
+  “Fetch from URL” action sat below the viewport and could not be reached. The
+  step content now scrolls inside the 85% sheet, and the action is reachable at
+  568 px height and in landscape (844×390).
+- A second sweep of vertical occlusion and text clipping — routes at 320/390/768,
+  all main sheets at 320/390 and 844×390, tab-bar/FAB overlap, and clipped Text
+  nodes — found no other unreachable controls.
+
 ## [5.32.42] - 2026-11-24
 
 ### Fixed

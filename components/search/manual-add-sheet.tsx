@@ -2,6 +2,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -127,6 +128,11 @@ export function ManualAddSheet({
             </TouchableOpacity>
           </View>
 
+          <ScrollView
+            style={{ flexGrow: 0, flexShrink: 1 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
           {draft === null ? (
             <ManualAddInputStep
               colors={colors}
@@ -163,6 +169,7 @@ export function ManualAddSheet({
               onForceClose={handleForceClose}
             />
           )}
+          </ScrollView>
         </View>
       </View>
       </KeyboardAvoidingView>
