@@ -76,12 +76,12 @@ async function evaluateConfigPage(
   // this, causing unbounded table growth).
   for (const { deviceId, config } of anonDevices) {
     await evaluateConfigDb(db, deviceId, config, now, getPrice, getHistory).catch(
-      (e) => console.error(`[notifications] device ${deviceId} evaluation failed`, e),
+      (e) => console.error("[notifications] device %s evaluation failed", deviceId, e),
     );
   }
   for (const [userId, devices] of userDevices) {
     await evaluateUserDb(db, userId, devices, now, getPrice, getHistory).catch(
-      (e) => console.error(`[notifications] user ${userId} evaluation failed`, e),
+      (e) => console.error("[notifications] user %s evaluation failed", userId, e),
     );
   }
 }

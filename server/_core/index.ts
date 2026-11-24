@@ -149,7 +149,7 @@ async function startServer() {
   }
 
   server.on("error", (error: NodeJS.ErrnoException) => {
-    console.error(`[api] failed to bind port ${port}:`, error.message);
+    console.error("[api] failed to bind port %d:", port, error.message);
     process.exit(1);
   });
 

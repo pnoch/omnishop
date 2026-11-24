@@ -1,0 +1,20 @@
+# Local security scans run gitleaks over the working tree, which includes
+# captured distributor pages and local-only signing material. These paths are
+# intentional and contain no credentials for this project:
+#   - fixtures are public pages saved for parser tests (their analytics tokens
+#     and reCAPTCHA site keys are public, not project secrets)
+#   - native/**/build is generated output, not source
+#   - credentials/ is gitignored local signing material; CI asserts it is not
+#     tracked (see .github/workflows/ci.yml), so suppressing it here cannot hide
+#     a committed keystore
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Captured public fixtures, generated build output, and gitignored signing material"
+paths = [
+  '''tests/fixtures/scrapers/.*\.html''',
+  '''tests/resilient-fetch\.test\.ts''',
+  '''native/.*/build/.*''',
+  '''credentials/keystore\.properties''',
+]

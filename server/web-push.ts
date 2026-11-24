@@ -81,7 +81,7 @@ export async function sendWebPush(
       const { pruneDeviceToken } = await import("./push-notifications");
       await pruneDeviceToken(deviceId);
     } else {
-      console.warn(`[WebPush] Failed to send to device ${deviceId}:`, error);
+      console.warn("[WebPush] Failed to send to device %s:", deviceId, error);
     }
   }
 }

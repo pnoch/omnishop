@@ -485,6 +485,7 @@ describe("runWarmerTick", () => {
     await runWarmerTick();
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining("Warmer step failed"),
+      expect.any(String),
       expect.anything(),
     );
     warn.mockRestore();

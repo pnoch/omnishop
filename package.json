@@ -1,6 +1,6 @@
 {
   "name": "omnishop",
-  "version": "5.32.44",
+  "version": "5.32.45",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {

@@ -59,7 +59,7 @@ export async function recordPushOutcome(
         },
       });
   } catch (error) {
-    console.warn(`[Push] Failed to record outcome for device ${deviceId}:`, error);
+    console.warn("[Push] Failed to record outcome for device %s:", deviceId, error);
   }
 }
 
@@ -83,7 +83,7 @@ export async function getPushOutcome(deviceId: string): Promise<PushOutcome | nu
       ticketId: row.ticketId,
     };
   } catch (error) {
-    console.warn(`[Push] Failed to read outcome for device ${deviceId}:`, error);
+    console.warn("[Push] Failed to read outcome for device %s:", deviceId, error);
     return null;
   }
 }
@@ -186,7 +186,8 @@ export async function sendPushForDevice(
     }
   } catch (error) {
     console.warn(
-      `[Push] Failed to read push token for device ${deviceId}:`,
+      "[Push] Failed to read push token for device %s:",
+      deviceId,
       error,
     );
     return;
@@ -200,7 +201,8 @@ export async function sendPushForDevice(
       }
     } catch (error) {
       console.warn(
-        `[Push] Failed to send web push for device ${deviceId}:`,
+        "[Push] Failed to send web push for device %s:",
+        deviceId,
         error,
       );
     }
@@ -241,7 +243,7 @@ export async function sendPushForDevice(
     // path (the test-push endpoint awaited this and hung for 15s).
     void recordReceiptOutcome(expo, deviceId, ticketIds, events.length);
   } catch (error) {
-    console.warn(`[Push] Failed to send push for device ${deviceId}:`, error);
+    console.warn("[Push] Failed to send push for device %s:", deviceId, error);
   }
 }
 
@@ -276,7 +278,7 @@ async function recordReceiptOutcome(
       ticketId,
     });
   } catch (e) {
-    console.warn(`[Push] Receipt check failed for device ${deviceId}:`, e);
+    console.warn("[Push] Receipt check failed for device %s:", deviceId, e);
   }
 }
 
@@ -302,7 +304,8 @@ export async function sendPushForUser(
     }
   } catch (error) {
     console.warn(
-      `[Push] Failed to read push tokens for user ${userId}:`,
+      "[Push] Failed to read push tokens for user %s:",
+      userId,
       error,
     );
     return;
@@ -338,7 +341,8 @@ export async function pruneDeviceToken(deviceId: string): Promise<void> {
     }
   } catch (error) {
     console.warn(
-      `[Push] Failed to prune push token for device ${deviceId}:`,
+      "[Push] Failed to prune push token for device %s:",
+      deviceId,
       error,
     );
   }

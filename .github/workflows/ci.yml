@@ -94,6 +94,11 @@ jobs:
       # light and dark mode across every route and phone/tablet/desktop width.
       - run: pnpm audit:layout
       - run: pnpm audit:contrast
+      # The Android signing material is local-only and gitignored. Fail if a
+      # force-add ever puts it in the repository (the gitleaks allowlist covers
+      # the working tree, so this is the backstop for a committed file).
+      - name: Ensure signing credentials stay untracked
+        run: test -z "$(git ls-files credentials)"
 
   # The production image is the deploy artifact; nothing built it in CI, so a
   # broken Dockerfile (or a secret copied into the context) could ship unseen.

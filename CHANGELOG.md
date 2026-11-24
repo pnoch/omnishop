@@ -4,6 +4,24 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.45] - 2026-11-24
+
+### Security
+
+- Added `.gitleaks.toml` for captured public fixtures, generated build output,
+  and the gitignored local signing file, plus a CI check that `credentials/` is
+  never tracked. `secscan secrets` now reports no leaks.
+- Patched desktop Rust TLS/HTTP dependencies (rustls, rustls-webpki, webpki
+  roots, cookie, rustix, tokio, url); `cargo test` and clippy pass.
+- Server logs use constant `%s` format strings instead of interpolated
+  templates, closing the log-forging/format-string findings.
+- Remaining scanner output triaged: no npm advisories; `zip` is a build-only
+  dependency of `playwright-rs` pinned to `^8`; `glib` 0.18 is pinned by Tauri's
+  `gtk` 0.18; several Rust crates have unmaintained advisories with no patched
+  release; `native/gradle/verification-metadata.xml` is checksum metadata, not a
+  resolved runtime dependency graph. Follow-ups: pin GitHub Actions to commit
+  SHAs and run the production image as a non-root user.
+
 ## [5.32.44] - 2026-11-24
 
 ### Added

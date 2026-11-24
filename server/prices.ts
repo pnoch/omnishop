@@ -100,7 +100,9 @@ async function refreshPrice(
     return snapshot;
   } catch (error) {
     console.warn(
-      `[Prices] Scrape failed for ${distributorId}/${modelNumber}:`,
+      "[Prices] Scrape failed for %s/%s:",
+      distributorId,
+      modelNumber,
       error,
     );
     return null;
@@ -262,7 +264,7 @@ async function warmerStep(
   try {
     await fn();
   } catch (error) {
-    console.warn(`[Prices] Warmer step failed: ${name}`, error);
+    console.warn("[Prices] Warmer step failed: %s", name, error);
   }
 }
 
