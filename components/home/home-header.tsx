@@ -1,4 +1,4 @@
-import { Platform, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Pressable, Text, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -28,10 +28,23 @@ export function HomeHeader({
   onDismissMonitoring: () => void;
 }) {
   const colors = useColors();
+  const { width } = useWindowDimensions();
+  // The greeting plus the badge/profile/add cluster needs ~470px. Below that
+  // the row used to overflow and the trailing buttons were clipped off-screen
+  // on every phone; stack the actions under the greeting instead.
+  const stacked = width < 560;
   return (
     <>
-      <View className="px-5 pt-4 pb-2 flex-row items-center justify-between">
-        <View>
+      <View
+        className="px-5 pt-4 pb-2"
+        style={{
+          flexDirection: stacked ? "column" : "row",
+          alignItems: stacked ? "flex-start" : "center",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <View style={stacked ? undefined : { flex: 1, minWidth: 0, marginRight: 12 }}>
           <Heading level={1} className="text-2xl font-bold text-foreground">
             {greeting}
           </Heading>
@@ -39,7 +52,14 @@ export function HomeHeader({
             Here&apos;s what needs your attention.
           </Text>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            alignSelf: stacked ? "flex-end" : "auto",
+          }}
+        >
           <ConnectionBadge
             status={connectionStatus}
             onPress={

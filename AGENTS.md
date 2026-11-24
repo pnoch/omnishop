@@ -256,8 +256,9 @@ Anything under `lib/_core/`, `server/_core/`, or `shared/_core/` is framework-le
 ## Reference Docs
 
 - `design.md` — full UI/UX design spec (screen list, flows, component design, distributor catalog)
-- `todo.md` — phase-by-phase feature history (1083 phases through 5.17.0)
-- `CHANGELOG.md` — per-release notes (current version `5.17.0`)
+- `todo.md` — phase-by-phase feature history through 5.17.0; newer changes are in
+  `CHANGELOG.md`
+- `CHANGELOG.md` — per-release notes (the current version is in `package.json`)
 - `docs/releasing.md` — release runbook (version bump, Android signing/App Links/FCM, desktop tag + updater, web deploy)
 - `server/README.md` — backend guide (auth, DB, tRPC, storage, LLM, image gen) — read only if adding backend features
 - `docs/superpowers/` — design specs (`specs/`) and implementation plans (`plans/`) for recent phases. Entries written before the 2026-11 rebrand keep the historical `product-stock-finder`/`PSF_*` names; current code and docs use `omnishop`/`OMNISHOP_*`.

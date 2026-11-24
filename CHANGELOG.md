@@ -4,6 +4,22 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.41] - 2026-11-24
+
+### Fixed
+
+- The Home header’s connection badge, profile/settings, and add buttons were
+  clipped off-screen on phones: the single row needs about 470 px, wider than
+  every 320–430 px viewport. Below 560 px the action row now sits under the
+  greeting, so all three controls are reachable.
+- A 320 px reflow audit (WCAG 1.4.10) across ten routes reports no horizontal
+  overflow and no controls outside the viewport.
+
+### Docs
+
+- `AGENTS.md` no longer pins a stale version; it points at `package.json` and
+  `CHANGELOG.md`.
+
 ## [5.32.40] - 2026-11-24
 
 ### Accessibility
