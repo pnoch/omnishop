@@ -108,7 +108,7 @@ The browser release gates need the web export first:
 ```bash
 pnpm build:web
 pnpm audit:layout && pnpm audit:contrast && pnpm e2e:smoke
-DATABASE_URL=... pnpm e2e:shared   # builds its own same-origin web export
+DATABASE_URL=... pnpm e2e:shared   # live/expired/unknown, members-only, join/leave
 pnpm build:desktop && pnpm audit:desktop
 pnpm budget:web
 ```
