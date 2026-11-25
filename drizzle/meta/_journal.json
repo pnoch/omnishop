@@ -246,6 +246,13 @@
       "when": 1792477256642,
       "tag": "0034_certain_drax",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1795578309347,
+      "tag": "0035_open_hairball",
+      "breakpoints": true
     }
   ]
 }

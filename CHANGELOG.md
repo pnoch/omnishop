@@ -4,6 +4,38 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.48] - 2026-11-25
+
+### Performance
+
+- Product thumbnails are now content-addressed HTTP resources
+  (`/api/thumb/<id>/<w>.webp?v=<hash>`) backed by a new `product_thumbnails`
+  table and an in-memory LRU. The first view of an image fetches and encodes it
+  once; browsers, the PWA, and native clients then cache it immutably
+  (`ETag`/`304`) instead of re-downloading a base64 data URL inside every
+  `images.get` response.
+- `images.get` no longer downloads the full-size source or runs Sharp: it
+  returns the thumbnail URL and leaves generation to the image request, so
+  card rendering is not blocked on encoding.
+- Widths are limited to 64/96/128/192/256, so requests cannot fragment the
+  cache. The desktop app requests 96 px thumbnails through the same endpoint.
+- Generated images stored as `/storage/...` now resolve against the API base
+  on native (previously the relative URL could not load), and generated images
+  are thumbnailed when the storage backend is configured.
+
+### Security
+
+- The thumbnail route accepts only a product id, width, and content hash —
+  never a source URL — and re-validates the stored source (SSRF checks and the
+  storage-key allowlist). It is rate limited at 600 requests/minute per IP and
+  serves only `image/webp` from the store or a fresh encode.
+
+### Database
+
+- Additive `product_thumbnails` migration. Rows for a replaced source hash and
+  for products without an image are purged automatically. Run
+  `pnpm db:migrate` before deploying the new server.
+
 ## [5.32.47] - 2026-11-25
 
 ### Accessibility

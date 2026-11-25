@@ -6,6 +6,7 @@ import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
+import { registerThumbnailRoute } from "../thumbnail-route";
 import { appRouter } from "../routers";
 import { registerUnsubscribeRoute } from "../email-unsubscribe-route";
 import { createContext } from "./context";
@@ -91,6 +92,7 @@ async function startServer() {
   registerBodyParsers(app);
 
   registerStorageProxy(app);
+  registerThumbnailRoute(app);
   registerOAuthRoutes(app);
   registerUnsubscribeRoute(app);
 

@@ -39,12 +39,17 @@ export function ProductImage({
     let active = true;
     const base = getApiBaseUrl();
     if (!base) return;
-    invoke<{ imageUrl?: string }>("fetch_product_image", {
+    invoke<{ imageUrl?: string; thumbnailUrl?: string }>("fetch_product_image", {
       apiBaseUrl: base,
       productId,
+      thumbWidth: 96,
     })
       .then((res) => {
-        const url = res?.imageUrl ?? null;
+        const raw = res?.thumbnailUrl ?? res?.imageUrl ?? null;
+        const url =
+          raw && raw.startsWith("/")
+            ? `${base.replace(/\/+$/, "")}${raw}`
+            : raw;
         imageCache.set(productId, url);
         if (active) {
           setImage({ productId, url });

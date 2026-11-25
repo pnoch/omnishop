@@ -6,9 +6,11 @@ import {
   index,
   int,
   json,
+  mediumtext,
   mysqlEnum,
   mysqlTable,
   primaryKey,
+  smallint,
   text,
   timestamp,
   uniqueIndex,
@@ -200,6 +202,34 @@ export const productImages = mysqlTable("product_images", {
 
 export type ProductImagesRow = typeof productImages.$inferSelect;
 export type InsertProductImagesRow = typeof productImages.$inferInsert;
+
+/**
+ * Encoded product thumbnails, keyed by the source image's content hash. A URL
+ * carrying the hash can be cached immutably; when the source image changes the
+ * hash changes and the route renders a new row. `data` is base64 WebP rather
+ * than a BLOB so the value round-trips cleanly through the MySQL driver.
+ */
+export const productThumbnails = mysqlTable(
+  "product_thumbnails",
+  {
+    productId: varchar("productId", { length: 128 }).notNull(),
+    width: smallint("width").notNull(),
+    sourceHash: varchar("sourceHash", { length: 16 }).notNull(),
+    contentType: varchar("contentType", { length: 32 }).notNull(),
+    data: mediumtext("data").notNull(),
+    createdAt: bigint("createdAt", { mode: "number" }).notNull(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.productId, table.width, table.sourceHash],
+    }),
+    index("idx_thumbnails_product").on(table.productId),
+  ],
+);
+
+export type ProductThumbnailsRow = typeof productThumbnails.$inferSelect;
+export type InsertProductThumbnailsRow =
+  typeof productThumbnails.$inferInsert;
 
 export const deviceNotificationConfigs = mysqlTable(
   "device_notification_configs",

@@ -67,7 +67,9 @@ export function checkRateLimit(
 ): void {
   // Skip in test to avoid flaky cross-test bucket pollution (tests mock context with static ip)
   if (process.env.NODE_ENV === "test" && clientKey(ctx) === "unknown") return;
-  consumeBucket(`${endpoint}:${clientKey(ctx)}`, limit, windowMs);
+  if (!consumeBucket(`${endpoint}:${clientKey(ctx)}`, limit, windowMs)) {
+    throw rateLimitError();
+  }
 }
 
 // Rate limit keyed on an arbitrary value (e.g. a share token) rather than the
@@ -77,10 +79,29 @@ export function checkRateLimitByKey(
   limit: number,
   windowMs: number,
 ): void {
-  consumeBucket(key, limit, windowMs);
+  if (!consumeBucket(key, limit, windowMs)) throw rateLimitError();
 }
 
-function consumeBucket(key: string, limit: number, windowMs: number): void {
+/**
+ * Boolean form for plain Express handlers, which cannot propagate a TRPCError.
+ * Returns false when the caller is over budget.
+ */
+export function tryCheckRateLimitByKey(
+  key: string,
+  limit: number,
+  windowMs: number,
+): boolean {
+  return consumeBucket(key, limit, windowMs);
+}
+
+function rateLimitError(): TRPCError {
+  return new TRPCError({
+    code: "TOO_MANY_REQUESTS",
+    message: "Rate limit exceeded. Try again shortly.",
+  });
+}
+
+function consumeBucket(key: string, limit: number, windowMs: number): boolean {
   pruneStale();
   const now = Date.now();
   const windowStart = now - windowMs;
@@ -88,10 +109,7 @@ function consumeBucket(key: string, limit: number, windowMs: number): void {
   bucket.windowMs = windowMs;
   const recent = bucket.timestamps.filter((t) => t > windowStart);
   if (recent.length >= limit) {
-    throw new TRPCError({
-      code: "TOO_MANY_REQUESTS",
-      message: "Rate limit exceeded. Try again shortly.",
-    });
+    return false;
   }
   recent.push(now);
   bucket.timestamps = recent;
@@ -106,6 +124,7 @@ function consumeBucket(key: string, limit: number, windowMs: number): void {
     if (oldest === undefined) break;
     buckets.delete(oldest);
   }
+  return true;
 }
 
 export function clearRateLimitsForTests(): void {

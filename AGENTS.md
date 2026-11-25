@@ -123,14 +123,17 @@ server/                Express + tRPC backend (see server/README.md)
   sync-db.ts           Sync item upserts, tombstones, LWW conflict resolution
   prices.ts            Server-side scraping via resilientFetch + price cache
   price-cache.ts, price-history.ts, price-insights.ts, product-images.ts
+  image-thumbnail.ts   Content-addressed WebP thumbnails (MySQL store + memory LRU)
+  thumbnail-route.ts   GET /api/thumb/<id>/<w>.webp?v=<hash> (immutable, ETag/304)
   fx.ts                Live FX rate source
   notifications.ts, push-notifications.ts   Server notification scheduling + push tokens
   devices.ts           Device binding, labels, sign-out, stale cleanup (deviceId from session JWT claim → x-device-id header; per-user ownership via assertDeviceAccess; unrevoke on login; 30-day idle cleanup; revokedDevices with user-scoped composite keys)
   catalog-warmer.ts    Full-catalog background warmer
   storage.ts           S3 helpers
-drizzle/              MySQL schema — 23 tables: users, watchlistItems, priceAlerts,
+drizzle/              MySQL schema — 24 tables: users, watchlistItems, priceAlerts,
                       backOrderReminders, appSettings, priceCache, priceHistory,
-                      priceInsights, productImages, deviceNotificationConfigs,
+                      priceInsights, productImages, productThumbnails,
+                      deviceNotificationConfigs,
                       notificationEvents, notificationEventDeliveries, devicePushTokens,
                       deviceLabels, pushDeliveryLog, revokedDevices, passwordResetTokens,
                       emailVerificationTokens, trendingProducts, sharedWatchlists,

@@ -59,6 +59,42 @@ describe("getProductImage", () => {
     expect(mockedGenerateImage).toHaveBeenCalledTimes(1);
   });
 
+  it("returns a content-addressed thumbnail URL instead of base64 bytes", async () => {
+    const result = await getProductImage(
+      "mikrotik-crs804-4ddq-hrm",
+      undefined,
+      96,
+    );
+    expect(result?.imageUrl).toBe("https://img.example.com/crs804.png");
+    expect(result?.thumbnailUrl).toMatch(
+      /^\/api\/thumb\/mikrotik-crs804-4ddq-hrm\/96\.webp\?v=[a-f0-9]{16}$/,
+    );
+    expect(result?.thumbnailUrl).not.toContain("data:");
+  });
+
+  it("snaps thumbnail widths to the stored set", async () => {
+    const result = await getProductImage(
+      "mikrotik-crs804-4ddq-hrm",
+      undefined,
+      100,
+    );
+    expect(result?.thumbnailUrl).toMatch(/\/128\.webp\?v=/);
+  });
+
+  it("keeps generated /storage images as a relative URL", async () => {
+    mockedGenerateImage.mockResolvedValue({
+      url: "/storage/generated/product.png",
+    });
+    const result = await getProductImage(
+      "mikrotik-crs804-4ddq-hrm",
+      undefined,
+      96,
+    );
+    // Before the thumbnail pipeline this relative URL was rejected by the
+    // absolute-URL SSRF check, so generated images never reached the client.
+    expect(result?.imageUrl).toBe("/storage/generated/product.png");
+  });
+
   it("returns null when the product is not in the catalog", async () => {
     const result = await getProductImage("unknown-product");
     expect(result).toBeNull();

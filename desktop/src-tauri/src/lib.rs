@@ -1536,13 +1536,20 @@ async fn fetch_price_insight(
 async fn fetch_product_image(
     api_base_url: String,
     product_id: String,
+    thumb_width: Option<u32>,
 ) -> Result<Option<serde_json::Value>, String> {
     if api_base_url.is_empty() {
         return Ok(None);
     }
-    let input = serde_json::json!({
-        "json": { "productId": product_id }
-    });
+    let mut input = serde_json::Map::new();
+    input.insert(
+        "productId".to_string(),
+        serde_json::Value::String(product_id),
+    );
+    if let Some(width) = thumb_width {
+        input.insert("thumbWidth".to_string(), serde_json::json!(width));
+    }
+    let input = serde_json::json!({ "json": serde_json::Value::Object(input) });
     let url = format!(
         "{}/api/trpc/images.get?input={}",
         api_base_url.trim_end_matches('/'),

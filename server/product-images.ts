@@ -6,7 +6,14 @@ import { DISTRIBUTORS } from "../shared/src/distributors.js";
 import { PRODUCT_IMAGE_SOURCES } from "../shared/src/product-image-sources.js";
 import { getDb } from "./db";
 import { fetchWithTimeout } from "./fetch-timeout";
-import { getImageThumbnailDataUrl } from "./image-thumbnail";
+import {
+  canServeThumbnail,
+  imageSourceHash,
+  normalizeThumbnailWidth,
+  purgeOrphanedThumbnails,
+  thumbnailPath,
+} from "./image-thumbnail";
+import { isValidStorageKey } from "./_core/storageProxy";
 import { generateImage } from "./_core/imageGeneration";
 import { tryConsumeBudget } from "./spend-budget";
 import { isBlockedUrl } from "./product-parse";
@@ -74,11 +81,25 @@ async function getProductImageInner(
 
   if (!imageUrl) return null;
   // Cached values and page metadata predate the SSRF checks below, so gate the
-  // final fetch/thumbnail path as well.
-  if (isBlockedUrl(imageUrl)) return null;
-  if (!thumbWidth) return { imageUrl };
-  const thumbnailUrl = await getImageThumbnailDataUrl(imageUrl, thumbWidth);
-  return { imageUrl, ...(thumbnailUrl ? { thumbnailUrl } : {}) };
+  // final fetch/thumbnail path as well. Generated images are stored as
+  // `/storage/<key>` (relative by design), so validate the key rather than
+  // rejecting every non-absolute URL.
+  if (imageUrl.startsWith("/storage/")) {
+    if (!isValidStorageKey(imageUrl.slice("/storage/".length))) return null;
+  } else if (isBlockedUrl(imageUrl)) {
+    return null;
+  }
+  if (!thumbWidth || !canServeThumbnail(imageUrl)) return { imageUrl };
+  // The thumbnail is generated lazily by /api/thumb on first use; resolving a
+  // URL here keeps images.get off the Sharp/CPU path.
+  return {
+    imageUrl,
+    thumbnailUrl: thumbnailPath(
+      productId,
+      normalizeThumbnailWidth(thumbWidth),
+      imageSourceHash(imageUrl),
+    ),
+  };
 }
 
 const DISTRIBUTOR_HOSTS = new Set(
@@ -229,6 +250,16 @@ async function readCached(productId: string): Promise<string | null> {
   }
 }
 
+/**
+ * The resolved image URL without any discovery, generation, or network work.
+ * Used by the thumbnail route so an image request can never spend budget.
+ */
+export async function readCachedProductImageUrl(
+  productId: string,
+): Promise<string | null> {
+  return readCached(productId);
+}
+
 async function writeCached(productId: string, url: string): Promise<void> {
   const db = await getDb();
   if (!db) {
@@ -315,4 +346,6 @@ export async function purgeOrphanedImages(): Promise<void> {
     // A blip here must not abort the rest of the warmer tick.
     console.warn("[Images] Failed to purge orphaned rows", e);
   }
+  // Thumbnails are keyed by product, so rows for a dropped image follow it.
+  await purgeOrphanedThumbnails();
 }
