@@ -39,8 +39,13 @@ async function journey(page: Page, baseUrl: string): Promise<void> {
     const add = page.getByLabel(/^Add .* to watchlist/);
     await expectVisible(add, "an Add to watchlist result");
     await add.first().click();
-    // The add handler returns to Home or the watchlist; load the watchlist
-    // explicitly so this asserts the write, not a search result on screen.
+    // The add handler navigates after the local write; wait for that so the
+    // following goto cannot interrupt the pending write (a CI-only race).
+    await page
+      .waitForURL((url) => !url.pathname.startsWith("/search"), {
+        timeout: 30_000,
+      })
+      .catch(() => {});
     await page.goto(`${baseUrl}/watchlist`, {
       waitUntil: "load",
       timeout: 60_000,
@@ -107,7 +112,7 @@ async function journey(page: Page, baseUrl: string): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const spa = await startSpa();
+  const spa = await startSpa(process.env.WEB_DIST ?? "dist-web");
   const browser = await chromium.launch();
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
