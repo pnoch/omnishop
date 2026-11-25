@@ -32,6 +32,11 @@ export function useProductDetailData({
   const [insight, setInsight] = useState<string | null>(null);
   const [insightLoading, setInsightLoading] = useState(true);
   const [productImage, setProductImage] = useState<string | null>(null);
+  // The hero is at most ~640 CSS px wide; keep the untouched source URL so an
+  // unavailable thumbnail can still fall back to the original image.
+  const [productImageFallback, setProductImageFallback] = useState<
+    string | null
+  >(null);
   const imageSourceUrls = pickImageSourceUrls(product?.listings);
   const imageSourceKey = imageSourceUrls.join("|");
   const [stockWatches, setStockWatches] = useState<Record<string, boolean>>({});
@@ -44,6 +49,7 @@ export function useProductDetailData({
       setInsight(null);
       setInsightLoading(true);
       setProductImage(null);
+      setProductImageFallback(null);
       // Local data first: the screen must paint without waiting on the
       // optional server enrichment (LLM insight, generated image).
       const [stockWatchesData, alertsData] = await Promise.all([
@@ -71,10 +77,12 @@ export function useProductDetailData({
         });
       void fetchProductImage(id, {
         sourceUrls: imageSourceKey ? imageSourceKey.split("|") : undefined,
+        thumbWidth: 512,
       })
         .then((data) => {
-          if (signal?.cancelled) return;
-          if (data) setProductImage(data.imageUrl);
+          if (signal?.cancelled || !data) return;
+          setProductImage(data.thumbnailUrl ?? data.imageUrl);
+          setProductImageFallback(data.imageUrl);
         })
         .catch(() => {});
     },
@@ -124,6 +132,7 @@ export function useProductDetailData({
     insight,
     insightLoading,
     productImage,
+    productImageFallback,
     stockWatches,
     setStockWatches,
     alerts,

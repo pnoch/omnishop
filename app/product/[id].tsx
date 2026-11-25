@@ -77,6 +77,7 @@ export default function ProductDetailScreen() {
     insight,
     insightLoading,
     productImage,
+    productImageFallback,
     stockWatches,
     alerts,
     setAlerts,
@@ -180,7 +181,7 @@ export default function ProductDetailScreen() {
       >
         <DetailHeader product={product} bestDeal={bestDeal} scrollY={scrollY} watchingAny={!!stockWatches["*"]} onToggleWatch={() => void toggleAnyWatch()} acquired={isAcquired(product)} onToggleAcquired={() => void handleToggleAcquired()} isTracked={isTracked} addingToWatchlist={addingToWatchlist} onAddToWatchlist={() => void handleAddToWatchlist()} onBack={() => goBackOrHome(router)} stockStatus={headerStockStatus} />
         <View ref={shareRef} collapsable={false}>
-          {product.marketplace ? <MarketplaceCard product={product} onUpdated={refresh} /> : <ProductInfoCard product={product} listings={listings} visibleListings={visibleListings} lastUpdatedAt={lastUpdatedAt ? new Date(lastUpdatedAt).toISOString() : undefined} displayCurrency={effectiveCurrency} productImage={productImage} />}
+          {product.marketplace ? <MarketplaceCard product={product} onUpdated={refresh} /> : <ProductInfoCard product={product} listings={listings} visibleListings={visibleListings} lastUpdatedAt={lastUpdatedAt ? new Date(lastUpdatedAt).toISOString() : undefined} displayCurrency={effectiveCurrency} productImage={productImage} productImageFallback={productImageFallback} />}
           {!product.marketplace && <>
           {dealScore != null && <DealScoreCard dealScore={dealScore} />}
           {priceVsAvg && <PriceVsAvgCard data={priceVsAvg} displayCurrency={effectiveCurrency} />}

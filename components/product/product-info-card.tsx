@@ -26,6 +26,8 @@ interface ProductInfoCardProps {
   lastUpdatedAt?: string;
   displayCurrency: string;
   productImage: string | null;
+  /** Original source used if the thumbnail cannot load. */
+  productImageFallback?: string | null;
   onEditDetails?: () => void;
 }
 
@@ -36,14 +38,23 @@ export function ProductInfoCard({
   lastUpdatedAt,
   displayCurrency,
   productImage,
+  productImageFallback,
   onEditDetails,
 }: ProductInfoCardProps) {
   const colors = useColors();
   const [imageErrorFor, setImageErrorFor] = useState<string | null>(null);
+  const [fallbackFor, setFallbackFor] = useState<string | null>(null);
+  const usingFallback =
+    fallbackFor != null &&
+    fallbackFor === productImage &&
+    Boolean(productImageFallback);
+  const imageSrc = usingFallback ? productImageFallback : productImage;
   const imageError = productImage != null && imageErrorFor === productImage;
   const imageOpacity = useState(() => new Animated.Value(0))[0];
   useEffect(() => {
     imageOpacity.setValue(0);
+    // The fallback is keyed by the thumbnail URL, so a new image naturally
+    // stops matching it; no synchronous state reset is needed here.
     if (productImage) {
       Animated.timing(imageOpacity, {
         toValue: 1,
@@ -52,10 +63,19 @@ export function ProductInfoCard({
       }).start();
     }
   }, [product.id, productImage, imageOpacity]);
-  const handleImageError = useCallback(
-    () => setImageErrorFor(productImage ?? null),
-    [productImage],
-  );
+  const handleImageError = useCallback(() => {
+    // A failed thumbnail should not hide an image that the original source can
+    // still serve; fall back once, then show the placeholder.
+    if (
+      !usingFallback &&
+      productImageFallback &&
+      productImageFallback !== productImage
+    ) {
+      setFallbackFor(productImage);
+      return;
+    }
+    setImageErrorFor(productImage ?? null);
+  }, [productImage, productImageFallback, usingFallback]);
 
   const primary22 = useMemo(() => colors.primary + "22", [colors.primary]);
 
@@ -124,7 +144,7 @@ export function ProductInfoCard({
           }}
         >
           <Image
-            source={{ uri: productImage }}
+            source={{ uri: imageSrc! }}
             accessibilityLabel={`${product.name} image`}
             onError={handleImageError}
             style={{

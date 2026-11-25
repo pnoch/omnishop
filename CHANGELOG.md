@@ -4,6 +4,23 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.50] - 2026-11-25
+
+### Performance
+
+- The mobile product-detail hero requests a 512 px thumbnail instead of the
+  full-size source (often 10–20x larger). If the thumbnail cannot load, the
+  card falls back to the original image once before showing the placeholder.
+- Thumbnail widths now include 512; `images.get` accepts it.
+
+### Reliability
+
+- Images for products added outside the catalog are no longer purged every
+  warmer tick while a live watchlist item still references them (migration
+  `0036` adds the supporting `watchlist_items.productId` index).
+- Thumbnail misses run behind a 4-slot encoder queue with 64 waiting; the route
+  answers `503` + `Retry-After` when saturated instead of stacking Sharp jobs.
+
 ## [5.32.49] - 2026-11-25
 
 ### Performance

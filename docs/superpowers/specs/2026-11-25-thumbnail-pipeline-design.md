@@ -73,8 +73,9 @@ GET /api/thumb/<id>/<w>.webp?v=<hash>
 ### URL contract
 
 - `id`: URI-encoded product ID, 1–128 chars, no `/`, `\`, NUL, `..`.
-- `w`: one of `64, 96, 128, 192, 256`. Other values are `400`. Requests are
+- `w`: one of `64, 96, 128, 192, 256, 512`. Other values are `400`. Requests are
   snapped up to the next allowed width, so clients cannot fragment the cache.
+  Cards use 96/192; the mobile and desktop product-detail hero uses 512/192.
 - `v`: 16 hex chars of `sha256(imageUrl)`. A stale/absent `v` gets a `302` to
   the canonical URL with `no-store`, so an immutable response is only ever
   cached under the hash that produced it.

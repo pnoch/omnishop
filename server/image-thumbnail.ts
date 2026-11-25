@@ -20,7 +20,7 @@ import { storageGet } from "./storage";
  */
 
 /** Widths a thumbnail may be stored at. Keeps the cache from fragmenting. */
-export const THUMBNAIL_WIDTHS = [64, 96, 128, 192, 256] as const;
+export const THUMBNAIL_WIDTHS = [64, 96, 128, 192, 256, 512] as const;
 
 const MAX_CACHE_ENTRIES = 500;
 const MAX_SOURCE_BYTES = 8 * 1024 * 1024;

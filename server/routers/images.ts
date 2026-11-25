@@ -11,7 +11,7 @@ export const imagesRouter = router({
         // sourceUrl is the older single-URL shape; keep it for cached clients.
         sourceUrl: z.string().max(2048).optional(),
         sourceUrls: z.array(z.string().max(2048)).max(8).optional(),
-        thumbWidth: z.number().int().min(16).max(256).optional(),
+        thumbWidth: z.number().int().min(16).max(512).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {

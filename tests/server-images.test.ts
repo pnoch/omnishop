@@ -82,6 +82,20 @@ describe("fetchProductImage", () => {
     });
   });
 
+  it("forwards the requested thumbnail width", async () => {
+    const query = vi.fn(async () => ({
+      imageUrl: "https://img.example.com/real.png",
+      thumbnailUrl: "/api/thumb/p/512.webp?v=0123456789abcdef",
+    }));
+    mockedCreateClient.mockReturnValue({
+      images: { get: { query } },
+    } as unknown as ReturnType<typeof createTRPCClient>);
+
+    await fetchProductImage("p", { thumbWidth: 512 });
+
+    expect(query).toHaveBeenCalledWith({ productId: "p", thumbWidth: 512 });
+  });
+
   it("returns null when there is no image", async () => {
     mockImagesGet(async () => null);
     const result = await fetchProductImage("unknown");

@@ -73,6 +73,26 @@ describe("images router", () => {
     );
   });
 
+  it("accepts the hero width", async () => {
+    mockedGetProductImage.mockResolvedValue({ imageUrl: "x" });
+    const caller = appRouter.createCaller(createPublicContext());
+    await caller.images.get({
+      productId: "mikrotik-crs804-4ddq-hrm",
+      thumbWidth: 512,
+    });
+    expect(mockedGetProductImage).toHaveBeenCalledWith(
+      "mikrotik-crs804-4ddq-hrm",
+      undefined,
+      512,
+    );
+    await expect(
+      caller.images.get({
+        productId: "mikrotik-crs804-4ddq-hrm",
+        thumbWidth: 513,
+      }),
+    ).rejects.toThrow();
+  });
+
   it("returns null when there is no image", async () => {
     mockedGetProductImage.mockResolvedValue(null);
     const caller = appRouter.createCaller(createPublicContext());

@@ -51,13 +51,14 @@ function imageResponse(arrayBuffer: ArrayBuffer) {
 }
 
 describe("thumbnail widths", () => {
-  it("snaps up to a stored width and caps at 256", () => {
+  it("snaps up to a stored width and caps at 512", () => {
     expect(normalizeThumbnailWidth(20)).toBe(64);
     expect(normalizeThumbnailWidth(48)).toBe(64);
     expect(normalizeThumbnailWidth(96)).toBe(96);
     expect(normalizeThumbnailWidth(100)).toBe(128);
     expect(normalizeThumbnailWidth(200)).toBe(256);
-    expect(normalizeThumbnailWidth(999)).toBe(256);
+    expect(normalizeThumbnailWidth(300)).toBe(512);
+    expect(normalizeThumbnailWidth(999)).toBe(512);
     expect(normalizeThumbnailWidth(Number.NaN)).toBe(64);
   });
 
