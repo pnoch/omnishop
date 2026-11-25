@@ -78,7 +78,7 @@ export function Settings() {
               ? "Sign in to sync prices with the backend."
               : "Backend unreachable. Showing saved prices."}
         </p>
-        <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
           {connection.lastCheckedAt
             ? `Last checked ${formatLastRefreshed(new Date(connection.lastCheckedAt).toISOString())}`
             : "Never checked"}
@@ -92,7 +92,7 @@ export function Settings() {
         className="flex items-center gap-2 w-full bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-brand-500 transition-colors"
         aria-label="View distributor health"
       >
-        <Activity className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+        <Activity className="w-5 h-5 text-brand-600 dark:text-brand-300" />
         <span className="text-left">
           <span className="block text-lg font-semibold">
             Distributor Health
@@ -113,12 +113,12 @@ export function Settings() {
       {/* Share Watchlist — desktop port of mobile SharedWatchlists */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-3">
-          <Share2 className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <Share2 className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Collaborative Watchlist</h2>
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">Create a read-only public link to your watchlist. Anyone with the link can view it.</p>
         {!isAuthenticated ? (
-          <p className="text-sm text-gray-500">Sign in to share your watchlist.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Sign in to share your watchlist.</p>
         ) : (
           <>
             <button onClick={handleShareWatchlist} disabled={sharing} className="px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 disabled:opacity-50" aria-label="Create share link">
@@ -126,12 +126,12 @@ export function Settings() {
             </button>
             {shareUrl && (
               <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 break-all">
-                <p className="text-xs text-gray-500 mb-1">Share link (expires in 30 days):</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Share link (expires in 30 days):</p>
                 <a href={shareUrl} target="_blank" rel="noopener noreferrer" onClick={externalLinkHandler(shareUrl)} className="text-sm text-brand-600 hover:underline break-all">{shareUrl}</a>
                 <button onClick={() => { navigator.clipboard.writeText(shareUrl).then(() => showToast("Copied")).catch(() => showToast("Couldn't copy link")); }} className="ml-2 text-xs px-2 py-1 rounded border bg-white dark:bg-gray-800">Copy</button>
               </div>
             )}
-            {shareError && <p className="text-sm text-amber-600 mt-2">{shareError}</p>}
+            {shareError && <p className="text-sm text-amber-700 dark:text-amber-400 mt-2">{shareError}</p>}
             <SharedLinksList />
             <JoinedSharedList />
           </>
@@ -141,7 +141,7 @@ export function Settings() {
       {/* Theme Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <Palette className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <Palette className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Theme</h2>
         </div>
         <div className="flex gap-2">
@@ -166,7 +166,7 @@ export function Settings() {
       {/* Currency Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <DollarSign className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <DollarSign className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Display Currency</h2>
         </div>
         <select
@@ -186,7 +186,7 @@ export function Settings() {
       {/* Shipping Region Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <Globe className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <Globe className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Shipping Region</h2>
         </div>
         <select
@@ -212,7 +212,7 @@ export function Settings() {
       {/* Check Interval Section */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <Clock className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <Clock className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Check Interval</h2>
         </div>
         <div className="flex gap-2">

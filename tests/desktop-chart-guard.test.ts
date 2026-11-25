@@ -554,7 +554,7 @@ describe("desktop chart guard", () => {
     );
     const start = text.indexOf(">Dropping now</p>");
     const block = text.slice(start - 200, start);
-    expect(block).toContain("text-brand-600 dark:text-brand-400");
+    expect(block).toContain("text-brand-600 dark:text-brand-300");
   });
 
   // QA round 226: mobile's mover change is a colored pill; desktop's was plain

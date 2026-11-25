@@ -31,7 +31,7 @@ export function ProductNoteCard({
             </button>
           )}
         </div>
-        {error && <p className="text-xs text-amber-600 dark:text-amber-400 mb-2">{error}</p>}
+        {error && <p className="text-xs text-amber-700 dark:text-amber-400 mb-2">{error}</p>}
         {editingNote ? (
           <div className="space-y-2">
             <textarea

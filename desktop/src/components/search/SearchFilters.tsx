@@ -73,17 +73,17 @@ export function SearchFilters({
           );
         })}
         {(selectedCategory || selectedBrand) && (
-          <button onClick={() => { onSelectCategory(null); onSelectBrand(null); }} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 ml-1">Clear</button>
+          <button onClick={() => { onSelectCategory(null); onSelectBrand(null); }} className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 ml-1">Clear</button>
         )}
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
         <span>{resultCount} result{resultCount !== 1 ? "s" : ""}</span>
         {query.trim() && <span className="px-2 py-0.5 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-600">{query}</span>}
       </div>
 
       {searchTagIds.length > 0 && (
-        <p className="text-xs text-gray-500 px-1">Tag filter: showing watchlist matches only — clear to see catalog</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 px-1">Tag filter: showing watchlist matches only — clear to see catalog</p>
       )}
     </>
   );

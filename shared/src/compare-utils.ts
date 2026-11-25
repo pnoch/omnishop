@@ -24,6 +24,21 @@ export function distributorColor(distributorId: string): string {
   return CHART_COLORS[Math.abs(h) % CHART_COLORS.length];
 }
 
+// White text fails on the lighter chart colors (emerald/amber/violet). Pick the
+// label color from the background's relative luminance instead of assuming
+// white everywhere.
+export function readableTextOn(hex: string): "#FFFFFF" | "#000000" {
+  const value = hex.replace("#", "");
+  const r = parseInt(value.slice(0, 2), 16) / 255;
+  const g = parseInt(value.slice(2, 4), 16) / 255;
+  const b = parseInt(value.slice(4, 6), 16) / 255;
+  const convert = (c: number) =>
+    c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  const luminance =
+    0.2126 * convert(r) + 0.7152 * convert(g) + 0.0722 * convert(b);
+  return luminance > 0.18 ? "#000000" : "#FFFFFF";
+}
+
 // ─── Time range options ───────────────────────────────────────────────────────
 export type TimeRange = "1W" | "1M" | "3M" | "6M" | "1Y" | "All";
 export const TIME_RANGES: TimeRange[] = ["1W", "1M", "3M", "6M", "1Y", "All"];

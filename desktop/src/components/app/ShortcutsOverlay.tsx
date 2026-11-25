@@ -48,7 +48,7 @@ export function ShortcutsOverlay({ open, onClose }: { open: boolean; onClose: ()
       <div ref={dialogRef} tabIndex={-1} className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md mx-4 p-6 animate-scaleIn outline-none" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h2 id={titleId} className="text-lg font-semibold">Keyboard Shortcuts</h2>
-          <button type="button" onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500" aria-label="Close shortcuts"><X className="w-5 h-5" /></button>
+          <button type="button" onClick={onClose} className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400" aria-label="Close shortcuts"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-2">
           {shortcuts.map((s) => (
@@ -64,7 +64,7 @@ export function ShortcutsOverlay({ open, onClose }: { open: boolean; onClose: ()
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 text-center">Press <kbd className="px-1 py-0.5 rounded border bg-gray-50 dark:bg-gray-700 text-[10px]">?</kbd> or <kbd className="px-1 py-0.5 rounded border bg-gray-50 dark:bg-gray-700 text-[10px]">Esc</kbd> to close</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center">Press <kbd className="px-1 py-0.5 rounded border bg-gray-50 dark:bg-gray-700 text-[10px]">?</kbd> or <kbd className="px-1 py-0.5 rounded border bg-gray-50 dark:bg-gray-700 text-[10px]">Esc</kbd> to close</p>
       </div>
     </div>
   );

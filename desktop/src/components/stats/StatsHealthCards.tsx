@@ -24,7 +24,7 @@ export function StatsHealthCards({
               Stale (&gt;7 days): <span className="font-medium text-gray-900 dark:text-gray-100">{freshness.staleCount}</span> · Never checked:{" "}
               <span className="font-medium text-gray-900 dark:text-gray-100">{freshness.neverCheckedCount}</span>
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Oldest check{" "}
               {freshness.oldestCheck
                 ? new Date(freshness.oldestCheck).toLocaleDateString(undefined, {
@@ -36,7 +36,7 @@ export function StatsHealthCards({
             </p>
           </div>
         ) : (
-          <p className="text-sm text-gray-400">No data</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No data</p>
         )}
       </div>
       <div className="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
@@ -47,16 +47,16 @@ export function StatsHealthCards({
           <div className="space-y-1 text-sm">
             <div className="flex gap-2">
               <div className="flex-1">
-                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{stockHealth.inStockPct}%</p>
-                <p className="text-[11px] text-gray-400">Listings in stock</p>
+                <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{stockHealth.inStockPct}%</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Listings in stock</p>
               </div>
               <div className="flex-1">
                 <p className="text-lg font-bold text-red-600 dark:text-red-400">{stockHealth.fullyOutOfStock}</p>
-                <p className="text-[11px] text-gray-400">Fully out of stock</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Fully out of stock</p>
               </div>
               <div className="flex-1">
-                <p className="text-lg font-bold text-amber-600 dark:text-amber-400">{stockHealth.backOrderOnly}</p>
-                <p className="text-[11px] text-gray-400">Back-order everywhere</p>
+                <p className="text-lg font-bold text-amber-700 dark:text-amber-400">{stockHealth.backOrderOnly}</p>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400">Back-order everywhere</p>
               </div>
             </div>
             <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 mt-2">
@@ -67,7 +67,7 @@ export function StatsHealthCards({
             </div>
           </div>
         ) : (
-          <p className="text-sm text-gray-400">No data</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No data</p>
         )}
       </div>
     </div>

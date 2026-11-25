@@ -116,7 +116,7 @@ export function Compare() {
         <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-800">
-              <TrendingDown className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <TrendingDown className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
             </div>
             <div>
               <p className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
@@ -163,22 +163,22 @@ export function Compare() {
             Price History ({displayCurrency})
           </h2>
           {/* Mobile's ChartCard shows this subtitle and range-specific hints. */}
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
             Select up to 5 distributors to overlay
           </p>
           {(timeRange === "6m" || timeRange === "1y") && (
-            <p className="text-[11px] italic text-gray-500 dark:text-gray-400 mb-2">
+            <p className="text-[11px] italic text-gray-600 dark:text-gray-300 mb-2">
               Showing all available history — up to 1Y retained (older points may be limited)
             </p>
           )}
           {timeRange === "all" && (
-            <p className="text-[11px] italic text-gray-500 dark:text-gray-400 mb-2">
+            <p className="text-[11px] italic text-gray-600 dark:text-gray-300 mb-2">
               Showing all available history
             </p>
           )}
           <SeriesChart series={chartSeries} displayCurrency={displayCurrency} />
           {chartSeries.length === 1 && (
-            <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <p className="text-center text-xs text-gray-600 dark:text-gray-300 mt-2">
               Add another distributor to compare
             </p>
           )}
@@ -193,7 +193,7 @@ export function Compare() {
               ? "No price history yet"
               : "Select distributors to compare"}
           </h3>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
+          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 max-w-sm">
             {sortedListings.filter((l) => l.priceHistory && l.priceHistory.length >= 2).length === 0
               ? "Price points will appear here once distributors have history. Try tracking more distributors or check back later."
               : "Use the selector above to choose up to 5 distributors with price history."}

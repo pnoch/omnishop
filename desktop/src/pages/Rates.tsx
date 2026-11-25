@@ -171,12 +171,12 @@ export function Rates() {
           // nothing was measured).
           const ch = change[code] ?? null;
           const hist = slicedRates[code] ?? [];
-          const chColor = ch === null ? "text-gray-500" : ch > 0 ? "text-emerald-600" : ch < 0 ? "text-red-500" : "text-gray-500";
+          const chColor = ch === null ? "text-gray-500 dark:text-gray-400" : ch > 0 ? "text-emerald-700 dark:text-emerald-400" : ch < 0 ? "text-red-500" : "text-gray-500 dark:text-gray-400";
           return (
             <div key={code} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-sm">{code}</span>
-                <span className="text-[10px] text-gray-400">per 1 USD</span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">per 1 USD</span>
               </div>
               <div className="text-lg font-semibold mt-2">{rate >= 10 ? rate.toFixed(2) : rate >= 1 ? rate.toFixed(3) : rate.toFixed(4)}</div>
               <div className={`text-xs font-semibold mt-1 ${chColor}`}>{ch === null ? "No history" : `${ch > 0 ? "+" : ""}${ch.toFixed(2)}%`}</div>

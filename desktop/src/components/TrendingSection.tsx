@@ -138,7 +138,7 @@ export function TrendingSection() {
           <span className="text-xs text-gray-500 dark:text-gray-400">Couldn&apos;t load</span>
           <button
             onClick={load}
-            className="px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 text-xs font-semibold text-brand-600 dark:text-brand-300 hover:bg-gray-50 dark:hover:bg-gray-800"
             aria-label="Retry loading trending"
           >
             Retry
@@ -183,7 +183,7 @@ export function TrendingSection() {
                 {product.category} · {product.brand} ·{" "}
                 {formatPrice(product.estimatedPrice, product.currency)}
               </p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 italic">
+              <p className="text-xs text-gray-500 dark:text-gray-400 italic">
                 {product.reason}
               </p>
             </Link>

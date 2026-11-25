@@ -245,7 +245,7 @@ export function Drops() {
                       {drop.modelNumber || drop.distributorName}
                     </span>
                   </span>
-                  <span className="md:hidden ml-auto text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="md:hidden ml-auto text-sm font-bold text-emerald-700 dark:text-emerald-400">
                     {formatDropPct(drop.dropPct)}
                   </span>
                 </span>
@@ -256,7 +256,7 @@ export function Drops() {
                   {formatPrice(drop.previousPrice, drop.currency)} →{" "}
                   {formatPrice(drop.currentPrice, drop.currency)}
                 </span>
-                <span className="hidden md:block text-sm font-bold text-emerald-600 dark:text-emerald-400 text-right">
+                <span className="hidden md:block text-sm font-bold text-emerald-700 dark:text-emerald-400 text-right">
                   {formatDropPct(drop.dropPct)}
                 </span>
                 <span className="hidden md:block text-sm text-gray-500 dark:text-gray-400 text-right">

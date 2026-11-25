@@ -36,7 +36,7 @@ export function TagPickerDialog({
             const sel = selected.includes(def.id);
             return <label key={def.id} className="flex items-center gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"><input type="checkbox" checked={sel} onChange={() => onToggleTag(def.id)} /><span className="w-3 h-3 rounded-full" style={{ backgroundColor: def.color }} /><span className="text-sm">{def.name}</span></label>;
           })}
-          {Object.keys(tagDefinitions).length === 0 && <p className="text-sm text-gray-500">No tags yet — create one below.</p>}
+          {Object.keys(tagDefinitions).length === 0 && <p className="text-sm text-gray-500 dark:text-gray-400">No tags yet — create one below.</p>}
         </div>
         <div className="mt-3">
           <input
@@ -56,7 +56,7 @@ export function TagPickerDialog({
             Create tag
           </button>
         </div>
-        <div className="flex justify-end gap-2 mt-4"><button onClick={onClose} className="px-3 py-1.5 rounded-lg border text-sm">Done</button><button onClick={onClear} className="px-3 py-1.5 text-sm text-gray-500">Clear</button></div>
+        <div className="flex justify-end gap-2 mt-4"><button onClick={onClose} className="px-3 py-1.5 rounded-lg border text-sm">Done</button><button onClick={onClear} className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400">Clear</button></div>
       </div>
     </DialogOverlay>
   );

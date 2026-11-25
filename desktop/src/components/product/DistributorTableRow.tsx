@@ -58,7 +58,7 @@ export function DistributorTableRow({
             {dist?.region ? ` · ${dist.region}` : ""} {dist?.countryCode}
           </p>
           {dist?.paymentMethods && dist.paymentMethods.length > 0 && (
-            <p className="text-xs text-gray-400 mt-0.5 truncate" title={dist.paymentMethods.join(" · ")}>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate" title={dist.paymentMethods.join(" · ")}>
               {dist.paymentMethods.join(" · ")}
             </p>
           )}
@@ -100,9 +100,9 @@ export function DistributorTableRow({
           const key = getLastRefreshedColor(listing.lastChecked);
           const cls =
             key === "green"
-              ? "text-emerald-600 dark:text-emerald-400"
+              ? "text-emerald-700 dark:text-emerald-400"
               : key === "yellow"
-                ? "text-amber-600 dark:text-amber-400"
+                ? "text-amber-700 dark:text-amber-400"
                 : key === "red"
                   ? "text-red-600 dark:text-red-400"
                   : "text-gray-500 dark:text-gray-400";
@@ -166,7 +166,7 @@ export function DistributorTableRow({
             target="_blank"
             rel="noopener noreferrer"
             onClick={externalLinkHandler(listing.url)}
-            className="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 text-sm hover:underline px-1.5 py-1"
+            className="inline-flex items-center gap-1 text-brand-600 dark:text-brand-300 text-sm hover:underline px-1.5 py-1"
             aria-label={`Visit ${dist?.name ?? listing.distributorId}`}
           >
             Visit <ExternalLink className="w-3.5 h-3.5" />

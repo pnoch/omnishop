@@ -127,9 +127,9 @@ export function ProductActions({
             const key = getLastRefreshedColor(iso);
             const cls =
               key === "green"
-                ? "text-emerald-600 dark:text-emerald-400"
+                ? "text-emerald-700 dark:text-emerald-400"
                 : key === "yellow"
-                  ? "text-amber-600 dark:text-amber-400"
+                  ? "text-amber-700 dark:text-amber-400"
                   : key === "red"
                     ? "text-red-600 dark:text-red-400"
                     : "text-gray-500 dark:text-gray-400";

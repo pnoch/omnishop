@@ -51,14 +51,14 @@ export function SearchModalManualAddDialog({
         {manualTimedOut && (
           <div role="alert" className="mb-3 p-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-left">
             <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">Discovery timed out</p>
-            <p className="text-sm text-amber-600 dark:text-amber-400 mt-1">Added {manualTimedOut.name} — listings can be retried.</p>
+            <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">Added {manualTimedOut.name} — listings can be retried.</p>
             <div className="flex gap-2 mt-2">
               <button onClick={onManualRetry} disabled={manualRetrying} aria-label="Retry discovery" className="px-3 py-1.5 rounded-lg bg-amber-600 text-white text-xs font-medium hover:bg-amber-700 disabled:opacity-50">{manualRetrying ? "Retrying…" : "Retry"}</button>
               <button onClick={onClose} className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 text-sm">Done</button>
             </div>
           </div>
         )}
-        {manualProgress && <p className="text-xs text-gray-500 mb-2">{manualProgress}</p>}
+        {manualProgress && <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{manualProgress}</p>}
         <div className="space-y-3">
           <input value={manualName} onChange={(e) => onManualName(e.target.value)} placeholder="Product name *" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm" />
           <input value={manualModel} onChange={(e) => onManualModel(e.target.value)} placeholder="Model number *" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm" />

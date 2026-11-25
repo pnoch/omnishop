@@ -66,7 +66,7 @@ export function RestockWatches() {
       <div className="flex items-center mb-4">
         <button
           onClick={() => navigate("/alerts")}
-          className="text-blue-600 dark:text-brand-400 mr-3"
+          className="text-blue-600 dark:text-brand-300 mr-3"
           aria-label="Go back to alerts"
         >
           ‹ Back

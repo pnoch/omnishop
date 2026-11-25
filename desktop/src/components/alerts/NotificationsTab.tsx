@@ -60,12 +60,12 @@ export function NotificationsTab({
             onClick={onRefresh}
             disabled={refreshing}
             aria-label="Refresh notifications"
-            className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline disabled:opacity-50"
+            className="text-xs font-semibold text-brand-600 dark:text-brand-300 hover:underline disabled:opacity-50"
           >
             {refreshing ? "Refreshing" : "Refresh"}
           </button>
           {unreadCount > 0 && (
-            <button onClick={onMarkAllRead} className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">Mark all read</button>
+            <button onClick={onMarkAllRead} className="text-xs font-semibold text-brand-600 dark:text-brand-300 hover:underline">Mark all read</button>
           )}
         </div>
       </div>
@@ -103,13 +103,13 @@ export function NotificationsTab({
                 : TYPE_ICONS[n.type] ?? Bell;
             const content = (
               <>
-                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${n.type === "health" ? (n.healthStatus === "recovered" ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400" : "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400") : n.type === "reminder" ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400" : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"}`}>
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${n.type === "health" ? (n.healthStatus === "recovered" ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400" : "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400") : n.type === "reminder" ? "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400" : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"}`}>
                   <TypeIcon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold truncate">{n.title}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{n.body}</p>
-                  <p className="text-[11px] text-gray-400 mt-1" title={new Date(n.createdAt).toLocaleString()}>{formatRelativeTime(n.createdAt)}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1" title={new Date(n.createdAt).toLocaleString()}>{formatRelativeTime(n.createdAt)}</p>
                 </div>
                 {!n.read && <span className="w-2.5 h-2.5 rounded-full bg-brand-600 shrink-0" aria-label="Unread" />}
               </>

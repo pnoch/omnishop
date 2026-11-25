@@ -111,7 +111,7 @@ export function SearchModal({
           </button>
         </div>
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
           <input
             ref={inputRef}
             value={query}
@@ -124,11 +124,11 @@ export function SearchModal({
         </div>
         {query.length === 0 && recentSearches.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3 items-center">
-            <span className="text-xs text-gray-500">Recent:</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Recent:</span>
             {recentSearches.map((q) => (
               <button key={q} onClick={() => setQuery(q)} className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-xs hover:bg-gray-200 dark:hover:bg-gray-600">{q}</button>
             ))}
-            <button onClick={() => { localStorage.removeItem(RECENT_KEY); setRecentSearches([]); }} className="text-xs text-gray-400 hover:text-gray-600 ml-1">Clear</button>
+            <button onClick={() => { localStorage.removeItem(RECENT_KEY); setRecentSearches([]); }} className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-600 ml-1">Clear</button>
           </div>
         )}
         {discoveredProducts.length > 0 && (
@@ -154,11 +154,11 @@ export function SearchModal({
               );
             })}
             {(selectedCategory || selectedBrand) && (
-              <button onClick={() => { setSelectedCategory(null); setSelectedBrand(null); }} className="text-xs text-gray-500 ml-1">Clear</button>
+              <button onClick={() => { setSelectedCategory(null); setSelectedBrand(null); }} className="text-xs text-gray-500 dark:text-gray-400 ml-1">Clear</button>
             )}
           </div>
         </div>
-        <div className="text-xs text-gray-500 mb-2">{sortedResults.length} result{sortedResults.length !== 1 ? "s" : ""}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{sortedResults.length} result{sortedResults.length !== 1 ? "s" : ""}</div>
         <SearchModalResults
           results={sortedResults}
           trackedIds={trackedIds}

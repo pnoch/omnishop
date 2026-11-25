@@ -55,7 +55,7 @@ export function RescheduleDialog({
               })}
             </span>
           </span>
-          <span className="text-gray-400">▾</span>
+          <span className="text-gray-500 dark:text-gray-400">▾</span>
         </button>
         <input
           id="reschedule-date"
@@ -67,7 +67,7 @@ export function RescheduleDialog({
           aria-label="Reminder date"
         />
         {error && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 mb-3">{error}</p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 mb-3">{error}</p>
         )}
         <div className="flex gap-2">
           <button

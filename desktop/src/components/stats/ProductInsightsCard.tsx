@@ -6,19 +6,19 @@ export function ProductInsightsCard({ insights }: { insights: ProductInsightsRes
       <p className="text-sm text-gray-500 dark:text-gray-400">Product Insights</p>
       <div className="flex gap-2 mt-1">
         <div className="flex-1">
-          <p className="text-lg font-bold text-emerald-600">{insights.allTimeLows}</p>
-          <p className="text-xs text-gray-400">At all-time low</p>
+          <p className="text-lg font-bold text-emerald-700 dark:text-emerald-400">{insights.allTimeLows}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">At all-time low</p>
         </div>
         <div className="flex-1">
-          <p className="text-lg font-bold text-brand-600 dark:text-brand-400">{insights.droppingCount}</p>
-          <p className="text-xs text-gray-400">Dropping now</p>
+          <p className="text-lg font-bold text-brand-600 dark:text-brand-300">{insights.droppingCount}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Dropping now</p>
         </div>
         <div className="flex-1">
           <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
             {insights.volatility.low}·{insights.volatility.medium}·{insights.volatility.high}
           </p>
-          <p className="text-xs text-gray-400">Volatility</p>
-          <p className="text-[11px] text-gray-400">Low · Medium · High</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Volatility</p>
+          <p className="text-[11px] text-gray-500 dark:text-gray-400">Low · Medium · High</p>
         </div>
       </div>
       {(() => {
@@ -27,12 +27,12 @@ export function ProductInsightsCard({ insights }: { insights: ProductInsightsRes
         return (
           <div className="mt-2 space-y-1">
             {lows.map((p) => (
-              <p key={p.productId} className="text-xs text-emerald-600 truncate">
+              <p key={p.productId} className="text-xs text-emerald-700 dark:text-emerald-400 truncate">
                 {p.name} is at its all-time low
               </p>
             ))}
             {insights.allTimeLows > lows.length && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 +{insights.allTimeLows - lows.length} more at all-time low
               </p>
             )}

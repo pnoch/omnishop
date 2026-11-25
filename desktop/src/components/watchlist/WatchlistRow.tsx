@@ -126,7 +126,7 @@ export function WatchlistRow({
                   onFindPrices(product);
                 }}
                 disabled={findingIds.has(product.id)}
-                className="mt-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline disabled:opacity-50"
+                className="mt-1 text-xs font-semibold text-brand-600 dark:text-brand-300 hover:underline disabled:opacity-50"
                 aria-label="Find prices"
               >
                 {findingIds.has(product.id) ? "Finding prices…" : "Find prices"}
@@ -140,11 +140,11 @@ export function WatchlistRow({
       </td>
       <td className="px-4 py-3">
         {best ? (
-          <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+          <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
             {formatPrice(best.price, best.currency)}
           </span>
         ) : (
-          <span className="text-sm text-gray-400">No price</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">No price</span>
         )}
         <WatchlistRowSparkline listings={product.listings ?? []} />
       </td>
@@ -156,7 +156,7 @@ export function WatchlistRow({
               {s}
             </span>
           ) : (
-            <span className="text-gray-400">—</span>
+            <span className="text-gray-500 dark:text-gray-400">—</span>
           );
         })()}
       </td>
@@ -173,7 +173,7 @@ export function WatchlistRow({
           {trend === "down" && (
             <TrendingDown className="w-4 h-4 text-emerald-500" />
           )}
-          {trend === "flat" && <Minus className="w-4 h-4 text-gray-400" />}
+          {trend === "flat" && <Minus className="w-4 h-4 text-gray-500 dark:text-gray-400" />}
         </span>
       </td>
       <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">

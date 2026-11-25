@@ -70,7 +70,7 @@ export function PerListingAlertModal({
                     key={s.key}
                     type="button"
                     onClick={() => onPriceChange(String(s.price))}
-                    className="px-3 py-1.5 rounded-full border border-brand-500/40 bg-brand-500/10 text-brand-600 dark:text-brand-400 text-xs font-semibold hover:bg-brand-500/20 transition-colors"
+                    className="px-3 py-1.5 rounded-full border border-brand-500/40 bg-brand-500/10 text-brand-600 dark:text-brand-300 text-xs font-semibold hover:bg-brand-500/20 transition-colors"
                     aria-label={`Set price to ${s.label}`}
                   >
                     {s.label} · {formatPrice(s.price, currency)}

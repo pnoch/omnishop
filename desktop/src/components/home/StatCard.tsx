@@ -13,7 +13,7 @@ export function StatCard({
 }) {
   const content = (
     <>
-      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400">
+      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300">
         {icon}
       </div>
       <div>

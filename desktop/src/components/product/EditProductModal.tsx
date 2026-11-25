@@ -73,7 +73,7 @@ export function EditProductModal({
               aria-label="Product model"
             />
             {model.trim() !== originalModel && (
-              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
                 Model changed — listings will re-match on next refresh.
               </p>
             )}

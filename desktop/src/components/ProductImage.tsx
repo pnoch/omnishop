@@ -88,7 +88,7 @@ export function ProductImage({
         className="shrink-0 bg-gray-100 dark:bg-gray-700 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-600"
         title="No image"
       >
-        <span className="text-[10px] text-gray-400 text-center leading-none">No image</span>
+        <span className="text-[10px] text-gray-600 dark:text-gray-300 text-center leading-none">No image</span>
       </div>
     );
   }

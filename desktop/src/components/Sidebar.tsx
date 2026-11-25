@@ -81,7 +81,7 @@ export function Sidebar() {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg border-l-[3px] transition-colors duration-150 ${
                   isActive
-                    ? "bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 border-brand-600 dark:border-brand-400 shadow-sm"
+                    ? "bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-300 border-brand-600 dark:border-brand-400 shadow-sm"
                     : "text-gray-600 dark:text-gray-400 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
                 }`
               }

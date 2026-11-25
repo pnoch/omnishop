@@ -58,7 +58,7 @@ export function BulkTagDialog({
         )}
         <div className="space-y-1 mb-4 max-h-[260px] overflow-y-auto">
           {Object.keys(tagDefinitions).length === 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               No tags yet — create one below.
             </p>
           )}

@@ -91,7 +91,7 @@ export function DeviceManagementSection({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
       <div className="flex items-center gap-3 mb-4">
-        <MonitorSmartphone className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+        <MonitorSmartphone className="w-5 h-5 text-brand-600 dark:text-brand-300" />
         <h2 className="text-lg font-semibold">Device Management</h2>
         <button
           onClick={loadDevices}
@@ -102,10 +102,10 @@ export function DeviceManagementSection({
         </button>
       </div>
       {!devices && devicesLoading ? (
-        <p className="text-sm text-gray-500">Loading devices…</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">Loading devices…</p>
       ) : devicesError ? (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-amber-600">{devicesError}</p>
+          <p className="text-sm text-amber-700 dark:text-amber-400">{devicesError}</p>
           <button
             onClick={loadDevices}
             className="text-sm text-brand-600 font-medium hover:underline"
@@ -114,7 +114,7 @@ export function DeviceManagementSection({
           </button>
         </div>
       ) : devices && devices.length === 0 ? (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           No other devices bound to your account.
         </p>
       ) : devices ? (
@@ -136,14 +136,14 @@ export function DeviceManagementSection({
                       {d.label ?? `${d.deviceId.slice(0, 12)}…`}
                     </p>
                     {isCurrent && (
-                      <span className="inline-flex shrink-0 px-1.5 py-0.5 rounded-lg bg-brand-600/15 text-brand-600 dark:text-brand-400 text-[10px] font-semibold">
+                      <span className="inline-flex shrink-0 px-1.5 py-0.5 rounded-lg bg-brand-600/15 text-brand-600 dark:text-brand-300 text-[10px] font-semibold">
                         This device
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{d.deviceId}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{d.deviceId}</p>
                   {d.lastSeenAt > 0 && (
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       {formatLastSeen(d.lastSeenAt)}
                     </p>
                   )}

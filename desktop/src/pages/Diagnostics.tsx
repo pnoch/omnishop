@@ -10,7 +10,7 @@ import { formatLastRefreshed } from "../../../lib/last-refreshed";
 
 function StatusIcon({ device }: { device: PushStatusDevice }) {
   if (!device.outcome) {
-    return <HelpCircle className="w-7 h-7 text-gray-400 dark:text-gray-500" aria-label="No pushes sent yet" />;
+    return <HelpCircle className="w-7 h-7 text-gray-500 dark:text-gray-400" aria-label="No pushes sent yet" />;
   }
   if (device.outcome.status === "ok") {
     return <CheckCircle2 className="w-7 h-7 text-emerald-500" aria-label="Delivered" />;
@@ -78,7 +78,7 @@ function DeviceCard({
         disabled={testing}
         onClick={() => onTest(device.deviceId)}
         aria-label={`Send test push to ${name}`}
-        className="mt-3 w-full py-2.5 rounded-[10px] border border-brand-600 text-brand-600 dark:text-brand-400 text-sm font-semibold hover:bg-brand-50 dark:hover:bg-brand-900/20 disabled:opacity-60 transition-colors"
+        className="mt-3 w-full py-2.5 rounded-[10px] border border-brand-600 text-brand-600 dark:text-brand-300 text-sm font-semibold hover:bg-brand-50 dark:hover:bg-brand-900/20 disabled:opacity-60 transition-colors"
       >
         {testing ? "Sending…" : "Send test push"}
       </button>
@@ -156,7 +156,7 @@ export function Diagnostics() {
           onClick={() => void onRefresh()}
           disabled={refreshing}
           aria-label="Refresh diagnostics"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-brand-600 dark:text-brand-400 disabled:opacity-50"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-brand-600 dark:text-brand-300 disabled:opacity-50"
         >
           <RefreshCw className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`} />
         </button>
@@ -185,7 +185,7 @@ export function Diagnostics() {
         </div>
       ) : (devices ?? []).length === 0 ? (
         <div className="text-center pt-15 px-8">
-          <HelpCircle className="w-10 h-10 text-gray-400 dark:text-gray-500 mx-auto" />
+          <HelpCircle className="w-10 h-10 text-gray-500 dark:text-gray-400 mx-auto" />
           <p className="text-base font-semibold mt-3">No devices yet</p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1.5">
             No devices with push tokens yet — open the app on a device while signed in.
@@ -207,7 +207,7 @@ export function Diagnostics() {
 
       <Link
         to="/settings"
-        className="inline-block text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
+        className="inline-block text-sm font-medium text-brand-600 dark:text-brand-300 hover:underline"
       >
         ← Back to Settings
       </Link>

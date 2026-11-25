@@ -20,7 +20,7 @@ export function DigestCard({
     return (
       <div className="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
         <p className="text-sm text-gray-500 dark:text-gray-400">Digest off</p>
-        <p className="text-sm text-gray-400 mt-2">Enable daily or weekly price digests to see changes here.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Enable daily or weekly price digests to see changes here.</p>
         <Link
           to="/settings"
           className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors text-sm font-medium"
@@ -36,7 +36,7 @@ export function DigestCard({
     return (
       <div className="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
         <p className="text-sm text-gray-500 dark:text-gray-400">Digest scheduled</p>
-        <p className="text-sm text-gray-400 mt-2">Your first digest will appear here once it&apos;s sent.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Your first digest will appear here once it&apos;s sent.</p>
       </div>
     );
   }
@@ -58,7 +58,7 @@ export function DigestCard({
             className={
               digest.valueDelta.percent >= 0
                 ? "font-bold text-red-600"
-                : "font-bold text-emerald-600"
+                : "font-bold text-emerald-700 dark:text-emerald-400"
             }
           >
             {digest.valueDelta.percent >= 0 ? "+" : ""}
@@ -71,7 +71,7 @@ export function DigestCard({
       digest.alertTargetsHit.length === 0 &&
       digest.newProducts.length === 0 &&
       digest.removedProducts.length === 0 ? (
-        <p className="text-sm text-gray-400 mt-2">No changes in this period.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">No changes in this period.</p>
       ) : (
         <div className="mt-2 space-y-2 text-sm">
           {digest.priceChanges.length > 0 && (
@@ -86,7 +86,7 @@ export function DigestCard({
                     className={
                       c.percent > 0
                         ? "font-semibold text-red-600"
-                        : "font-semibold text-emerald-600"
+                        : "font-semibold text-emerald-700 dark:text-emerald-400"
                     }
                   >
                     {c.percent > 0 ? "+" : ""}
@@ -95,7 +95,7 @@ export function DigestCard({
                 </p>
               ))}
               {digest.priceChanges.length > 3 && (
-                <p className="text-xs text-gray-400">+{digest.priceChanges.length - 3} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">+{digest.priceChanges.length - 3} more</p>
               )}
             </div>
           )}
@@ -118,10 +118,10 @@ export function DigestCard({
                   <span
                     className={
                       d.band === "hot"
-                        ? "font-semibold text-emerald-600"
+                        ? "font-semibold text-emerald-700 dark:text-emerald-400"
                         : d.band === "fair"
-                          ? "font-semibold text-amber-600"
-                          : "font-semibold text-gray-400"
+                          ? "font-semibold text-amber-700 dark:text-amber-400"
+                          : "font-semibold text-gray-500 dark:text-gray-400"
                     }
                   >
                     {dealBandLabel(d.band)}
@@ -139,7 +139,7 @@ export function DigestCard({
                 </p>
               ))}
               {digest.stockChanges.length > 3 && (
-                <p className="text-xs text-gray-400">+{digest.stockChanges.length - 3} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">+{digest.stockChanges.length - 3} more</p>
               )}
             </div>
           )}
@@ -153,7 +153,7 @@ export function DigestCard({
                 </p>
               ))}
               {digest.alertTargetsHit.length > 3 && (
-                <p className="text-xs text-gray-400">+{digest.alertTargetsHit.length - 3} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">+{digest.alertTargetsHit.length - 3} more</p>
               )}
             </div>
           )}
@@ -165,7 +165,7 @@ export function DigestCard({
                 </p>
               ))}
               {digest.newProducts.length > 3 && (
-                <p className="text-xs text-gray-400">+{digest.newProducts.length - 3} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">+{digest.newProducts.length - 3} more</p>
               )}
             </div>
           )}
@@ -177,7 +177,7 @@ export function DigestCard({
                 </p>
               ))}
               {digest.removedProducts.length > 3 && (
-                <p className="text-xs text-gray-400">+{digest.removedProducts.length - 3} more</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">+{digest.removedProducts.length - 3} more</p>
               )}
             </div>
           )}

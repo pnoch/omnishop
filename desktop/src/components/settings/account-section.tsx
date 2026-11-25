@@ -35,7 +35,7 @@ export function AccountSection({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
       <div className="flex items-center gap-3 mb-4">
-        <UserCircle className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+        <UserCircle className="w-5 h-5 text-brand-600 dark:text-brand-300" />
         <h2 className="text-lg font-semibold">Account</h2>
       </div>
       {isAuthenticated && user ? (

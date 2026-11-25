@@ -94,6 +94,7 @@ jobs:
       # light and dark mode across every route and phone/tablet/desktop width.
       - run: pnpm audit:layout
       - run: pnpm audit:contrast
+      - run: pnpm audit:desktop
       # Drives the real first-run journey (onboarding, add, alert, snooze,
       # delete/undo) so functional regressions fail CI, not just visual ones.
       - run: pnpm e2e:smoke

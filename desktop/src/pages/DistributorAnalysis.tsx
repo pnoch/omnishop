@@ -68,7 +68,7 @@ export function DistributorAnalysis() {
       <div className="flex items-center mb-4">
         <button
           onClick={() => navigate("/watchlist")}
-          className="text-blue-600 dark:text-brand-400 mr-3"
+          className="text-blue-600 dark:text-brand-300 mr-3"
           aria-label="Go back to watchlist"
         >
           ‹ Back
@@ -143,7 +143,7 @@ export function DistributorAnalysis() {
                     {formatPrice(a.averagePrice, displayCurrency)} (incl. tax)
                   </p>
                 </div>
-                <p className="text-base font-bold text-brand-600 dark:text-brand-400">
+                <p className="text-base font-bold text-brand-600 dark:text-brand-300">
                   {formatPrice(a.totalCost, displayCurrency)}
                 </p>
               </div>

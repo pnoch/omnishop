@@ -62,7 +62,7 @@ export function PriceHistoryChart({
   );
 
   if (points.length === 0)
-    return <div className="text-center text-sm text-gray-400 py-8">No data</div>;
+    return <div className="text-center text-sm text-gray-500 dark:text-gray-400 py-8">No data</div>;
 
   const width = measured === null ? 640 : Math.min(960, Math.max(320, Math.floor(measured)));
   const usableW = width - PAD_L - PAD_R;

@@ -35,7 +35,7 @@ export function BestDistributorCard({
         <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl p-5">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400 uppercase tracking-wide mb-1">
                 Best Price
               </p>
               <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">
@@ -120,7 +120,7 @@ export function BestDistributorCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={externalLinkHandler(bestListing.url)}
-              className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
+              className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 bg-emerald-700 text-white hover:bg-emerald-700 cursor-pointer"
               aria-label={`Buy ${productName} at ${bestDistributor.name}`}
             >
               Buy Now <ExternalLink className="w-3.5 h-3.5" />

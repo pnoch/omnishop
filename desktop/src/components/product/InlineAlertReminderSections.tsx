@@ -131,7 +131,7 @@ export function InlineAlertReminderSections({
               className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm"
               aria-label="Inline reminder date"
             />
-            {reminderError && <p className="text-xs text-amber-600">{reminderError}</p>}
+            {reminderError && <p className="text-xs text-amber-700 dark:text-amber-400">{reminderError}</p>}
           </div>
           <button
             onClick={onAddReminder}

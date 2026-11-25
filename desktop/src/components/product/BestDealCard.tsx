@@ -19,7 +19,7 @@ export function BestDealCard({
         <p className="text-base font-bold">
           {distrib?.countryCode} {distrib?.name ?? bestDeal.distributorId}
         </p>
-        <p className="text-lg font-bold text-brand-600 dark:text-brand-400">
+        <p className="text-lg font-bold text-brand-600 dark:text-brand-300">
           {formatPrice(bestDeal.total, bestDeal.currency)}
         </p>
       </div>

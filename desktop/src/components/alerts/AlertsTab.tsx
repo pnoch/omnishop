@@ -56,8 +56,8 @@ export function AlertsTab({
     <div className="space-y-3">
       {alerts.filter((a) => !a.triggeredAt).length > 0 && (
         <div className="flex items-center gap-2 p-3 bg-brand-600/10 border border-brand-600/20 rounded-xl">
-          <Info className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0" />
-          <p className="text-sm text-brand-600 dark:text-brand-400">
+          <Info className="w-4 h-4 text-brand-600 dark:text-brand-300 shrink-0" />
+          <p className="text-sm text-brand-600 dark:text-brand-300">
             You&apos;ll be notified when a product restocks or drops below your target.
           </p>
         </div>
@@ -84,7 +84,7 @@ export function AlertsTab({
         <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-700 space-y-3">
           {totalSaved > 0 && (
             <div className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
-              <Star className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+              <Star className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
               <div className="flex-1">
                 <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300">
                   Total Saved: {formatPrice(totalSaved, displayCurrency)}
@@ -97,7 +97,7 @@ export function AlertsTab({
             </div>
           )}
           <div className="flex items-center gap-2">
-            <RotateCcw className="w-4 h-4 text-emerald-600" />
+            <RotateCcw className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Alert History ({triggeredAlerts.length})</h3>
           </div>
           {triggeredAlerts.map((alert, idx) => (

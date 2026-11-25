@@ -150,7 +150,7 @@ export function LlmSettingsSection({
               />
               <button
                 onClick={() => setShowLlmApiKey(!showLlmApiKey)}
-                className="px-3 py-2 text-sm text-brand-600 dark:text-brand-400 font-medium"
+                className="px-3 py-2 text-sm text-brand-600 dark:text-brand-300 font-medium"
                 aria-label={showLlmApiKey ? "Hide API key" : "Show API key"}
               >
                 {showLlmApiKey ? "Hide" : "Show"}
@@ -189,7 +189,7 @@ export function LlmSettingsSection({
               />
               <button
                 onClick={() => setShowLlmApiKey(!showLlmApiKey)}
-                className="px-3 py-2 text-sm text-brand-600 dark:text-brand-400 font-medium"
+                className="px-3 py-2 text-sm text-brand-600 dark:text-brand-300 font-medium"
                 aria-label={showLlmApiKey ? "Hide API key" : "Show API key"}
               >
                 {showLlmApiKey ? "Hide" : "Show"}

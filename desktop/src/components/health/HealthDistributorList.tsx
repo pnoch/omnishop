@@ -43,7 +43,7 @@ export function HealthDistributorList({
                   ? `${distributor.countryCode} ${distributor.name}`
                   : h.distributorId}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {h.reason || h.status}
                 {sanitizeResponseTimeMs(h.responseTimeMs) != null
                   ? ` · ${sanitizeResponseTimeMs(h.responseTimeMs)}ms`
@@ -51,7 +51,7 @@ export function HealthDistributorList({
               </p>
             </div>
             <div className="flex flex-col items-end gap-1 ml-3 shrink-0">
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 {h.lastChecked
                   ? formatLastRefreshed(h.lastChecked)
                   : "Never"}
@@ -64,7 +64,7 @@ export function HealthDistributorList({
                   <HealthSparkline data={s.sparkline} color={resolveStatusColor(h)} />
                 </>
               ) : (
-                <span className="text-xs text-gray-400">–</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400">–</span>
               )}
             </div>
             <span className="ml-2 text-gray-300 dark:text-gray-600">›</span>

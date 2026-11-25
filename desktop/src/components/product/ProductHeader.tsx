@@ -38,7 +38,7 @@ export function ProductHeader({
     <>
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        className="inline-flex min-h-6 items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         aria-label="Go back"
       >
         <ArrowLeft className="w-4 h-4" /> Back
@@ -114,13 +114,13 @@ export function ProductHeader({
         </div>
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400">In Stock</p>
-          <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="text-xl font-bold text-emerald-700 dark:text-emerald-400">
             {visibleListings.filter((l) => l.stockStatus === "in_stock").length}
           </p>
         </div>
         <div>
           <p className="text-xs text-gray-500 dark:text-gray-400">Best Price</p>
-          <p className="text-xl font-bold text-brand-600 dark:text-brand-400">
+          <p className="text-xl font-bold text-brand-600 dark:text-brand-300">
             {best ? formatPrice(best.price, best.currency) : "N/A"}
           </p>
         </div>

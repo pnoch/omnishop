@@ -58,7 +58,7 @@ export function RemindersTab({
                 className={`flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl border hover:shadow-sm transition-shadow animate-fadeIn ${isPast ? "border-amber-300 dark:border-amber-700" : "border-gray-200 dark:border-gray-700"}`}
                 style={{ animationDelay: `${idx * 60}ms` } as React.CSSProperties}
               >
-                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 shrink-0">
+                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 shrink-0">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -87,7 +87,7 @@ export function RemindersTab({
                 </button>
                 <button
                   onClick={() => onDeleteReminder(r.id)}
-                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   title="Delete reminder"
                   aria-label="Delete reminder"
                 >
@@ -112,7 +112,7 @@ export function RemindersTab({
                 className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow animate-fadeIn"
                 style={{ animationDelay: `${(reminders.length + idx) * 60}ms` } as React.CSSProperties}
               >
-                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 shrink-0">
+                <div className="flex items-center justify-center w-9 h-9 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-300 shrink-0">
                   <Bell className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -132,13 +132,13 @@ export function RemindersTab({
                     }
                   />
                 )}
-                <span className="text-xs text-gray-400 shrink-0">· last checked</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 shrink-0">· last checked</span>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-xs font-semibold shrink-0">
                   Watching
                 </span>
                 <button
                   onClick={() => onDeleteWatch(w.id)}
-                  className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   title="Delete stock watch"
                   aria-label="Delete stock watch"
                 >

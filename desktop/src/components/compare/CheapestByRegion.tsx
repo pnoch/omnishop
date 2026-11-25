@@ -16,7 +16,7 @@ export function CheapestByRegion({
         Cheapest by Region
       </h3>
       {regionBest.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-3">No in-stock regions</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 text-center py-3">No in-stock regions</p>
       ) : (
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {regionBest.map((item, i) => {
@@ -35,8 +35,8 @@ export function CheapestByRegion({
                     </span>
                   )}
                   <span className="text-sm font-medium">{item.region}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{dist?.countryCode}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-gray-600 dark:text-gray-300">{dist?.countryCode}</span>
+                  <span className="text-xs text-gray-600 dark:text-gray-300">
                     {dist?.name ?? item.listing.distributorId}
                   </span>
                 </div>

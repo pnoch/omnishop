@@ -25,7 +25,7 @@ export function Health() {
       <div className="flex items-center mb-4">
         <button
           onClick={() => navigate("/settings")}
-          className="text-blue-600 mr-3"
+          className="inline-flex min-h-6 items-center text-blue-600 dark:text-brand-300 mr-3"
           aria-label="Go back to settings"
         >
           ‹ Back

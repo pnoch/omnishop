@@ -115,7 +115,7 @@ export function ScraperStatusSection({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
       <div className="flex items-center gap-3 mb-4">
-        <Activity className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+        <Activity className="w-5 h-5 text-brand-600 dark:text-brand-300" />
         <h2 className="text-lg font-semibold">Scraper Status</h2>
       </div>
       <div className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -154,13 +154,13 @@ export function ScraperStatusSection({
                       <button
                         onClick={() => handleReenableDistributor(id)}
                         disabled={reenabling}
-                        className="ml-2 shrink-0 px-3 py-1.5 rounded-lg bg-brand-600/10 text-brand-600 dark:text-brand-400 text-xs font-semibold hover:bg-brand-600/20 disabled:opacity-50"
+                        className="ml-2 shrink-0 px-3 py-1.5 rounded-lg bg-brand-600/10 text-brand-600 dark:text-brand-300 text-xs font-semibold hover:bg-brand-600/20 disabled:opacity-50"
                         aria-label={`Re-enable ${distributor.name}`}
                       >
                         Re-enable
                       </button>
                     ) : (
-                      <span className="ml-2 shrink-0 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                      <span className="ml-2 shrink-0 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                         {health.label}
                       </span>
                     )}
@@ -168,7 +168,7 @@ export function ScraperStatusSection({
                 );
               })}
             {Object.keys(distributorStatuses).length === 0 && (
-              <p className="text-sm text-gray-500 text-center py-4">
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
                 No distributors configured
               </p>
             )}

@@ -92,7 +92,7 @@ export function OnboardingModal({
           aria-hidden="true"
         >
           <slide.icon
-            className="w-10 h-10 text-brand-600 dark:text-brand-400"
+            className="w-10 h-10 text-brand-600 dark:text-brand-300"
             strokeWidth={1.75}
           />
         </div>

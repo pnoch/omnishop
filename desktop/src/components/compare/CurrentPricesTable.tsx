@@ -20,7 +20,7 @@ export function CurrentPricesTable({
         Current Prices
       </h2>
       {selected.size === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-3">
+        <p className="text-sm text-gray-600 dark:text-gray-300 text-center py-3">
           No distributors selected
         </p>
       ) : (
@@ -38,12 +38,12 @@ export function CurrentPricesTable({
                     <p className="text-sm font-medium truncate">
                       {distributor?.countryCode} {distributor?.name ?? l.distributorId}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{distributor?.country}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-300">{distributor?.country}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="text-sm font-semibold">{formatPrice(l.price, l.currency)}</span>
                     {l.currency !== displayCurrency && converted !== null && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
                         ≈ {formatPrice(converted, displayCurrency)}
                       </span>
                     )}

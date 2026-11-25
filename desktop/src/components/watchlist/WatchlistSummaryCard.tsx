@@ -36,19 +36,19 @@ export function WatchlistSummaryCard({
               key: "in_stock",
               label: "In Stock",
               value: summary.inStock,
-              valueClass: "text-emerald-600",
+              valueClass: "text-emerald-700 dark:text-emerald-400",
             },
             {
               key: "back_order",
               label: "Back Order",
               value: summary.backOrder,
-              valueClass: "text-amber-600",
+              valueClass: "text-amber-700 dark:text-amber-400",
             },
             {
               key: "out_of_stock",
               label: "Out of Stock",
               value: summary.outOfStock,
-              valueClass: "text-red-600",
+              valueClass: "text-red-600 dark:text-red-400",
             },
             {
               key: "all",
@@ -79,7 +79,7 @@ export function WatchlistSummaryCard({
             <span className={`block text-lg font-semibold ${item.valueClass}`}>
               {item.value}
             </span>
-            <span className="block text-xs text-gray-500">{item.label}</span>
+            <span className="block text-xs text-gray-600 dark:text-gray-300">{item.label}</span>
           </button>
         ))}
       </div>

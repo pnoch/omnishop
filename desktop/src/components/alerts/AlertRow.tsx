@@ -46,7 +46,7 @@ export function AlertRow({
             : "border-gray-200 dark:border-gray-700"
       }`}
     >
-      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 shrink-0">
+      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-300 shrink-0">
         <Bell className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
@@ -63,11 +63,11 @@ export function AlertRow({
             `Alert — target ${formatPrice(alert.targetPrice, alert.currency)}`
           )}
           {alert.distributorId ? (
-            <span className="ml-1.5 text-xs text-gray-400 font-normal">
+            <span className="ml-1.5 text-xs text-gray-500 dark:text-gray-400 font-normal">
               at {(() => { const d = getDistributorById(alert.distributorId!); return d ? `${d.countryCode} ${d.name}` : alert.distributorId; })()}
             </span>
           ) : null}
-          {isSnoozed && <span className="ml-2 text-xs font-semibold text-amber-600 dark:text-amber-400">Snoozed until {new Date(alert.snoozedUntil!).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>}
+          {isSnoozed && <span className="ml-2 text-xs font-semibold text-amber-700 dark:text-amber-400">Snoozed until {new Date(alert.snoozedUntil!).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>}
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           {isTriggered ? (
@@ -83,7 +83,7 @@ export function AlertRow({
               )}
               Target: {formatPrice(alert.targetPrice, alert.currency)}
               {alert.triggeredPrice && alert.triggeredPrice > 0 && (
-                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
                   {" "}→ {formatPrice(alert.triggeredPrice, alert.currency)}
                 </span>
               )}{" "}
@@ -118,7 +118,7 @@ export function AlertRow({
       {isTriggered ? (
         <button
           onClick={() => onRearm(alert.id)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-lg transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-brand-600 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-lg transition-colors"
           aria-label="Rearm price alert"
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -128,7 +128,7 @@ export function AlertRow({
         <>
           <button
             onClick={() => onEdit(alert)}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
+            className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 transition-colors"
             title="Edit alert (price/currency/direction/distributor)"
             aria-label="Edit price alert"
           >
@@ -137,7 +137,7 @@ export function AlertRow({
           <div className="relative">
             <button
               onClick={() => setShowSnooze((v) => !v)}
-              className={`p-1.5 rounded-lg transition-colors ${isSnoozed ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20" : "text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"}`}
+              className={`p-1.5 rounded-lg transition-colors ${isSnoozed ? "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20" : "text-gray-500 dark:text-gray-400 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"}`}
               title={isSnoozed ? "Snoozed — click to change" : "Snooze alert"}
               aria-label="Snooze alert"
             >
@@ -148,13 +148,13 @@ export function AlertRow({
                 <button onClick={() => { onSnooze(alert.id, 1); setShowSnooze(false); }} className="px-3 py-1.5 text-xs font-medium text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded">1 day</button>
                 <button onClick={() => { onSnooze(alert.id, 7); setShowSnooze(false); }} className="px-3 py-1.5 text-xs font-medium text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded">7 days</button>
                 <button onClick={() => { onSnooze(alert.id, 30); setShowSnooze(false); }} className="px-3 py-1.5 text-xs font-medium text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded">30 days</button>
-                {isSnoozed && <button onClick={() => { onSnooze(alert.id, 0); setShowSnooze(false); }} className="px-3 py-1.5 text-xs font-medium text-left text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded">Wake now</button>}
+                {isSnoozed && <button onClick={() => { onSnooze(alert.id, 0); setShowSnooze(false); }} className="px-3 py-1.5 text-xs font-medium text-left text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded">Wake now</button>}
               </div>
             )}
           </div>
           <button
             onClick={() => onToggle(alert.id)}
-            className="text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg p-1.5 transition-colors"
+            className="text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg p-1.5 transition-colors"
             title={alert.isActive ? "Deactivate alert" : "Activate alert"}
             aria-label={alert.isActive ? "Deactivate alert" : "Activate alert"}
           >
@@ -169,7 +169,7 @@ export function AlertRow({
 
       <button
         onClick={() => onDelete(alert.id)}
-        className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+        className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
         title="Delete alert"
         aria-label="Delete price alert"
       >

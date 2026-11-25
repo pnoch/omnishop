@@ -47,7 +47,7 @@ export function MultiLineChart({ data, distributors, colors, currencySymbol = "$
     }
   }
   if (data.length === 0 || values.length === 0) {
-    return <div className="text-center text-sm text-gray-400 py-8">No data</div>;
+    return <div className="text-center text-sm text-gray-500 dark:text-gray-400 py-8">No data</div>;
   }
 
   const width = measured === null ? 720 : Math.min(1100, Math.max(320, Math.floor(measured)));

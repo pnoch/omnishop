@@ -22,7 +22,7 @@ export function HeaderBar() {
           }
         />
         <span
-          className="text-xs text-gray-400 dark:text-gray-500"
+          className="text-xs text-gray-500 dark:text-gray-400"
           title={`Press ${searchHint} to search — ${isMac ? "Cmd" : "Ctrl"}+K, ${isMac ? "Cmd" : "Ctrl"}+, for settings, ${isMac ? "Cmd" : "Ctrl"}+Shift+T to toggle theme`}
           aria-label={`Keyboard shortcuts: ${searchHint} search, ${isMac ? "Cmd" : "Ctrl"} comma settings, ${isMac ? "Cmd" : "Ctrl"} Shift T toggle theme`}
         >

@@ -40,7 +40,7 @@ export function ProductInsightCards({
           <span
             className={`text-2xl font-bold shrink-0 min-w-[84px] ${
               priceVsAvg.verdict === "below"
-                ? "text-emerald-600 dark:text-emerald-400"
+                ? "text-emerald-700 dark:text-emerald-400"
                 : priceVsAvg.verdict === "above"
                   ? "text-red-600 dark:text-red-400"
                   : "text-gray-500 dark:text-gray-400"

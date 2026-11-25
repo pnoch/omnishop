@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.47] - 2026-11-25
+
+### Accessibility
+
+- Audited the Tauri desktop UI at 1024/1280/1440 in light and dark with the same
+  checks as mobile (contrast, clipping/overflow, target size). Fixed systemic
+  issues across the desktop components: light-mode secondary text
+  (`gray-400` → `gray-500`/`600`), emerald/amber status text (`600` → `700`
+  with dark variants), dark-mode brand links (`brand-400` → `brand-300`),
+  luminance-based text on chart-color chips, dark-mode gray labels and the
+  out-of-stock count, and controls under 24 px.
+- Added `pnpm audit:desktop` (24 px desktop target minimum, WCAG AA, no
+  overflow at 1024/1280/1440 in both schemes) and a CI step.
+
 ## [5.32.46] - 2026-11-24
 
 ### Fixed

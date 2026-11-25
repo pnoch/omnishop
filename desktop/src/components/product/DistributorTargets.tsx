@@ -48,7 +48,7 @@ export function DistributorTargets({
                       )}
                       {deltaPct !== null && (
                         <span
-                          className={`ml-1.5 font-semibold ${deltaPct <= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-gray-500 dark:text-gray-400"}`}
+                          className={`ml-1.5 font-semibold ${deltaPct <= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-gray-500 dark:text-gray-400"}`}
                         >
                           {deltaPct > 0 ? `+${deltaPct}%` : `${deltaPct}%`}
                         </span>

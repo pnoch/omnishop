@@ -60,7 +60,7 @@ export function NotificationSettingsSection({
   return (
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
         <div className="flex items-center gap-3 mb-4">
-          <Bell className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+          <Bell className="w-5 h-5 text-brand-600 dark:text-brand-300" />
           <h2 className="text-lg font-semibold">Notifications</h2>
         </div>
         <div className="space-y-1">
@@ -111,7 +111,7 @@ export function NotificationSettingsSection({
             ariaLabel="Enable web notifications"
           />
           {webNotifHint && (
-            <p className="px-3 text-xs text-amber-600 dark:text-amber-400">{webNotifHint}</p>
+            <p className="px-3 text-xs text-amber-700 dark:text-amber-400">{webNotifHint}</p>
           )}
           <SettingsToggleRow
             label="Health Alerts"
@@ -156,13 +156,13 @@ export function NotificationSettingsSection({
                 type="button"
                 disabled={webhookTesting || !isAuthenticated}
                 onClick={handleTestWebhook}
-                className="text-sm font-medium text-brand-600 dark:text-brand-400 disabled:opacity-50"
+                className="inline-flex min-h-6 items-center text-sm font-medium text-brand-600 dark:text-brand-300 disabled:opacity-50"
               >
                 {webhookTesting ? "Sending…" : "Send test"}
               </button>
             </div>
             {webhookHint && (
-              <p className={`mt-2 text-xs ${webhookHintOk ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+              <p className={`mt-2 text-xs ${webhookHintOk ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                 {webhookHint}
               </p>
             )}
@@ -225,7 +225,7 @@ export function NotificationSettingsSection({
               <span className="block text-sm font-medium">Push delivery status</span>
               <span className="block text-xs text-gray-500 dark:text-gray-400">Check per-device delivery health</span>
             </span>
-            <span className="text-brand-600 dark:text-brand-400 text-sm font-medium">View</span>
+            <span className="text-brand-600 dark:text-brand-300 text-sm font-medium">View</span>
           </Link>
           <button
             onClick={handleTestNotification}

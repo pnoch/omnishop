@@ -146,7 +146,7 @@ export function ManageTagsDialog({
             </div>
           ))}
           {Object.keys(tagDefinitions).length === 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               No tags yet. Create one below.
             </p>
           )}

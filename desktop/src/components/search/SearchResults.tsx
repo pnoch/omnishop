@@ -55,20 +55,20 @@ export function SearchResults({
               <ProductImage productId={product.id} />
               <div className="min-w-0 flex-1">
                 <div className="font-medium text-sm truncate">{product.name}</div>
-                <div className="text-xs text-gray-500 truncate">{product.brand} · {product.category} · {product.modelNumber}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{product.brand} · {product.category} · {product.modelNumber}</div>
                 {Object.keys(tagDefinitions).length > 0 && !isTracked && (
                   <button onClick={(e) => { e.stopPropagation(); onAssignTags(product.id); }} className="mt-1 text-xs text-brand-600 hover:underline">{pending.length ? `${pending.length} tag${pending.length !== 1 ? "s" : ""}` : "Assign tags"}</button>
                 )}
                 {pending.length > 0 && <div className="flex gap-1 mt-1 flex-wrap">{pending.map((tid) => { const d = tagDefinitions[tid]; if (!d) return null; return <span key={tid} className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold text-white" style={{ backgroundColor: d.color }}>{d.name}</span>; })}</div>}
               </div>
             </div>
-            {isTracked ? <span className="flex items-center gap-1 text-emerald-600 text-xs font-medium ml-2"><Check className="w-4 h-4" /> Tracked</span> : <button onClick={(e) => { e.stopPropagation(); onAdd(product); }} className="ml-2 px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-medium hover:bg-brand-700 flex items-center gap-1"><Plus className="w-3 h-3" /> Add</button>}
+            {isTracked ? <span className="flex items-center gap-1 text-emerald-700 dark:text-emerald-400 text-xs font-medium ml-2"><Check className="w-4 h-4" /> Tracked</span> : <button onClick={(e) => { e.stopPropagation(); onAdd(product); }} className="ml-2 px-3 py-1.5 rounded-lg bg-brand-600 text-white text-xs font-medium hover:bg-brand-700 flex items-center gap-1"><Plus className="w-3 h-3" /> Add</button>}
           </div>
         );
       })}
       {results.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-sm text-gray-500 mb-4">No products found.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No products found.</p>
           {!query.trim() && searchTagIds.length === 0 && (
             <p className="inline-flex items-center gap-2 px-3.5 py-2.5 mb-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400">
               <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
@@ -82,7 +82,7 @@ export function SearchResults({
           {discovering ? (
             <div className="flex flex-col items-center gap-2 py-4">
               <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
-              <span className="text-sm text-gray-500">Discovering...</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Discovering...</span>
             </div>
           ) : (
             <button

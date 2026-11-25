@@ -77,7 +77,7 @@ export function SharedLinksList() {
         return (
           <div key={link.token} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600">
             <p className="text-sm font-semibold truncate">{link.title}</p>
-            <p className={`text-xs mt-0.5 ${expired ? "text-red-500" : "text-gray-500"}`}>
+            <p className={`text-xs mt-0.5 ${expired ? "text-red-500" : "text-gray-500 dark:text-gray-400"}`}>
               {link.expiresAt ? `${expired ? "Expired" : "Expires"} ${new Date(link.expiresAt).toLocaleDateString()}` : "No expiry"}
             </p>
             <div className="flex gap-2 mt-2">

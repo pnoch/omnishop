@@ -41,7 +41,7 @@ export function SharedWatchlistHeader({
           {metaLine ? ` · ${metaLine}` : ""}
         </p>
         {truncated && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+          <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
             This share is larger than the 500-product limit — only the first 500 are shown.
           </p>
         )}
@@ -61,7 +61,7 @@ export function SharedWatchlistHeader({
             <button
               onClick={onJoin}
               disabled={joinPending}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-600 text-brand-600 dark:text-brand-400 text-sm font-medium hover:bg-brand-50 dark:hover:bg-brand-900/20 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-600 text-brand-600 dark:text-brand-300 text-sm font-medium hover:bg-brand-50 dark:hover:bg-brand-900/20 disabled:opacity-50"
               aria-label="Join shared watchlist"
             >
               {joinPending ? "Joining" : "Join"}

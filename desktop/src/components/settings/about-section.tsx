@@ -22,7 +22,7 @@ export function AboutSection({
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
       <div className="flex items-center gap-3 mb-4">
-        <Info className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+        <Info className="w-5 h-5 text-brand-600 dark:text-brand-300" />
         <h2 className="text-lg font-semibold">About</h2>
       </div>
       <div className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -65,7 +65,7 @@ export function AboutSection({
           <a
             href={getSupportMailtoUrl()}
             onClick={externalLinkHandler(getSupportMailtoUrl())}
-            className="ml-2 shrink-0 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+            className="ml-2 shrink-0 text-xs font-semibold text-brand-600 dark:text-brand-300 hover:underline"
             aria-label="Contact support"
           >
             Email us
@@ -84,14 +84,14 @@ export function AboutSection({
               target="_blank"
               rel="noopener noreferrer"
               onClick={externalLinkHandler(getPrivacyPolicyUrl())}
-              className="ml-2 shrink-0 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline"
+              className="ml-2 shrink-0 text-xs font-semibold text-brand-600 dark:text-brand-300 hover:underline"
               aria-label="Open privacy policy"
             >
               View
             </a>
           ) : (
             <span
-              className="ml-2 shrink-0 text-xs text-gray-400"
+              className="ml-2 shrink-0 text-xs text-gray-500 dark:text-gray-400"
               aria-label="Privacy policy not configured"
             >
               Not configured

@@ -15,7 +15,7 @@ export function CrossAlertCard({
     <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-3">
       <div className="flex-1">
         <div className="text-sm font-semibold">Alert me if any distributor drops below</div>
-        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <div className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">
           {formatPrice(alertTarget, displayCurrency)} (5% below current best of {formatPrice(crossBest, displayCurrency)})
         </div>
       </div>

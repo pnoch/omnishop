@@ -27,7 +27,7 @@ export function CompareDistributorList({
             className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
               sortBy === "name"
                 ? "bg-brand-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
             aria-label="Sort by name"
           >
@@ -39,7 +39,7 @@ export function CompareDistributorList({
             className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
               sortBy === "price"
                 ? "bg-brand-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
             aria-label="Sort by price"
           >
@@ -51,7 +51,7 @@ export function CompareDistributorList({
             className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
               sortBy === "trend"
                 ? "bg-brand-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
             aria-label="Sort by trend"
           >
@@ -65,7 +65,7 @@ export function CompareDistributorList({
             <GitCompareArrows className="w-10 h-10" />
           </div>
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">No distributors to compare</h3>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
+          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 max-w-sm">
             Add distributors to this product to see side-by-side prices and trends.
           </p>
         </div>
@@ -86,7 +86,7 @@ export function CompareDistributorList({
                   )}
                   <div>
                     <p className="font-medium text-sm">{listing.distName}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-gray-600 dark:text-gray-300">
                       {listing.dist?.country ?? listing.distributorId}
                     </p>
                   </div>
@@ -109,7 +109,7 @@ export function CompareDistributorList({
                       <TrendingUp className="w-4 h-4 text-red-500" />
                     )}
                     {trend === "flat" && (
-                      <Minus className="w-4 h-4 text-gray-400" />
+                      <Minus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                     )}
                   </div>
                 </div>

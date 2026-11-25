@@ -77,7 +77,7 @@ export function SeriesChart({
   }, [series, displayCurrency]);
 
   if (allPrices.length === 0) {
-    return <div className="text-center text-sm text-gray-400 py-8">No data</div>;
+    return <div className="text-center text-sm text-gray-600 dark:text-gray-300 py-8">No data</div>;
   }
   const globalMin = Math.min(...allPrices);
   const globalMax = Math.max(...allPrices);
@@ -92,7 +92,7 @@ export function SeriesChart({
       if (!Number.isNaN(t)) allDates.push(t);
     }
   if (allDates.length === 0) {
-    return <div className="text-center text-sm text-gray-400 py-8">No data</div>;
+    return <div className="text-center text-sm text-gray-600 dark:text-gray-300 py-8">No data</div>;
   }
   const minDate = Math.min(...allDates);
   const maxDate = Math.max(...allDates);
@@ -197,7 +197,7 @@ export function SeriesChart({
               return (
                 <p key={s.label} className="flex items-center gap-2 animate-fadeIn" style={{ animationDelay: `${i * 55}ms` } as React.CSSProperties}>
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                  <span className="text-gray-500 dark:text-gray-400 truncate max-w-[90px]">{s.label}</span>
+                  <span className="text-gray-600 dark:text-gray-300 truncate max-w-[90px]">{s.label}</span>
                   <span className="font-semibold text-gray-900 dark:text-gray-100 ml-auto">{symbol}{conv.toFixed(2)}</span>
                 </p>
               );

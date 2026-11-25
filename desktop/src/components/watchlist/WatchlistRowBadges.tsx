@@ -17,7 +17,7 @@ export function WatchlistRowBadges({
       {insight && (insight.atAllTimeLow || insight.dropStreak >= 2) && (
         <>
           {insight.atAllTimeLow && (
-            <span className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+            <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
               All-time low
             </span>
           )}
@@ -29,7 +29,7 @@ export function WatchlistRowBadges({
         </>
       )}
       {dealScore?.band === "hot" && (
-        <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400">
+        <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400">
           {dealBandLabel(dealScore.band)}
         </span>
       )}
@@ -52,7 +52,7 @@ export function WatchlistRowBadges({
       {(product.tags ?? []).filter((id) => tagDefinitions[id]).length === 0 &&
         product.tags &&
         product.tags.length > 0 && (
-          <span className="text-[10px] text-gray-400">
+          <span className="text-[10px] text-gray-500 dark:text-gray-400">
             · {product.tags.length} tag
             {product.tags.length !== 1 ? "s" : ""}
           </span>

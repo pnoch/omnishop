@@ -104,7 +104,7 @@ export function DropLeaderboard() {
                 </p>
               </div>
               <div className="text-right shrink-0">
-                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
                   {formatDropPct(drop.dropPct)}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -118,7 +118,7 @@ export function DropLeaderboard() {
       <div className="flex justify-end mt-2">
         <Link
           to="/drops"
-          className="text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
+          className="text-sm font-medium text-brand-600 dark:text-brand-300 hover:underline"
           aria-label="See all price drops"
         >
           See all →

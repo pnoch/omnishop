@@ -79,7 +79,7 @@ export function ReminderDatePickerModal({
                 })}
               </span>
             </span>
-            <span className="text-gray-400">▾</span>
+            <span className="text-gray-500 dark:text-gray-400">▾</span>
           </button>
           <input
             id="reminder-date-picker"
@@ -90,7 +90,7 @@ export function ReminderDatePickerModal({
             className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             aria-label="Reminder date"
           />
-          {error && <p className="text-xs text-amber-600 dark:text-amber-400">{error}</p>}
+          {error && <p className="text-xs text-amber-700 dark:text-amber-400">{error}</p>}
           <div className="flex justify-end gap-2 pt-2">
             <button
               onClick={onClose}

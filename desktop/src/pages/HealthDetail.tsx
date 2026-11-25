@@ -74,7 +74,7 @@ export function HealthDetail() {
   if (!distributor) {
     return (
       <div className="p-6 max-w-3xl mx-auto">
-        <button onClick={() => navigate(-1)} className="text-blue-600 mb-4" aria-label="Go back">‹ Back</button>
+        <button onClick={() => navigate(-1)} className="inline-flex min-h-6 items-center text-blue-600 dark:text-brand-300 mb-4" aria-label="Go back">‹ Back</button>
         <div className="text-center mt-10">
           <p className="font-semibold text-gray-700 dark:text-gray-200">Distributor not found</p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -100,7 +100,7 @@ export function HealthDetail() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <div className="flex items-center mb-4">
-        <button onClick={() => navigate(-1)} className="text-blue-600 mr-3" aria-label="Go back">‹ Back</button>
+        <button onClick={() => navigate(-1)} className="inline-flex min-h-6 items-center text-blue-600 dark:text-brand-300 mr-3" aria-label="Go back">‹ Back</button>
         <h1 className="text-xl font-bold">{distributor.countryCode} {distributor.name}</h1>
       </div>
 

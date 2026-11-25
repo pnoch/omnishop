@@ -41,11 +41,11 @@ export function HealthSummary({
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4 flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Overall Uptime</p>
-          <p className="text-2xl font-bold mt-1">{overallWorkingPct}% <span className="text-sm font-medium text-gray-500">{counts.working}/{health.length} working</span></p>
+          <p className="text-2xl font-bold mt-1">{overallWorkingPct}% <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{counts.working}/{health.length} working</span></p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{counts.blocked} blocked · {counts.error} error</p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-gray-400">Last check</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Last check</p>
           <p className="text-sm font-medium">{(() => { if (health.length === 0) return "Never"; const latest = health.reduce((max, h) => Math.max(max, new Date(h.lastChecked).getTime()), 0); return Number.isFinite(latest) && latest > 0 ? formatLastRefreshed(new Date(latest).toISOString()) : "Never"; })()}</p>
         </div>
       </div>

@@ -41,7 +41,7 @@ export function RecentActivity({
                 </div>
               </div>
               <div className="flex items-center gap-4 ml-4">
-                <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
                   {listing ? (
                     (() => {
                       const conv = convertPrice(listing.price, listing.currency, displayCurrency);
@@ -55,10 +55,10 @@ export function RecentActivity({
                   )}
                 </span>
                 <StockBadge status={listing?.stockStatus ?? "unknown"} />
-                <span className="text-xs text-gray-400 whitespace-nowrap">
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                   {timeAgo}
                 </span>
-                <ArrowRight className="w-4 h-4 text-gray-400" />
+                <ArrowRight className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               </div>
             </Link>
           );

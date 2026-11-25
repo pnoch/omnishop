@@ -33,7 +33,7 @@ export function HomeWatchlistPreview({
         <h2 className="text-lg font-semibold">Your Watchlist</h2>
         <Link
           to="/watchlist"
-          className="text-sm font-medium text-brand-600 dark:text-brand-400 hover:underline"
+          className="text-sm font-medium text-brand-600 dark:text-brand-300 hover:underline"
           aria-label={`View all ${products.length} product${products.length === 1 ? "" : "s"}`}
         >
           View all {products.length} product{products.length === 1 ? "" : "s"} →
@@ -57,11 +57,11 @@ export function HomeWatchlistPreview({
                   {product.brand} · {product.modelNumber}
                 </p>
                 {bestPrice ? (
-                  <p className="text-sm font-semibold text-brand-600 dark:text-brand-400 mt-1">
+                  <p className="text-sm font-semibold text-brand-600 dark:text-brand-300 mt-1">
                     {formatPrice(bestPrice.price, bestPrice.currency)}
                   </p>
                 ) : (
-                  <p className="text-xs text-gray-400 mt-1">No price</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">No price</p>
                 )}
               </div>
               <StockBadge status={bestStatus} />

@@ -40,7 +40,7 @@ export function SignedInAccountCard({
             {user.email ?? user.openId}
           </p>
           {user.email != null && user.emailVerified === true && (
-            <span aria-label="Email verified" className="inline-block mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">Verified</span>
+            <span aria-label="Email verified" className="inline-block mt-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">Verified</span>
           )}
           {user.email != null && !user.emailVerified && (
             <div className="mt-1">

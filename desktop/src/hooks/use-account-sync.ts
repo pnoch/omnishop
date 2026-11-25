@@ -43,7 +43,7 @@ export function useAccountSync({
     syncStatus.tone === "error"
       ? "text-red-600 dark:text-red-400"
       : syncStatus.tone === "success"
-        ? "text-emerald-600 dark:text-emerald-400"
+        ? "text-emerald-700 dark:text-emerald-400"
         : "text-gray-500 dark:text-gray-400";
 
   const handleSyncNow = useCallback(async () => {

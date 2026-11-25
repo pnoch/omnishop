@@ -26,7 +26,7 @@ export function CompareHeader({
     <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
       <div className="min-w-0">
         <h1 className="text-2xl font-bold">Compare Prices</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-gray-600 dark:text-gray-300">
           {product.name} · {product.brand} {product.modelNumber}
         </p>
       </div>

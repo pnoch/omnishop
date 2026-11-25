@@ -36,7 +36,7 @@ export function UntrackedProductCard({
     <div className="p-6 space-y-6 max-w-4xl">
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        className="inline-flex min-h-6 items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         aria-label="Go back"
       >
         <ArrowLeft className="w-4 h-4" /> Back
@@ -84,7 +84,7 @@ export function ProductNotFound({
       <div className="flex items-center gap-2 mb-4">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          className="inline-flex min-h-6 items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
           aria-label="Go back"
         >
           <ArrowLeft className="w-4 h-4" /> Back

@@ -23,7 +23,7 @@ export function DropCalendarCard({
       </p>
       <div className="grid grid-cols-7 gap-1 mt-3" role="grid" aria-label="Price drop calendar, last 30 days">
         {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
-          <div key={`hdr-${i}`} className="w-8 h-4 flex items-center justify-center text-[10px] font-medium text-gray-400" aria-hidden>
+          <div key={`hdr-${i}`} className="w-8 h-4 flex items-center justify-center text-[10px] font-medium text-gray-500 dark:text-gray-400" aria-hidden>
             {d}
           </div>
         ))}
@@ -62,7 +62,7 @@ export function DropCalendarCard({
             <div
               key={key}
               title={label}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-400"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             >
               {Number(key.slice(8, 10))}
             </div>

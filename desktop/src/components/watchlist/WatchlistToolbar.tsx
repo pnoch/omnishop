@@ -194,7 +194,7 @@ export function WatchlistToolbar({
             <Plus className="w-4 h-4" /> Add Product
           </button>
           {checking && checkProgress && (
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
               Checking {checkProgress.current}/{checkProgress.total} products
             </span>
           )}
