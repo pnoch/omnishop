@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.51] - 2026-11-25
+
+### Observability
+
+- Desktop Diagnostics now shows the server snapshot from `/api/status`:
+  database state, uptime/Node, RSS, the warmer's last tick, and the thumbnail
+  encoder queue and cache sizes. The payload is validated and normalized
+  client-side; a 503 that still carries a snapshot renders as Degraded, and a
+  local-only build explains why the card is unavailable.
+
 ## [5.32.50] - 2026-11-25
 
 ### Performance

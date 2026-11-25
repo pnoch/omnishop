@@ -1,12 +1,137 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
-import { CheckCircle2, XCircle, HelpCircle, RefreshCw } from "lucide-react";
+import { CheckCircle2, XCircle, HelpCircle, RefreshCw, Server } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { getApiBaseUrl } from "../lib/api-base";
+import {
+  dbState,
+  formatUptime,
+  parseServerStatus,
+  warmerState,
+  type ServerStatus,
+  type StatusTone,
+} from "../lib/server-status";
 import { createTRPCClient } from "../lib/trpc";
 import { getDesktopDeviceId } from "../lib/device-id";
 import { pushErrorHelpText, type PushStatusDevice } from "../../../lib/server-notifications";
 import { formatLastRefreshed } from "../../../lib/last-refreshed";
+
+const TONE_CLASS: Record<StatusTone, string> = {
+  ok: "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300",
+  warn: "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300",
+  error: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300",
+  idle: "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300",
+};
+
+function Badge({ tone, label }: { tone: StatusTone; label: string }) {
+  return (
+    <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${TONE_CLASS[tone]}`}>
+      {label}
+    </span>
+  );
+}
+
+function ServerStatusCard({
+  base,
+  status,
+  error,
+  loading,
+}: {
+  base: string;
+  status: ServerStatus | null;
+  error: string | null;
+  loading: boolean;
+}) {
+  const db = status ? dbState(status.db) : null;
+  const warmer = status ? warmerState(status.warmer) : null;
+  const online = status?.ok === true;
+
+  return (
+    <section
+      aria-labelledby="server-status-heading"
+      className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700"
+    >
+      <div className="flex items-center gap-2.5">
+        <Server className="w-5 h-5 text-gray-600 dark:text-gray-300" aria-hidden="true" />
+        <h2 id="server-status-heading" className="text-base font-semibold flex-1">
+          Server status
+        </h2>
+        {status && (
+          <Badge
+            tone={online ? "ok" : "error"}
+            label={online ? "Online" : "Degraded"}
+          />
+        )}
+      </div>
+
+      {!base ? (
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-3">
+          Local-only build — no API base URL is configured, so server
+          diagnostics are unavailable.
+        </p>
+      ) : loading && !status ? (
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-3" role="status">
+          Checking the server…
+        </p>
+      ) : error ? (
+        <div className="mt-3 flex items-start gap-2 text-sm">
+          <XCircle className="w-4 h-4 text-red-500 mt-0.5 shrink-0" aria-hidden="true" />
+          <p className="text-gray-700 dark:text-gray-200" role="status">
+            Couldn&apos;t reach /api/status: {error}
+          </p>
+        </div>
+      ) : status && db && warmer ? (
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 mt-3 text-sm">
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Database</dt>
+            <dd className="mt-0.5">
+              <Badge tone={db.tone} label={db.label} />
+            </dd>
+          </div>
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Uptime</dt>
+            <dd className="mt-0.5 font-semibold">
+              {formatUptime(status.uptimeSec)}
+              {status.node ? ` · ${status.node}` : ""}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Memory</dt>
+            <dd className="mt-0.5 font-semibold">{status.rssMb} MB RSS</dd>
+          </div>
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Warmer</dt>
+            <dd className="mt-0.5 flex flex-wrap items-center gap-2">
+              <Badge tone={warmer.tone} label={warmer.label} />
+              <span className="text-[13px] text-gray-600 dark:text-gray-300">
+                {warmer.detail}
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Thumbnail encoder</dt>
+            <dd className="mt-0.5 font-semibold">
+              {status.thumbnails.active} active · {status.thumbnails.queued} waiting
+              <span className="font-normal text-gray-600 dark:text-gray-300">
+                {" "}(max {status.thumbnails.maxConcurrent})
+              </span>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-gray-600 dark:text-gray-300">Cached</dt>
+            <dd className="mt-0.5 font-semibold">
+              {status.thumbnails.cached} thumbnails
+              <span className="font-normal text-gray-600 dark:text-gray-300">
+                {" "}· {status.imageCacheEntries} image URLs
+              </span>
+            </dd>
+          </div>
+        </dl>
+      ) : null}
+    </section>
+  );
+}
 
 function StatusIcon({ device }: { device: PushStatusDevice }) {
   if (!device.outcome) {
@@ -93,6 +218,10 @@ export function Diagnostics() {
   const [refreshing, setRefreshing] = useState(false);
   const [testingId, setTestingId] = useState<string | null>(null);
   const [myDeviceId, setMyDeviceId] = useState<string | null>(null);
+  const base = getApiBaseUrl();
+  const [serverStatus, setServerStatus] = useState<ServerStatus | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [serverLoading, setServerLoading] = useState(true);
 
   const load = useCallback(async () => {
     try {
@@ -109,20 +238,56 @@ export function Diagnostics() {
     }
   }, []);
 
+  const loadServer = useCallback(async () => {
+    if (!base) {
+      setServerStatus(null);
+      setServerError(null);
+      setServerLoading(false);
+      return;
+    }
+    setServerLoading(true);
+    setServerError(null);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 6_000);
+    try {
+      const res = await fetch(`${base}/api/status`, {
+        signal: controller.signal,
+        headers: { accept: "application/json" },
+      });
+      // 503 still carries a usable snapshot (database down); parse first.
+      const parsed = parseServerStatus(await res.json().catch(() => null));
+      if (!parsed) throw new Error(`HTTP ${res.status}`);
+      setServerStatus(parsed);
+    } catch (e) {
+      setServerStatus(null);
+      setServerError(
+        e instanceof Error && e.name === "AbortError"
+          ? "timed out"
+          : e instanceof Error
+            ? e.message
+            : "request failed",
+      );
+    } finally {
+      clearTimeout(timer);
+      setServerLoading(false);
+    }
+  }, [base]);
+
   useEffect(() => {
     queueMicrotask(() => {
       void load();
+      void loadServer();
     });
-  }, [load]);
+  }, [load, loadServer]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      await load();
+      await Promise.all([load(), loadServer()]);
     } finally {
       setRefreshing(false);
     }
-  }, [load]);
+  }, [load, loadServer]);
 
   const onTest = useCallback(
     async (deviceId: string) => {
@@ -150,7 +315,7 @@ export function Diagnostics() {
   return (
     <div className="p-6 space-y-4 max-w-3xl mx-auto">
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-bold flex-1">Push Diagnostics</h1>
+        <h1 className="text-2xl font-bold flex-1">Diagnostics</h1>
         <button
           type="button"
           onClick={() => void onRefresh()}
@@ -166,6 +331,15 @@ export function Diagnostics() {
           {toast}
         </div>
       )}
+
+      <ServerStatusCard
+        base={base}
+        status={serverStatus}
+        error={serverError}
+        loading={serverLoading}
+      />
+
+      <h2 className="text-lg font-semibold pt-2">Push delivery</h2>
 
       {devices === null && !loadError ? (
         <LoadingSpinner size="large" label="Loading diagnostics..." />
