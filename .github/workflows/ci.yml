@@ -101,6 +101,12 @@ jobs:
       # Drives the real first-run journey (onboarding, add, alert, snooze,
       # delete/undo) so functional regressions fail CI, not just visual ones.
       - run: pnpm e2e:smoke
+      # Public share links are server-backed: boot the real tRPC router against
+      # the migrated test database and drive the built SPA through live,
+      # expired, and unknown tokens.
+      - run: pnpm e2e:shared
+        env:
+          DATABASE_URL: mysql://root:root@127.0.0.1:3306/psf_test
       # The Android signing material is local-only and gitignored. Fail if a
       # force-add ever puts it in the repository (the gitleaks allowlist covers
       # the working tree, so this is the backstop for a committed file).

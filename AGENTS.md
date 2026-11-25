@@ -51,6 +51,10 @@ pnpm ios          # expo start --ios
 pnpm qr           # generate dev QR code
 ```
 
+Browser gates (need `pnpm build:web`; `e2e:shared` also needs `DATABASE_URL`):
+`pnpm smoke:web`, `pnpm audit:layout`, `pnpm audit:contrast`,
+`pnpm audit:desktop`, `pnpm e2e:smoke`, `pnpm e2e:shared`, `pnpm budget:web`.
+
 **Always run `pnpm check` and `pnpm lint` after non-trivial changes.** The project keeps TypeScript at 0 errors (see checkpoint commit messages).
 
 ## Directory Layout

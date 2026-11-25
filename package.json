@@ -28,6 +28,7 @@
     "audit:desktop": "node scripts/audit-desktop.mjs",
     "budget:web": "node scripts/check-bundle-budget.mjs",
     "e2e:smoke": "tsx scripts/e2e-smoke.ts",
+    "e2e:shared": "tsx scripts/e2e-shared-watchlist.ts",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "db:migrate": "drizzle-kit migrate",
     "db:check-migrations": "node scripts/check-migration-drift.mjs",

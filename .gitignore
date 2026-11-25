@@ -8,6 +8,7 @@ node_modules/
 .expo-android-export/
 dist/
 dist-web/
+dist-web-e2e/
 web-build/
 expo-env.d.ts
 
