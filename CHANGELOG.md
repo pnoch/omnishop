@@ -4,6 +4,14 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.49] - 2026-11-25
+
+### Performance
+
+- Desktop product-detail images request a 192 px thumbnail (2x for high-DPI
+  screens); list rows keep 96 px.
+- Thumbnail cache keys use a separator that cannot collide with a product id.
+
 ## [5.32.48] - 2026-11-25
 
 ### Performance

@@ -34,6 +34,10 @@ export function ProductImage({
     setLoadingProductId(imageCache.has(productId) ? null : productId);
   }
 
+  // Product detail renders at 96 px; request 2x there so high-DPI displays
+  // stay sharp. List rows are 36–48 px and use 96.
+  const thumbWidth = size >= 64 ? 192 : 96;
+
   useEffect(() => {
     if (imageCache.has(productId)) return;
     let active = true;
@@ -42,7 +46,7 @@ export function ProductImage({
     invoke<{ imageUrl?: string; thumbnailUrl?: string }>("fetch_product_image", {
       apiBaseUrl: base,
       productId,
-      thumbWidth: 96,
+      thumbWidth,
     })
       .then((res) => {
         const raw = res?.thumbnailUrl ?? res?.imageUrl ?? null;
@@ -63,7 +67,7 @@ export function ProductImage({
     return () => {
       active = false;
     };
-  }, [productId]);
+  }, [productId, thumbWidth]);
 
   if (loading) {
     return (

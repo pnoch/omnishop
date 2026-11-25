@@ -35,6 +35,11 @@ type StoredThumbnail = { bytes: Buffer; contentType: string; at: number };
 const cache = new Map<string, StoredThumbnail>();
 const inFlight = new Map<string, Promise<StoredThumbnail | null>>();
 
+/** NUL cannot appear in a validated product id, so it is a safe separator. */
+function cacheKey(productId: string, width: number, sourceHash: string): string {
+  return `${productId}\u0000${width}\u0000${sourceHash}`;
+}
+
 /** Snap a requested width up to the next stored size (max 256). */
 export function normalizeThumbnailWidth(requested: number): number {
   const value = Number.isFinite(requested) ? Math.round(requested) : 0;
@@ -132,7 +137,7 @@ export async function readStoredThumbnail(
   width: number,
   sourceHash: string,
 ): Promise<StoredThumbnail | null> {
-  const key = `${productId}|${width}|${sourceHash}`;
+  const key = cacheKey(productId, width, sourceHash);
   const hit = cache.get(key);
   if (hit) {
     // Refresh insertion order for the LRU.
@@ -182,7 +187,7 @@ export async function renderAndStoreThumbnail(input: {
   imageUrl: string;
 }): Promise<StoredThumbnail | null> {
   const { productId, width, sourceHash, imageUrl } = input;
-  const key = `${productId}|${width}|${sourceHash}`;
+  const key = cacheKey(productId, width, sourceHash);
   const existing = inFlight.get(key);
   if (existing) return existing;
 
