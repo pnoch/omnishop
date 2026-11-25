@@ -103,6 +103,13 @@ pnpm exec vitest run tests/version-lockstep.test.ts
 pnpm verify        # check + lint + test + check:desktop + desktop test + cargo test
 ```
 
+The browser release gates need the web export first:
+
+```bash
+pnpm build:web
+pnpm audit:layout && pnpm audit:contrast && pnpm e2e:smoke
+```
+
 If you touched `server/` or `shared/`, run the DB suite too (Docker):
 
 ```bash
@@ -247,6 +254,17 @@ The image installs Chromium + Xvfb and starts the server via
 headed-ness, so headless returns 403 for Winncom/B&H (see Phase 1106). Ensure
 the Railway service is connected to the GitHub repo (not a bare image) so the
 Dockerfile is built on deploy.
+
+The image runs as the non-root `node` user (uid/gid 1000); Chromium lives in
+`/ms-playwright` and distributor session cookies in `$HOME/.cache/omnishop`.
+If you mount a volume to keep those sessions across deploys, mount it at
+`/home/node/.cache` and make it writable by uid 1000. Without a volume the
+cookies are ephemeral and Cloudflare challenge passes must be redone after
+each restart. CI's `docker` job asserts the image runs as `node`/uid 1000.
+
+CI also runs the layout, contrast, and first-run journey gates plus a check
+that `credentials/` is never tracked; all actions are pinned to commit SHAs.
+Re-run the browser gates locally after UI changes (above).
 
 `DATABASE_URL` must be set; `scripts/start-production.sh` applies the committed
 migrations (`pnpm db:migrate`) before the server starts. Use `pnpm db:push` only

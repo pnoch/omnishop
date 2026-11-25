@@ -94,6 +94,9 @@ jobs:
       # light and dark mode across every route and phone/tablet/desktop width.
       - run: pnpm audit:layout
       - run: pnpm audit:contrast
+      # Drives the real first-run journey (onboarding, add, alert, snooze,
+      # delete/undo) so functional regressions fail CI, not just visual ones.
+      - run: pnpm e2e:smoke
       # The Android signing material is local-only and gitignored. Fail if a
       # force-add ever puts it in the repository (the gitleaks allowlist covers
       # the working tree, so this is the backstop for a committed file).
