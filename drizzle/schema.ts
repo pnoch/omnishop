@@ -70,6 +70,9 @@ export const watchlistItems = mysqlTable(
     primaryKey({ columns: [table.userId, table.productId] }),
     index("idx_watchlist_user_updated").on(table.userId, table.updatedAtMs),
     index("idx_watchlist_user_deleted").on(table.userId, table.deletedAtMs),
+    // Image-cache retention asks "is this product still on anyone's list?",
+    // which cannot use the (userId, productId) primary key.
+    index("idx_watchlist_product").on(table.productId),
   ],
 );
 

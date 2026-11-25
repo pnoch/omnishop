@@ -13,12 +13,14 @@ import { fetchWithTimeout } from "../server/fetch-timeout";
 import {
   canServeThumbnail,
   clearImageThumbnailCacheForTests,
+  createEncodeLimiter,
   imageSourceHash,
   normalizeThumbnailWidth,
   readStoredThumbnail,
   renderAndStoreThumbnail,
   renderThumbnail,
   thumbnailPath,
+  ThumbnailBusyError,
 } from "../server/image-thumbnail";
 
 const mockedFetch = vi.mocked(fetchWithTimeout);
@@ -165,5 +167,51 @@ describe("renderAndStoreThumbnail", () => {
     expect(result).toBeNull();
     expect(mockedFetch).not.toHaveBeenCalled();
     expect(await readStoredThumbnail("p", 96, imageSourceHash(imageUrl))).toBeNull();
+  });
+});
+
+describe("createEncodeLimiter", () => {
+  it("caps concurrency, queues up to the limit, then fails fast", async () => {
+    const limiter = createEncodeLimiter(1, 2);
+    let releaseFirst!: () => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((resolve) => {
+      markStarted = resolve;
+    });
+
+    const first = limiter.run(async () => {
+      markStarted();
+      await new Promise<void>((resolve) => {
+        releaseFirst = resolve;
+      });
+      return "first";
+    });
+    await started;
+    expect(limiter.stats()).toMatchObject({ active: 1, queued: 0 });
+
+    const second = limiter.run(async () => "second");
+    const third = limiter.run(async () => "third");
+    expect(limiter.stats()).toMatchObject({ active: 1, queued: 2 });
+
+    await expect(limiter.run(async () => "fourth")).rejects.toBeInstanceOf(
+      ThumbnailBusyError,
+    );
+
+    releaseFirst();
+    await expect(first).resolves.toBe("first");
+    await expect(second).resolves.toBe("second");
+    await expect(third).resolves.toBe("third");
+    expect(limiter.stats()).toMatchObject({ active: 0, queued: 0 });
+  });
+
+  it("releases the slot when the task throws", async () => {
+    const limiter = createEncodeLimiter(1, 1);
+    await expect(
+      limiter.run(async () => {
+        throw new Error("boom");
+      }),
+    ).rejects.toThrow("boom");
+    await expect(limiter.run(async () => "ok")).resolves.toBe("ok");
+    expect(limiter.stats()).toMatchObject({ active: 0, queued: 0 });
   });
 });

@@ -5,7 +5,11 @@ import {
   createThumbnailHandler,
   type ThumbnailRouteDeps,
 } from "../server/thumbnail-route";
-import { imageSourceHash, thumbnailPath } from "../server/image-thumbnail";
+import {
+  imageSourceHash,
+  thumbnailPath,
+  ThumbnailBusyError,
+} from "../server/image-thumbnail";
 
 const IMAGE_URL = "https://cdn.example.com/product.png";
 const HASH = imageSourceHash(IMAGE_URL);
@@ -170,6 +174,22 @@ describe("thumbnail route", () => {
       expect(res.status).toBe(400);
       expect(res.headers.get("cache-control")).toBe("no-store");
     });
+  });
+
+  it("answers 503 with Retry-After when the encoder queue is full", async () => {
+    await withServer(
+      deps({
+        renderThumbnail: vi.fn(async () => {
+          throw new ThumbnailBusyError();
+        }),
+      }),
+      async (base) => {
+        const res = await fetch(`${base}${thumbnailPath(ID, 96, HASH)}`);
+        expect(res.status).toBe(503);
+        expect(res.headers.get("retry-after")).toBe("5");
+        expect(res.headers.get("cache-control")).toBe("no-store");
+      },
+    );
   });
 
   it("rate limits with Retry-After instead of throwing a TRPC error", async () => {

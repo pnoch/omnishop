@@ -75,6 +75,77 @@ export function canServeThumbnail(imageUrl: string): boolean {
   return !isBlockedUrl(imageUrl);
 }
 
+/** Thrown when the encoder queue is saturated; the route answers 503. */
+export class ThumbnailBusyError extends Error {
+  constructor() {
+    super("Thumbnail encoder is busy");
+    this.name = "ThumbnailBusyError";
+  }
+}
+
+export interface EncodeLimiter {
+  run<T>(fn: () => Promise<T>): Promise<T>;
+  stats(): {
+    active: number;
+    queued: number;
+    maxConcurrent: number;
+    maxQueued: number;
+  };
+}
+
+/**
+ * Bounded worker pool for the CPU-heavy part of a thumbnail miss. Every catalog
+ * image has five valid widths, so a client can legitimately ask for hundreds
+ * of distinct encodes at once; without a cap each one would fetch up to 8 MB
+ * and run Sharp on the event-loop thread. Requests beyond the queue fail fast
+ * so the caller can retry instead of exhausting memory.
+ */
+export function createEncodeLimiter(
+  maxConcurrent: number,
+  maxQueued: number,
+): EncodeLimiter {
+  let active = 0;
+  const waiting: (() => void)[] = [];
+
+  async function acquire(): Promise<void> {
+    if (active < maxConcurrent) {
+      active += 1;
+      return;
+    }
+    if (waiting.length >= maxQueued) throw new ThumbnailBusyError();
+    await new Promise<void>((resolve) => waiting.push(resolve));
+    // `release` handed its slot straight over, so the count is already right.
+  }
+
+  function release(): void {
+    const next = waiting.shift();
+    if (next) {
+      next();
+      return;
+    }
+    active = Math.max(0, active - 1);
+  }
+
+  return {
+    async run<T>(fn: () => Promise<T>): Promise<T> {
+      await acquire();
+      try {
+        return await fn();
+      } finally {
+        release();
+      }
+    },
+    stats: () => ({
+      active,
+      queued: waiting.length,
+      maxConcurrent,
+      maxQueued,
+    }),
+  };
+}
+
+const encodeLimiter = createEncodeLimiter(4, 64);
+
 async function loadSource(imageUrl: string): Promise<Buffer | null> {
   try {
     if (imageUrl.startsWith(STORAGE_PREFIX)) {
@@ -192,14 +263,17 @@ export async function renderAndStoreThumbnail(input: {
   if (existing) return existing;
 
   const promise = (async () => {
-    const source = await loadSource(imageUrl);
-    if (!source) return null;
-    const bytes = await renderThumbnail(source, width);
-    if (!bytes) return null;
+    // Only the fetch + Sharp encode takes a slot; the DB write below is I/O.
+    const rendered = await encodeLimiter.run(async () => {
+      const source = await loadSource(imageUrl);
+      if (!source) return null;
+      const bytes = await renderThumbnail(source, width);
+      return bytes ? { bytes, contentType: "image/webp" as const } : null;
+    });
+    if (!rendered) return null;
 
     const value: StoredThumbnail = {
-      bytes,
-      contentType: "image/webp",
+      ...rendered,
       at: Date.now(),
     };
     remember(key, value);
@@ -214,13 +288,13 @@ export async function renderAndStoreThumbnail(input: {
             width,
             sourceHash,
             contentType: value.contentType,
-            data: bytes.toString("base64"),
+            data: value.bytes.toString("base64"),
             createdAt: Date.now(),
           })
           .onDuplicateKeyUpdate({
             set: {
               contentType: value.contentType,
-              data: bytes.toString("base64"),
+              data: value.bytes.toString("base64"),
               createdAt: Date.now(),
             },
           });

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
-import { productImages } from "../drizzle/schema";
-import { getDb } from "../server/db";
+import { productImages, watchlistItems } from "../drizzle/schema";
+import { getDb, getUserByOpenId, upsertUser } from "../server/db";
 
 const TEST_URL = process.env.TEST_DATABASE_URL;
 const runDbTests = Boolean(process.env.RUN_DB_TESTS) && Boolean(TEST_URL);
@@ -20,10 +20,18 @@ import {
 
 const CATALOG_ID = "mikrotik-crs804-4ddq-hrm";
 
+async function watchlistUserId(): Promise<number> {
+  await upsertUser({ openId: "thumb-purge-user" });
+  const user = await getUserByOpenId("thumb-purge-user");
+  if (!user) throw new Error("test user missing");
+  return user.id;
+}
+
 describe.skipIf(!runDbTests)("product-images (DB)", () => {
   beforeEach(async () => {
     const db = await getDb();
     if (!db) return;
+    await db.delete(watchlistItems);
     await db.delete(productImages);
     await clearImagesForTests();
     generateImage.mockReset();
@@ -68,6 +76,49 @@ describe.skipIf(!runDbTests)("product-images (DB)", () => {
     await getProductImage(CATALOG_ID);
     await clearImagesForTests();
     expect(await listProductsMissingImage()).toContain(CATALOG_ID);
+  });
+
+  it("keeps a non-catalog image while a live watchlist item references it", async () => {
+    const db = await getDb();
+    const userId = await watchlistUserId();
+    await db!.insert(watchlistItems).values({
+      userId,
+      productId: "manual-keep",
+      updatedAtMs: Date.now(),
+    });
+    await db!.insert(productImages).values({
+      productId: "manual-keep",
+      imageUrl: "https://img.example.com/manual.png",
+    });
+
+    await purgeOrphanedImages();
+
+    const ids = (
+      await db!.select({ productId: productImages.productId }).from(productImages)
+    ).map((r) => r.productId);
+    expect(ids).toContain("manual-keep");
+  });
+
+  it("drops a non-catalog image once its watchlist item is tombstoned", async () => {
+    const db = await getDb();
+    const userId = await watchlistUserId();
+    await db!.insert(watchlistItems).values({
+      userId,
+      productId: "manual-drop",
+      updatedAtMs: Date.now(),
+      deletedAtMs: Date.now(),
+    });
+    await db!.insert(productImages).values({
+      productId: "manual-drop",
+      imageUrl: "https://img.example.com/gone.png",
+    });
+
+    await purgeOrphanedImages();
+
+    const ids = (
+      await db!.select({ productId: productImages.productId }).from(productImages)
+    ).map((r) => r.productId);
+    expect(ids).not.toContain("manual-drop");
   });
 
   it("purgeOrphanedImages drops rows not in the catalog", async () => {

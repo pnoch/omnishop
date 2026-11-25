@@ -6,6 +6,7 @@ import {
   renderAndStoreThumbnail,
   THUMBNAIL_WIDTHS,
   thumbnailPath,
+  ThumbnailBusyError,
 } from "./image-thumbnail";
 import { readCachedProductImageUrl } from "./product-images";
 import { tryCheckRateLimitByKey } from "./rate-limit";
@@ -144,12 +145,22 @@ export function createThumbnailHandler(
       return;
     }
 
-    const rendered = await deps.renderThumbnail({
-      productId,
-      width,
-      sourceHash: currentHash,
-      imageUrl,
-    });
+    let rendered: Awaited<ReturnType<typeof deps.renderThumbnail>>;
+    try {
+      rendered = await deps.renderThumbnail({
+        productId,
+        width,
+        sourceHash: currentHash,
+        imageUrl,
+      });
+    } catch (error) {
+      if (error instanceof ThumbnailBusyError) {
+        res.set("Retry-After", "5");
+        noStore(res, 503, "Thumbnail service busy");
+        return;
+      }
+      throw error;
+    }
     if (!rendered) {
       noStore(res, 404, "Thumbnail unavailable");
       return;

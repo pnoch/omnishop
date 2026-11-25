@@ -253,6 +253,13 @@
       "when": 1795578309347,
       "tag": "0035_open_hairball",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1795582216766,
+      "tag": "0036_tidy_fixer",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
-import { eq, inArray, notInArray } from "drizzle-orm";
+import { and, eq, inArray, notInArray, sql } from "drizzle-orm";
 import * as cheerio from "cheerio";
-import { productImages } from "../drizzle/schema";
+import { productImages, watchlistItems } from "../drizzle/schema";
 import { PRODUCT_CATALOG } from "../shared/src/catalog.js";
 import { DISTRIBUTORS } from "../shared/src/distributors.js";
 import { PRODUCT_IMAGE_SOURCES } from "../shared/src/product-image-sources.js";
@@ -22,6 +22,19 @@ type CatalogProduct = (typeof PRODUCT_CATALOG)[number];
 
 const memoryImages = new Map<string, string>();
 const inFlight = new Map<string, Promise<ProductImage | null>>();
+// No-DB mode (local dev, tests) has no watchlist table to consult, so bound the
+// fallback instead of letting every user-added product accumulate forever.
+const MEMORY_IMAGE_MAX = 500;
+
+function rememberMemoryImage(productId: string, url: string): void {
+  memoryImages.delete(productId);
+  memoryImages.set(productId, url);
+  while (memoryImages.size > MEMORY_IMAGE_MAX) {
+    const oldest = memoryImages.keys().next().value;
+    if (!oldest) break;
+    memoryImages.delete(oldest);
+  }
+}
 
 export interface ProductImage {
   imageUrl: string;
@@ -263,7 +276,7 @@ export async function readCachedProductImageUrl(
 async function writeCached(productId: string, url: string): Promise<void> {
   const db = await getDb();
   if (!db) {
-    memoryImages.set(productId, url);
+    rememberMemoryImage(productId, url);
     return;
   }
   try {
@@ -274,7 +287,7 @@ async function writeCached(productId: string, url: string): Promise<void> {
   } catch (e) {
     // The image is already paid for; a failed write must not discard it.
     console.warn("[Images] DB write failed; keeping memory copy", e);
-    memoryImages.set(productId, url);
+    rememberMemoryImage(productId, url);
   }
 }
 
@@ -327,21 +340,29 @@ export async function clearImagesForTests(): Promise<void> {
   }
 }
 
-// Rows are keyed by productId and bounded by the catalog, but a product removed
-// from the catalog would leave its row behind forever. Drop orphans (called
-// from the warmer tick). No-op when the catalog is empty to avoid wiping all.
+// Rows are keyed by productId and the catalog is the durable set, but users
+// can add products outside it and those images are resolved from their listing
+// pages. Keep a non-catalog row while any live watchlist item still references
+// it; drop it once nothing does (the catalog check keeps a product removed from
+// the catalog from lingering forever). Called from the warmer tick.
 export async function purgeOrphanedImages(): Promise<void> {
   const ids = PRODUCT_CATALOG.map((p) => p.id);
   if (ids.length === 0) return;
   const db = await getDb();
-  if (!db) {
-    for (const key of memoryImages.keys()) {
-      if (!ids.includes(key)) memoryImages.delete(key);
-    }
-    return;
-  }
+  // No server database: watchlists live on the client, so there is no reliable
+  // reference to consult. The in-memory map is LRU-bounded instead.
+  if (!db) return;
   try {
-    await db.delete(productImages).where(notInArray(productImages.productId, ids));
+    await db.delete(productImages).where(
+      and(
+        notInArray(productImages.productId, ids),
+        sql`NOT EXISTS (
+          SELECT 1 FROM ${watchlistItems}
+          WHERE ${watchlistItems.productId} = ${productImages.productId}
+            AND ${watchlistItems.deletedAtMs} IS NULL
+        )`,
+      ),
+    );
   } catch (e) {
     // A blip here must not abort the rest of the warmer tick.
     console.warn("[Images] Failed to purge orphaned rows", e);
