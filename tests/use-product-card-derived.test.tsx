@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
-import { renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, renderHook } from "@testing-library/react";
+
+afterEach(cleanup);
+import { describe, expect, it, afterEach } from "vitest";
 import type { DistributorListing, Product, TagDefinition } from "../lib/types";
 import { useProductCardDerived } from "../hooks/use-product-card-derived";
 

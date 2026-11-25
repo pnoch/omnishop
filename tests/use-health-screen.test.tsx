@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
-import { act, renderHook, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, act, renderHook, waitFor } from "@testing-library/react";
+
+afterEach(cleanup);
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 import type { DistributorHealth } from "../lib/scrapers/health";
 
 const state = vi.hoisted(() => ({

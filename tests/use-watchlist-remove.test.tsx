@@ -1,6 +1,8 @@
 // @vitest-environment jsdom
-import { act, renderHook } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, act, renderHook } from "@testing-library/react";
+
+afterEach(cleanup);
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 import type { BackOrderReminder, PriceAlert, Product } from "../lib/types";
 
 const state = vi.hoisted(() => ({

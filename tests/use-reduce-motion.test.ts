@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { act, renderHook } from "@testing-library/react";
+import { act, cleanup, renderHook } from "@testing-library/react";
 
 vi.mock("react-native", () => ({
   Platform: { OS: "web" },
@@ -34,6 +34,7 @@ function mockMatchMedia(matches: boolean) {
 
 describe("useReduceMotion", () => {
   afterEach(() => {
+    cleanup();
     vi.unstubAllGlobals();
   });
 
