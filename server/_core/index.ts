@@ -6,6 +6,8 @@ import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
+import { registerStatusRoute } from "../status-route";
+import { getStatusSnapshot } from "../status";
 import { registerThumbnailRoute } from "../thumbnail-route";
 import { appRouter } from "../routers";
 import { registerUnsubscribeRoute } from "../email-unsubscribe-route";
@@ -99,6 +101,8 @@ async function startServer() {
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true, timestamp: Date.now() });
   });
+
+  registerStatusRoute(app, getStatusSnapshot);
 
   app.get("/api/healthz", async (_req, res) => {
     try {

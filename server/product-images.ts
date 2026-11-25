@@ -326,6 +326,11 @@ export async function listProductsMissingImage(): Promise<string[]> {
   return allIds.filter((id) => !existing.has(id));
 }
 
+/** Memory-fallback size for the ops status snapshot. */
+export function imageCacheEntryCount(): number {
+  return memoryImages.size;
+}
+
 export async function clearImagesForTests(): Promise<void> {
   memoryImages.clear();
   inFlight.clear();

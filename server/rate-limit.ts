@@ -37,7 +37,7 @@ function pruneStale() {
   }
 }
 
-function getClientIp(req: TrpcContext["req"]): string {
+export function getClientIp(req: TrpcContext["req"]): string {
   // Express resolves `req.ip` from the socket address, and — only when
   // `trust proxy` is configured — from X-Forwarded-For, taking the address
   // added by the trusted hop. Reading the raw leftmost XFF entry here would

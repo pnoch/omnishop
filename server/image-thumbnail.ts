@@ -340,6 +340,17 @@ export async function purgeOrphanedThumbnails(): Promise<void> {
   }
 }
 
+/** Encoder queue + cache size for the ops status snapshot. */
+export function thumbnailStats(): {
+  active: number;
+  queued: number;
+  maxConcurrent: number;
+  maxQueued: number;
+  cached: number;
+} {
+  return { ...encodeLimiter.stats(), cached: cache.size };
+}
+
 export function clearImageThumbnailCacheForTests(): void {
   cache.clear();
   inFlight.clear();

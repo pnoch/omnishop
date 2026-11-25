@@ -9,7 +9,7 @@ import {
   ThumbnailBusyError,
 } from "./image-thumbnail";
 import { readCachedProductImageUrl } from "./product-images";
-import { tryCheckRateLimitByKey } from "./rate-limit";
+import { getClientIp, tryCheckRateLimitByKey } from "./rate-limit";
 
 /**
  * Content-addressed product thumbnails.
@@ -50,10 +50,6 @@ function isValidProductId(id: string): boolean {
   // Path separators, query/fragment delimiters, and control characters would
   // let a caller reach a different route or smuggle a second value.
   return !/[/\\?#\u0000-\u001f\u007f]/.test(id);
-}
-
-function clientIp(req: Request): string {
-  return req.ip ?? req.socket.remoteAddress ?? "unknown";
 }
 
 function isFresh(header: string | undefined, etag: string): boolean {
@@ -113,7 +109,7 @@ export function createThumbnailHandler(
       return;
     }
 
-    if (!deps.allow(`thumb:${clientIp(req)}`, RATE_LIMIT, RATE_WINDOW_MS)) {
+    if (!deps.allow(`thumb:${getClientIp(req)}`, RATE_LIMIT, RATE_WINDOW_MS)) {
       res.set("Retry-After", "60");
       noStore(res, 429, "Too many requests");
       return;

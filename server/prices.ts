@@ -254,6 +254,30 @@ export async function warmProductImages(count: number): Promise<number> {
 
 let warmerTickInFlight = false;
 
+export interface WarmerStatus {
+  running: boolean;
+  lastStartedAt: number | null;
+  lastFinishedAt: number | null;
+  lastDurationMs: number | null;
+  lastOk: boolean | null;
+  failedSteps: number;
+}
+
+const warmerStatus: WarmerStatus = {
+  running: false,
+  lastStartedAt: null,
+  lastFinishedAt: null,
+  lastDurationMs: null,
+  lastOk: null,
+  failedSteps: 0,
+};
+let warmerTickFailedSteps = 0;
+
+/** Last-tick health for `/api/status`; no step error text is exposed. */
+export function getWarmerStatus(): WarmerStatus {
+  return { ...warmerStatus };
+}
+
 // Each step gets its own error boundary: a single shared catch meant one
 // failing step (e.g. a transient DB error in purgeOldHistory) skipped every
 // later step in the tick, starving the remaining purges for that run.
@@ -264,6 +288,7 @@ async function warmerStep(
   try {
     await fn();
   } catch (error) {
+    warmerTickFailedSteps += 1;
     console.warn("[Prices] Warmer step failed: %s", name, error);
   }
 }
@@ -271,6 +296,10 @@ async function warmerStep(
 export async function runWarmerTick(): Promise<void> {
   if (warmerTickInFlight) return;
   warmerTickInFlight = true;
+  const startedAt = Date.now();
+  warmerTickFailedSteps = 0;
+  warmerStatus.running = true;
+  warmerStatus.lastStartedAt = startedAt;
   try {
     await warmerStep("refreshNearExpiry", () => refreshNearExpiry(Date.now()));
     await warmerStep("warmCatalogRotation", () =>
@@ -302,9 +331,16 @@ export async function runWarmerTick(): Promise<void> {
       purgeOldRevokedDevices(Date.now()),
     );
   } catch (error) {
+    warmerTickFailedSteps += 1;
     console.warn("[Prices] Warmer tick failed:", error);
   } finally {
     warmerTickInFlight = false;
+    const finishedAt = Date.now();
+    warmerStatus.running = false;
+    warmerStatus.lastFinishedAt = finishedAt;
+    warmerStatus.lastDurationMs = finishedAt - startedAt;
+    warmerStatus.failedSteps = warmerTickFailedSteps;
+    warmerStatus.lastOk = warmerTickFailedSteps === 0;
   }
 }
 

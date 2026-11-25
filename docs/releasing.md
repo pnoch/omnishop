@@ -273,6 +273,18 @@ migrations (`pnpm db:migrate`) before the server starts. Use `pnpm db:push` only
 while changing the schema, and commit the generated SQL — CI's
 `pnpm db:check-migrations` fails on drift.
 
+### Ops status
+
+`GET /api/healthz` is the Railway health check (200/503 on database
+reachability). `GET /api/status` is the operator snapshot: database state,
+process age/memory, the warmer's last tick (`lastOk`, `failedSteps`, duration),
+the thumbnail encoder queue, and cache sizes. It is rate limited (60/min/IP)
+and cached for 5 s, so it is safe to poll:
+
+```bash
+curl -fsS https://web.omnishop.siamcreations.app/api/status
+```
+
 ### Custom domain (`web.omnishop.siamcreations.app`)
 
 The web app lives at `web.omnishop.siamcreations.app`; the brand subdomain

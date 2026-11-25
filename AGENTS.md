@@ -125,6 +125,8 @@ server/                Express + tRPC backend (see server/README.md)
   price-cache.ts, price-history.ts, price-insights.ts, product-images.ts
   image-thumbnail.ts   Content-addressed WebP thumbnails (MySQL store + memory LRU)
   thumbnail-route.ts   GET /api/thumb/<id>/<w>.webp?v=<hash> (immutable, ETag/304)
+  status.ts            /api/status ops snapshot (DB, warmer last tick, encoder queue)
+  status-route.ts      Cached, rate-limited JSON status endpoint
   fx.ts                Live FX rate source
   notifications.ts, push-notifications.ts   Server notification scheduling + push tokens
   devices.ts           Device binding, labels, sign-out, stale cleanup (deviceId from session JWT claim → x-device-id header; per-user ownership via assertDeviceAccess; unrevoke on login; 30-day idle cleanup; revokedDevices with user-scoped composite keys)
