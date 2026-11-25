@@ -4,12 +4,20 @@ import type { TrpcContext } from "../server/_core/context";
 
 vi.mock("../server/product-images", () => ({
   getProductImage: vi.fn(),
+  readCachedProductImageUrl: vi.fn(),
   listProductsMissingImage: vi.fn(),
   clearImagesForTests: vi.fn(),
 }));
 
-import { getProductImage } from "../server/product-images";
+vi.mock("../server/rate-limit", () => ({
+  checkRateLimit: vi.fn(),
+}));
+
+import { getProductImage, readCachedProductImageUrl } from "../server/product-images";
+import { checkRateLimit } from "../server/rate-limit";
 const mockedGetProductImage = vi.mocked(getProductImage);
+const mockedReadCached = vi.mocked(readCachedProductImageUrl);
+const mockedCheckRateLimit = vi.mocked(checkRateLimit);
 
 function createPublicContext(): TrpcContext {
   return {
@@ -27,7 +35,10 @@ function createPublicContext(): TrpcContext {
 }
 
 describe("images router", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockedReadCached.mockResolvedValue(null);
+  });
 
   it("returns the product image URL", async () => {
     mockedGetProductImage.mockResolvedValue({
@@ -91,6 +102,25 @@ describe("images router", () => {
         thumbWidth: 513,
       }),
     ).rejects.toThrow();
+  });
+
+  it("charges discovery only when the image is not cached", async () => {
+    mockedGetProductImage.mockResolvedValue({ imageUrl: "x" });
+    const caller = appRouter.createCaller(createPublicContext());
+
+    mockedReadCached.mockResolvedValue("https://img.example.com/x.png");
+    await caller.images.get({ productId: "mikrotik-crs804-4ddq-hrm" });
+    expect(mockedCheckRateLimit.mock.calls.map((call) => call[1])).toEqual([
+      "images.get",
+    ]);
+
+    mockedCheckRateLimit.mockClear();
+    mockedReadCached.mockResolvedValue(null);
+    await caller.images.get({ productId: "mikrotik-crs804-4ddq-hrm" });
+    expect(mockedCheckRateLimit.mock.calls.map((call) => call[1])).toEqual([
+      "images.get",
+      "images.resolve",
+    ]);
   });
 
   it("returns null when there is no image", async () => {
