@@ -109,6 +109,7 @@ The browser release gates need the web export first:
 pnpm build:web
 pnpm audit:layout && pnpm audit:contrast && pnpm e2e:smoke
 pnpm build:desktop && pnpm audit:desktop
+pnpm budget:web
 ```
 
 If you touched `server/` or `shared/`, run the DB suite too (Docker):

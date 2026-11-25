@@ -26,6 +26,7 @@
     "audit:layout": "tsx scripts/audit-layout.ts",
     "audit:contrast": "tsx scripts/audit-contrast.ts",
     "audit:desktop": "node scripts/audit-desktop.mjs",
+    "budget:web": "node scripts/check-bundle-budget.mjs",
     "e2e:smoke": "tsx scripts/e2e-smoke.ts",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
     "db:migrate": "drizzle-kit migrate",

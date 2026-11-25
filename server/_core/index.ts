@@ -13,6 +13,7 @@ import { registerApiNoStore } from "../api-cache";
 import {
   registerBodyParsers,
   registerCors,
+  registerRequestLog,
   registerSecurityHeaders,
   resolveTrustProxy,
 } from "../http-middleware";
@@ -71,6 +72,8 @@ async function startServer() {
   );
   // CORS + body parsers live in server/http-middleware.ts so their exact
   // matching/ordering is unit-tested rather than only reachable through startup.
+  // One log line per API request, with a correlatable id (skips health checks).
+  registerRequestLog(app);
   // Baseline security headers for every response (API + SPA shell).
   registerSecurityHeaders(app);
   registerCors(app, allowedOrigins);

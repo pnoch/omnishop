@@ -77,6 +77,9 @@ jobs:
           TEST_DATABASE_URL: mysql://root:root@127.0.0.1:3306/psf_test
       # Verify the deployable artifacts build (web export + server bundle).
       - run: pnpm build
+      # The performance work cut the initial web JS by ~42%; a new dependency
+      # must not silently undo it.
+      - run: pnpm budget:web
       # The Android JS bundle is a SEPARATE Metro resolution from web: a
       # Node-only import (e.g. impit's `node:fs`) can bundle fine on web but
       # break the Android release build, which `pnpm verify`/`pnpm build` never

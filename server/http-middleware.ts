@@ -1,8 +1,35 @@
 import express, { type Express } from "express";
+import { randomUUID } from "node:crypto";
 
 // Request-shape middleware, extracted from server/_core/index.ts so it is
 // testable (the entry only wires it). These are exactly the pieces whose
 // ordering and matching are security-relevant.
+
+/**
+ * One line per API request with a correlatable id, status, and duration. Static
+ * assets and health checks are skipped so production logs stay useful; the id
+ * is echoed in `x-request-id` (and preserved when a proxy supplied one).
+ */
+export function registerRequestLog(app: Express): void {
+  app.use((req, res, next) => {
+    if (!req.path.startsWith("/api/")) return next();
+    const incoming = req.headers["x-request-id"];
+    const id =
+      typeof incoming === "string" && incoming.length > 0 && incoming.length <= 128
+        ? incoming
+        : randomUUID();
+    res.setHeader("x-request-id", id);
+    const started = process.hrtime.bigint();
+    res.on("finish", () => {
+      if (req.path === "/api/health" || req.path === "/api/healthz") return;
+      const ms = Number(process.hrtime.bigint() - started) / 1e6;
+      console.log(
+        `[api] ${id} ${req.method} ${req.path} ${res.statusCode} ${ms.toFixed(1)}ms`,
+      );
+    });
+    next();
+  });
+}
 
 /**
  * CORS for allowlisted origins only (exact match; credentials are never granted
