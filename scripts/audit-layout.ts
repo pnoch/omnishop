@@ -1,5 +1,5 @@
 import { chromium } from "patchright";
-import { ROUTES, WIDTHS, seedApp, startSpa } from "./audit-shared";
+import { freezeMotion, ROUTES, WIDTHS, seedApp, startSpa } from "./audit-shared";
 
 // Browser-side check, passed as a string so tsx/esbuild does not inject its
 // `__name` helper into the page (it is not defined in the browser).
@@ -70,6 +70,7 @@ async function main() {
       const context = await browser.newContext({
         viewport: { width, height: 900 },
       });
+      await freezeMotion(context);
       const page = await context.newPage();
       await seedApp(page, spa.baseUrl, `${width}px`);
 

@@ -47,6 +47,12 @@ const b=await chromium.launch();
 for(const scheme of ['light','dark']){
   for(const width of [1024,1280,1440]){
   const ctx=await b.newContext({viewport:{width,height:900},colorScheme:scheme});
+  // Measure settled colors, not a chip caught mid transition-colors.
+  await ctx.addInitScript(() => {
+    const css="*{transition:none!important;animation:none!important;}";
+    const inject=()=>{const style=document.createElement("style");style.textContent=css;document.head&&document.head.appendChild(style);};
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",inject,{once:true}); else inject();
+  });
   await ctx.addInitScript(({product,alert,reminder})=>{localStorage.setItem('has_seen_onboarding','true');localStorage.setItem('watchlist_products',JSON.stringify([product]));localStorage.setItem('price_alerts',JSON.stringify([alert]));localStorage.setItem('back_order_reminders',JSON.stringify([reminder]));},{product,alert,reminder});
   const p=await ctx.newPage();
   for(const route of ['/','/watchlist','/alerts','/drops','/search','/rates','/stats','/health','/distributor-analysis','/settings','/product/mikrotik-crs326-24s','/compare/mikrotik-crs326-24s']){

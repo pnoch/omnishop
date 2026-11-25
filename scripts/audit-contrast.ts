@@ -1,5 +1,5 @@
 import { chromium } from "patchright";
-import { seedApp, startSpa } from "./audit-shared";
+import { freezeMotion, seedApp, startSpa } from "./audit-shared";
 
 const ROUTES = [
   "/",
@@ -116,6 +116,7 @@ async function main() {
         viewport: { width: 390, height: 900 },
         colorScheme: scheme,
       });
+      await freezeMotion(context);
       const page = await context.newPage();
       await seedApp(page, spa.baseUrl, scheme);
 

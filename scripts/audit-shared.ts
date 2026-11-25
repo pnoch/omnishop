@@ -1,10 +1,33 @@
 import express from "express";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { Page } from "patchright";
+import type { BrowserContext, Page } from "patchright";
 import { registerSpa } from "../server/spa";
 
 export const WIDTHS = [320, 390, 768, 1440] as const;
+
+/**
+ * Disable CSS transitions/animations before the document runs. A color and
+ * layout measurement that lands mid-fade reads a blended value: a selected
+ * distribution chip animating from transparent to its color measured 4.09:1
+ * against its black label instead of the settled 4.96:1, failing a gate that
+ * was actually green. Deterministic measurements need the settled state.
+ */
+export async function freezeMotion(context: BrowserContext): Promise<void> {
+  await context.addInitScript(() => {
+    const css = "*{transition:none!important;animation:none!important;}";
+    const inject = () => {
+      const style = document.createElement("style");
+      style.textContent = css;
+      document.head?.appendChild(style);
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", inject, { once: true });
+    } else {
+      inject();
+    }
+  });
+}
 
 export const ROUTES = [
   "/",
