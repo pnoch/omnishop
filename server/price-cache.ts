@@ -89,25 +89,33 @@ export async function setCachedPrice(
     });
 }
 
-// Bounded per tick: the warmer refreshes a few rows every 5 minutes, so an
-// unbounded scan would re-fetch an ever-growing table in one tick.
-const NEAR_EXPIRY_PER_TICK = 100;
+// Bounded scan: the warmer ranks this set and then stops starting new refreshes
+// after its own time budget, so the scan must be wide enough to include rows
+// that have already been attempted (otherwise ranking can never rotate them).
+const NEAR_EXPIRY_SCAN_CAP = 2_000;
 
 export async function listNearExpiry(
   now: number,
   thresholdMs: number,
-  limit: number = NEAR_EXPIRY_PER_TICK,
-): Promise<{ distributorId: string; modelNumber: string }[]> {
+  limit: number = NEAR_EXPIRY_SCAN_CAP,
+): Promise<
+  { distributorId: string; modelNumber: string; fetchedAt: number }[]
+> {
   const cutoff = now - thresholdMs;
   const db = await getDb();
   if (!db) {
-    const entries: { distributorId: string; modelNumber: string }[] = [];
+    const entries: {
+      distributorId: string;
+      modelNumber: string;
+      fetchedAt: number;
+    }[] = [];
     for (const entry of memoryCache.values()) {
       if (entries.length >= limit) break;
       if (entry.snapshot.fetchedAt < cutoff) {
         entries.push({
           distributorId: entry.distributorId,
           modelNumber: entry.modelNumber,
+          fetchedAt: entry.snapshot.fetchedAt,
         });
       }
     }
@@ -117,6 +125,7 @@ export async function listNearExpiry(
     .select({
       distributorId: priceCache.distributorId,
       modelNumber: priceCache.modelNumber,
+      fetchedAt: priceCache.fetchedAt,
     })
     .from(priceCache)
     .where(lt(priceCache.fetchedAt, cutoff))

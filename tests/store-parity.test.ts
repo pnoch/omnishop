@@ -91,7 +91,7 @@ describe("store parity with the DB", () => {
   it("keeps the original case in listNearExpiry", async () => {
     await setCachedPrice("MikroTik", "CRS804", snapshot({ fetchedAt: 1000 }));
     expect(await listNearExpiry(10_000, 1_000)).toEqual([
-      { distributorId: "MikroTik", modelNumber: "CRS804" },
+      { distributorId: "MikroTik", modelNumber: "CRS804", fetchedAt: 1000 },
     ]);
   });
 

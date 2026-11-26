@@ -88,6 +88,7 @@ import {
 } from "../server/price-cache";
 import { purgeOldHistory } from "../server/price-history";
 import {
+  orderNearExpiryEntries,
   refreshNearExpiry,
   startWarmer,
   runWarmerTick,
@@ -130,7 +131,7 @@ describe("warmer", () => {
 
   it("refreshNearExpiry refreshes near-expiry entries", async () => {
     mockedListNearExpiry.mockResolvedValue([
-      { distributorId: "server2u-my", modelNumber: "CRS804" },
+      { distributorId: "server2u-my", modelNumber: "CRS804", fetchedAt: 0 },
     ]);
     await refreshNearExpiry(Date.now());
     expect(mockedFetch).toHaveBeenCalledTimes(1);
@@ -143,13 +144,39 @@ describe("warmer", () => {
     expect(mockedFetch).not.toHaveBeenCalled();
   });
 
-  it("refreshNearExpiry refreshes multiple entries sequentially", async () => {
+  it("refreshNearExpiry refreshes multiple entries in one wave", async () => {
     mockedListNearExpiry.mockResolvedValue([
-      { distributorId: "a", modelNumber: "m1" },
-      { distributorId: "b", modelNumber: "m2" },
+      { distributorId: "a", modelNumber: "m1", fetchedAt: 0 },
+      { distributorId: "b", modelNumber: "m2", fetchedAt: 0 },
     ]);
     await refreshNearExpiry(Date.now());
     expect(mockedFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("retries a recently attempted pair instead of dropping it", async () => {
+    mockedListNearExpiry.mockResolvedValue([
+      { distributorId: "server2u-my", modelNumber: "CRS804", fetchedAt: 0 },
+    ]);
+    await refreshNearExpiry(Date.now());
+    await refreshNearExpiry(Date.now());
+    expect(mockedFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it("sends recently attempted pairs behind fresher ones", () => {
+    const entries = [
+      { distributorId: "a", modelNumber: "1", fetchedAt: 90_000 },
+      { distributorId: "b", modelNumber: "2", fetchedAt: 80_000 },
+      { distributorId: "c", modelNumber: "3", fetchedAt: 70_000 },
+    ];
+    // `a` failed recently; its rank becomes the attempt time, so it moves
+    // behind the older successful rows.
+    const attempts = new Map([["a:1", 200_000]]);
+    const ordered = orderNearExpiryEntries(entries, attempts);
+    expect(ordered.map((entry) => entry.distributorId)).toEqual([
+      "c",
+      "b",
+      "a",
+    ]);
   });
 
   it("startWarmer returns a no-op stop function in test env", () => {

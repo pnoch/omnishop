@@ -67,15 +67,21 @@ describe("price cache (memory backend)", () => {
     await setCachedPrice("a", "m2", snapshot({ fetchedAt: now - 5000 }));
     await setCachedPrice("b", "m1", snapshot({ fetchedAt: now - 100 }));
     const entries = await listNearExpiry(now, 2000);
-    expect(entries).toContainEqual({ distributorId: "a", modelNumber: "m2" });
-    expect(entries).not.toContainEqual({
+    expect(entries).toContainEqual({
       distributorId: "a",
-      modelNumber: "m1",
+      modelNumber: "m2",
+      fetchedAt: now - 5000,
     });
-    expect(entries).not.toContainEqual({
-      distributorId: "b",
-      modelNumber: "m1",
-    });
+    expect(
+      entries.some(
+        (entry) => entry.distributorId === "a" && entry.modelNumber === "m1",
+      ),
+    ).toBe(false);
+    expect(
+      entries.some(
+        (entry) => entry.distributorId === "b" && entry.modelNumber === "m1",
+      ),
+    ).toBe(false);
   });
 });
 

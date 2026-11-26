@@ -184,16 +184,78 @@ function pLimit(concurrency: number) {
 
 export { pLimit };
 
+const NEAR_EXPIRY_BUDGET_MS = 45_000;
+const NEAR_EXPIRY_CONCURRENCY = 3;
+const NEAR_EXPIRY_ATTEMPTS_MAX = 5_000;
+const NEAR_EXPIRY_ATTEMPT_TTL_MS = 24 * 60 * 60 * 1000;
+
+// Failed scrapes do not update fetchedAt, so the oldest-first query would hand
+// the same dead pairs back every tick and starve live rows behind them. Rank
+// each pair by the later of its last successful fetch and its last attempt:
+// a failed attempt moves it to the back until every older row has been tried
+// (the catalog rotation uses the same rule).
+const nearExpiryAttempts = new Map<string, number>();
+
+export function orderNearExpiryEntries<
+  T extends {
+    distributorId: string;
+    modelNumber: string;
+    fetchedAt?: number;
+  },
+>(entries: T[], attempts: Map<string, number>): T[] {
+  const rank = (entry: T): number =>
+    Math.max(
+      entry.fetchedAt ?? 0,
+      attempts.get(cacheKey(entry.distributorId, entry.modelNumber)) ?? 0,
+    );
+  return [...entries].sort((a, b) => rank(a) - rank(b));
+}
+
+function rememberNearExpiryAttempt(
+  entry: { distributorId: string; modelNumber: string },
+  at: number,
+): void {
+  const key = cacheKey(entry.distributorId, entry.modelNumber);
+  // Delete first so the map's insertion order stays attempt order.
+  nearExpiryAttempts.delete(key);
+  nearExpiryAttempts.set(key, at);
+  while (nearExpiryAttempts.size > NEAR_EXPIRY_ATTEMPTS_MAX) {
+    const oldest = nearExpiryAttempts.keys().next().value;
+    if (!oldest) break;
+    nearExpiryAttempts.delete(oldest);
+  }
+}
+
+function pruneNearExpiryAttempts(now: number): void {
+  const cutoff = now - NEAR_EXPIRY_ATTEMPT_TTL_MS;
+  for (const [key, at] of nearExpiryAttempts) {
+    if (at >= cutoff) break;
+    nearExpiryAttempts.delete(key);
+  }
+}
+
 export async function refreshNearExpiry(now: number): Promise<void> {
   const entries = await listNearExpiry(now, PRICE_TTL_MS - WARMER_LEAD_MS);
-  const limit = pLimit(3);
-  await Promise.all(
-    entries.map((entry) =>
-      limit(() =>
-        refreshSingleFlight(entry.distributorId, entry.modelNumber),
-      ).catch(() => null),
-    ),
-  );
+  const ordered = orderNearExpiryEntries(entries, nearExpiryAttempts);
+
+  // Deadline, not just a count: a slow distributor can make each wave take
+  // 10-20 s, and 100 rows then consumed the whole 5-minute window. In-flight
+  // scrapes finish; no new wave starts after the budget.
+  const startedAt = Date.now();
+  for (let i = 0; i < ordered.length; i += NEAR_EXPIRY_CONCURRENCY) {
+    if (i > 0 && Date.now() - startedAt >= NEAR_EXPIRY_BUDGET_MS) break;
+    const wave = ordered.slice(i, i + NEAR_EXPIRY_CONCURRENCY);
+    for (const entry of wave) rememberNearExpiryAttempt(entry, now);
+    await Promise.all(
+      wave.map((entry) =>
+        refreshSingleFlight(
+          entry.distributorId,
+          entry.modelNumber,
+        ).catch(() => null),
+      ),
+    );
+  }
+  pruneNearExpiryAttempts(now);
 }
 
 // Per-process record of the last warm attempt, so pairs whose scrape never
