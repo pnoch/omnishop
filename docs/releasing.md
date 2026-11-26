@@ -278,8 +278,8 @@ while changing the schema, and commit the generated SQL — CI's
 
 `GET /api/healthz` is the Railway health check (200/503 on database
 reachability). `GET /api/status` is the operator snapshot: database state,
-process age/memory, the warmer's last tick (`lastOk`, `failedSteps`, duration),
-the thumbnail encoder queue, and cache sizes. It is rate limited (60/min/IP)
+process age/memory, the warmer's last tick (`lastOk`, `failedSteps`, duration, per-step
+timings), the thumbnail encoder queue, and cache sizes. It is rate limited (60/min/IP)
 and cached for 5 s, so it is safe to poll:
 
 ```bash

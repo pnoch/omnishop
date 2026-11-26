@@ -4,6 +4,15 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.52] - 2026-11-26
+
+### Observability
+
+- `/api/status` now reports per-step warmer timings
+  (`steps: [{ name, durationMs, ok }]`), so a slow tick can be attributed;
+  recent production ticks ranged from 112 s to 195 s. Desktop Diagnostics shows
+  the slowest step of the last tick.
+
 ## [5.32.51] - 2026-11-25
 
 ### Observability

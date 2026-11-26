@@ -7,6 +7,12 @@
 export type StatusTone = "ok" | "warn" | "error" | "idle";
 export type DbStatus = "ok" | "not_configured" | "error";
 
+export interface WarmerStepStatus {
+  name: string;
+  durationMs: number;
+  ok: boolean;
+}
+
 export interface WarmerStatus {
   running: boolean;
   lastStartedAt: number | null;
@@ -14,6 +20,7 @@ export interface WarmerStatus {
   lastDurationMs: number | null;
   lastOk: boolean | null;
   failedSteps: number;
+  steps: WarmerStepStatus[];
 }
 
 export interface ThumbnailStatus {
@@ -76,6 +83,21 @@ export function parseServerStatus(value: unknown): ServerStatus | null {
       lastDurationMs: nullableNumber(warmer.lastDurationMs),
       lastOk: nullableBoolean(warmer.lastOk),
       failedSteps: numberOr(warmer.failedSteps, 0),
+      steps: Array.isArray(warmer.steps)
+        ? warmer.steps
+            .flatMap((step) =>
+              isRecord(step) && typeof step.name === "string"
+                ? [
+                    {
+                      name: step.name,
+                      durationMs: numberOr(step.durationMs, 0),
+                      ok: step.ok === true,
+                    },
+                  ]
+                : [],
+            )
+            .slice(0, 64)
+        : [],
     },
     thumbnails: {
       active: numberOr(thumbnails.active, 0),
@@ -115,6 +137,25 @@ export function formatDuration(ms: number | null): string {
   const hours = Math.floor(ms / 3_600_000);
   const minutes = Math.round((ms % 3_600_000) / 60_000);
   return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+}
+
+/** The step that consumed the most of the last warmer tick, if any. */
+export function slowestStep(
+  steps: WarmerStepStatus[],
+): WarmerStepStatus | null {
+  let slowest: WarmerStepStatus | null = null;
+  for (const step of steps) {
+    if (!slowest || step.durationMs > slowest.durationMs) slowest = step;
+  }
+  return slowest;
+}
+
+/** `warmCatalogRotation` → `warm catalog rotation`. */
+export function formatStepName(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/_/g, " ")
+    .toLowerCase();
 }
 
 export function dbState(db: DbStatus): { label: string; tone: StatusTone } {

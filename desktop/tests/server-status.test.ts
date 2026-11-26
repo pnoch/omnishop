@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   dbState,
   formatDuration,
+  formatStepName,
   formatUptime,
   parseServerStatus,
+  slowestStep,
   warmerState,
 } from "../src/lib/server-status";
 
@@ -21,6 +23,10 @@ const payload = {
     lastDurationMs: 1500,
     lastOk: true,
     failedSteps: 0,
+    steps: [
+      { name: "warmCatalogRotation", durationMs: 900, ok: true },
+      { name: "purgeOldHistory", durationMs: 120, ok: true },
+    ],
   },
   thumbnails: {
     active: 1,
@@ -37,6 +43,7 @@ describe("parseServerStatus", () => {
     const status = parseServerStatus(payload);
     expect(status?.db).toBe("ok");
     expect(status?.warmer.lastDurationMs).toBe(1500);
+    expect(status?.warmer.steps).toHaveLength(2);
     expect(status?.thumbnails.maxQueued).toBe(64);
     expect(status?.imageCacheEntries).toBe(3);
   });
@@ -65,6 +72,26 @@ describe("parseServerStatus", () => {
     expect(status?.warmer.lastDurationMs).toBeNull();
     expect(status?.thumbnails.active).toBe(0);
     expect(status?.imageCacheEntries).toBe(0);
+    expect(status?.warmer.steps).toEqual([]);
+  });
+
+  it("drops malformed step entries instead of rendering them", () => {
+    const status = parseServerStatus({
+      ...payload,
+      warmer: {
+        ...payload.warmer,
+        steps: [
+          { name: "warmCatalogRotation", durationMs: 10, ok: true },
+          { durationMs: 20 },
+          "nope",
+          { name: "other", durationMs: "soon", ok: false },
+        ],
+      },
+    });
+    expect(status?.warmer.steps).toEqual([
+      { name: "warmCatalogRotation", durationMs: 10, ok: true },
+      { name: "other", durationMs: 0, ok: false },
+    ]);
   });
 });
 
@@ -125,5 +152,21 @@ describe("state labels", () => {
       tone: "ok",
       detail: "Last tick took 1.5 s",
     });
+  });
+});
+
+describe("warmer step helpers", () => {
+  it("picks the longest step and handles an empty list", () => {
+    expect(slowestStep([])).toBeNull();
+    expect(slowestStep(payload.warmer.steps)?.name).toBe(
+      "warmCatalogRotation",
+    );
+  });
+
+  it("humanizes camelCase and snake_case step names", () => {
+    expect(formatStepName("warmCatalogRotation")).toBe(
+      "warm catalog rotation",
+    );
+    expect(formatStepName("purge_old_history")).toBe("purge old history");
   });
 });

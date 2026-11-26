@@ -6,8 +6,11 @@ import { LoadingSpinner } from "../components/LoadingSpinner";
 import { getApiBaseUrl } from "../lib/api-base";
 import {
   dbState,
+  formatDuration,
+  formatStepName,
   formatUptime,
   parseServerStatus,
+  slowestStep,
   warmerState,
   type ServerStatus,
   type StatusTone,
@@ -45,6 +48,7 @@ function ServerStatusCard({
 }) {
   const db = status ? dbState(status.db) : null;
   const warmer = status ? warmerState(status.warmer) : null;
+  const slowest = status ? slowestStep(status.warmer.steps) : null;
   const online = status?.ok === true;
 
   return (
@@ -109,6 +113,19 @@ function ServerStatusCard({
               </span>
             </dd>
           </div>
+          {slowest && (
+            <div className="sm:col-span-2">
+              <dt className="text-gray-600 dark:text-gray-300">
+                Slowest warmer step
+              </dt>
+              <dd className="mt-0.5 font-semibold">
+                {formatStepName(slowest.name)}
+                <span className="font-normal text-gray-600 dark:text-gray-300">
+                  {" "}· {formatDuration(slowest.durationMs)}
+                </span>
+              </dd>
+            </div>
+          )}
           <div>
             <dt className="text-gray-600 dark:text-gray-300">Thumbnail encoder</dt>
             <dd className="mt-0.5 font-semibold">

@@ -254,6 +254,12 @@ export async function warmProductImages(count: number): Promise<number> {
 
 let warmerTickInFlight = false;
 
+export interface WarmerStepStatus {
+  name: string;
+  durationMs: number;
+  ok: boolean;
+}
+
 export interface WarmerStatus {
   running: boolean;
   lastStartedAt: number | null;
@@ -261,6 +267,7 @@ export interface WarmerStatus {
   lastDurationMs: number | null;
   lastOk: boolean | null;
   failedSteps: number;
+  steps: WarmerStepStatus[];
 }
 
 const warmerStatus: WarmerStatus = {
@@ -270,12 +277,17 @@ const warmerStatus: WarmerStatus = {
   lastDurationMs: null,
   lastOk: null,
   failedSteps: 0,
+  steps: [],
 };
 let warmerTickFailedSteps = 0;
+let warmerTickSteps: WarmerStepStatus[] = [];
 
-/** Last-tick health for `/api/status`; no step error text is exposed. */
+/** Last-tick health and per-step timings for `/api/status`; no error text. */
 export function getWarmerStatus(): WarmerStatus {
-  return { ...warmerStatus };
+  return {
+    ...warmerStatus,
+    steps: warmerStatus.steps.map((step) => ({ ...step })),
+  };
 }
 
 // Each step gets its own error boundary: a single shared catch meant one
@@ -285,12 +297,20 @@ async function warmerStep(
   name: string,
   fn: () => Promise<unknown>,
 ): Promise<void> {
+  const startedAt = Date.now();
+  let ok = true;
   try {
     await fn();
   } catch (error) {
+    ok = false;
     warmerTickFailedSteps += 1;
     console.warn("[Prices] Warmer step failed: %s", name, error);
   }
+  warmerTickSteps.push({
+    name,
+    durationMs: Date.now() - startedAt,
+    ok,
+  });
 }
 
 export async function runWarmerTick(): Promise<void> {
@@ -298,6 +318,7 @@ export async function runWarmerTick(): Promise<void> {
   warmerTickInFlight = true;
   const startedAt = Date.now();
   warmerTickFailedSteps = 0;
+  warmerTickSteps = [];
   warmerStatus.running = true;
   warmerStatus.lastStartedAt = startedAt;
   try {
@@ -341,6 +362,7 @@ export async function runWarmerTick(): Promise<void> {
     warmerStatus.lastDurationMs = finishedAt - startedAt;
     warmerStatus.failedSteps = warmerTickFailedSteps;
     warmerStatus.lastOk = warmerTickFailedSteps === 0;
+    warmerStatus.steps = warmerTickSteps;
   }
 }
 
