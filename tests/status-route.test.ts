@@ -22,6 +22,7 @@ function snapshot(overrides: Partial<StatusSnapshot> = {}): StatusSnapshot {
       lastOk: true,
       failedSteps: 0,
       steps: [{ name: "warmCatalogRotation", durationMs: 900, ok: true }],
+      nearExpiry: { attempted: 10, refreshed: 7, failed: 3, backedOff: 1 },
     },
     thumbnails: {
       active: 0,

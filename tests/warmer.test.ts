@@ -88,6 +88,7 @@ import {
 } from "../server/price-cache";
 import { purgeOldHistory } from "../server/price-history";
 import {
+  getNearExpiryStatus,
   orderNearExpiryEntries,
   refreshNearExpiry,
   startWarmer,
@@ -136,6 +137,12 @@ describe("warmer", () => {
     await refreshNearExpiry(Date.now());
     expect(mockedFetch).toHaveBeenCalledTimes(1);
     expect(mockedSetCached).toHaveBeenCalledTimes(1);
+    expect(getNearExpiryStatus()).toMatchObject({
+      attempted: 1,
+      refreshed: 1,
+      failed: 0,
+      backedOff: 0,
+    });
   });
 
   it("refreshNearExpiry skips when there are no near-expiry entries", async () => {
@@ -162,6 +169,29 @@ describe("warmer", () => {
     expect(mockedFetch).toHaveBeenCalledTimes(2);
   });
 
+  it("backs off a pair after three failed refreshes", async () => {
+    const entry = {
+      distributorId: "backoff",
+      modelNumber: "dead",
+      fetchedAt: 0,
+    };
+    mockedListNearExpiry.mockResolvedValue([entry]);
+    parser.parsePrice = () => null;
+    const now = Date.now();
+    for (let i = 0; i < 3; i++) await refreshNearExpiry(now + i);
+    expect(mockedFetch).toHaveBeenCalledTimes(3);
+    expect(getNearExpiryStatus()).toMatchObject({ attempted: 1, failed: 1 });
+
+    await refreshNearExpiry(now + 10);
+    expect(mockedFetch).toHaveBeenCalledTimes(3);
+    expect(getNearExpiryStatus()).toMatchObject({
+      attempted: 0,
+      refreshed: 0,
+      failed: 0,
+      backedOff: 1,
+    });
+  });
+
   it("sends recently attempted pairs behind fresher ones", () => {
     const entries = [
       { distributorId: "a", modelNumber: "1", fetchedAt: 90_000 },
@@ -170,7 +200,9 @@ describe("warmer", () => {
     ];
     // `a` failed recently; its rank becomes the attempt time, so it moves
     // behind the older successful rows.
-    const attempts = new Map([["a:1", 200_000]]);
+    const attempts = new Map([
+      ["a:1", { at: 200_000, failures: 0, backoffUntil: 0 }],
+    ]);
     const ordered = orderNearExpiryEntries(entries, attempts);
     expect(ordered.map((entry) => entry.distributorId)).toEqual([
       "c",

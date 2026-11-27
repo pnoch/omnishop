@@ -49,6 +49,7 @@ function ServerStatusCard({
   const db = status ? dbState(status.db) : null;
   const warmer = status ? warmerState(status.warmer) : null;
   const slowest = status ? slowestStep(status.warmer.steps) : null;
+  const nearExpiry = status?.warmer.nearExpiry ?? null;
   const online = status?.ok === true;
 
   return (
@@ -123,6 +124,23 @@ function ServerStatusCard({
                 <span className="font-normal text-gray-600 dark:text-gray-300">
                   {" "}· {formatDuration(slowest.durationMs)}
                 </span>
+              </dd>
+            </div>
+          )}
+          {nearExpiry && (
+            <div className="sm:col-span-2">
+              <dt className="text-gray-600 dark:text-gray-300">
+                Near-expiry refresh
+              </dt>
+              <dd className="mt-0.5 font-semibold">
+                {nearExpiry.attempted} attempted ·{" "}
+                {nearExpiry.refreshed} refreshed
+                {nearExpiry.failed > 0
+                  ? ` · ${nearExpiry.failed} failed`
+                  : ""}
+                {nearExpiry.backedOff > 0
+                  ? ` · ${nearExpiry.backedOff} backed off`
+                  : ""}
               </dd>
             </div>
           )}

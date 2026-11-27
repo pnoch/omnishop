@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.53] - 2026-11-27
+
+### Reliability
+
+- The near-expiry warmer backs off a distributor/model pair for 24 hours after
+  three consecutive failed refreshes, so dead rows stop consuming the 45 s
+  budget every tick while on-demand requests still refresh them.
+- `/api/status` reports `nearExpiry: { attempted, refreshed, failed, backedOff }`
+  for the last run; desktop Diagnostics shows the counts.
+
 ## [5.32.52] - 2026-11-26
 
 ### Observability

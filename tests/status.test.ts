@@ -24,6 +24,7 @@ const warmer = {
   lastOk: true,
   failedSteps: 0,
   steps: [{ name: "warmCatalogRotation", durationMs: 900, ok: true }],
+  nearExpiry: { attempted: 10, refreshed: 7, failed: 3, backedOff: 1 },
 };
 const thumbnails = {
   active: 1,
@@ -52,6 +53,7 @@ describe("getStatusSnapshot", () => {
     expect(snapshot.db).toBe("ok");
     expect(snapshot.warmer).toEqual(warmer);
     expect(snapshot.warmer.steps[0]?.name).toBe("warmCatalogRotation");
+    expect(snapshot.warmer.nearExpiry?.failed).toBe(3);
     expect(snapshot.thumbnails).toEqual(thumbnails);
     expect(snapshot.imageCacheEntries).toBe(5);
     expect(snapshot.uptimeSec).toBeGreaterThanOrEqual(0);

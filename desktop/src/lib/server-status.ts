@@ -13,6 +13,13 @@ export interface WarmerStepStatus {
   ok: boolean;
 }
 
+export interface NearExpiryStatus {
+  attempted: number;
+  refreshed: number;
+  failed: number;
+  backedOff: number;
+}
+
 export interface WarmerStatus {
   running: boolean;
   lastStartedAt: number | null;
@@ -21,6 +28,7 @@ export interface WarmerStatus {
   lastOk: boolean | null;
   failedSteps: number;
   steps: WarmerStepStatus[];
+  nearExpiry: NearExpiryStatus | null;
 }
 
 export interface ThumbnailStatus {
@@ -98,6 +106,14 @@ export function parseServerStatus(value: unknown): ServerStatus | null {
             )
             .slice(0, 64)
         : [],
+      nearExpiry: isRecord(warmer.nearExpiry)
+        ? {
+            attempted: numberOr(warmer.nearExpiry.attempted, 0),
+            refreshed: numberOr(warmer.nearExpiry.refreshed, 0),
+            failed: numberOr(warmer.nearExpiry.failed, 0),
+            backedOff: numberOr(warmer.nearExpiry.backedOff, 0),
+          }
+        : null,
     },
     thumbnails: {
       active: numberOr(thumbnails.active, 0),

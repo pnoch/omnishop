@@ -27,6 +27,7 @@ const payload = {
       { name: "warmCatalogRotation", durationMs: 900, ok: true },
       { name: "purgeOldHistory", durationMs: 120, ok: true },
     ],
+    nearExpiry: { attempted: 10, refreshed: 7, failed: 3, backedOff: 1 },
   },
   thumbnails: {
     active: 1,
@@ -44,6 +45,7 @@ describe("parseServerStatus", () => {
     expect(status?.db).toBe("ok");
     expect(status?.warmer.lastDurationMs).toBe(1500);
     expect(status?.warmer.steps).toHaveLength(2);
+    expect(status?.warmer.nearExpiry?.failed).toBe(3);
     expect(status?.thumbnails.maxQueued).toBe(64);
     expect(status?.imageCacheEntries).toBe(3);
   });
@@ -73,6 +75,21 @@ describe("parseServerStatus", () => {
     expect(status?.thumbnails.active).toBe(0);
     expect(status?.imageCacheEntries).toBe(0);
     expect(status?.warmer.steps).toEqual([]);
+  });
+
+  it("treats a missing or malformed near-expiry block as absent", () => {
+    expect(
+      parseServerStatus({
+        ...payload,
+        warmer: { ...payload.warmer, nearExpiry: "nope" },
+      })?.warmer.nearExpiry,
+    ).toBeNull();
+    expect(
+      parseServerStatus({
+        ...payload,
+        warmer: { ...payload.warmer, nearExpiry: undefined },
+      })?.warmer.nearExpiry,
+    ).toBeNull();
   });
 
   it("drops malformed step entries instead of rendering them", () => {

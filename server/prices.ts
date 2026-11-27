@@ -188,13 +188,34 @@ const NEAR_EXPIRY_BUDGET_MS = 45_000;
 const NEAR_EXPIRY_CONCURRENCY = 3;
 const NEAR_EXPIRY_ATTEMPTS_MAX = 5_000;
 const NEAR_EXPIRY_ATTEMPT_TTL_MS = 24 * 60 * 60 * 1000;
+const NEAR_EXPIRY_FAILURE_LIMIT = 3;
+const NEAR_EXPIRY_FAILURE_BACKOFF_MS = 24 * 60 * 60 * 1000;
+
+export interface NearExpiryStatus {
+  attempted: number;
+  refreshed: number;
+  failed: number;
+  backedOff: number;
+}
+
+interface NearExpiryAttempt {
+  at: number;
+  failures: number;
+  backoffUntil: number;
+}
 
 // Failed scrapes do not update fetchedAt, so the oldest-first query would hand
 // the same dead pairs back every tick and starve live rows behind them. Rank
 // each pair by the later of its last successful fetch and its last attempt:
 // a failed attempt moves it to the back until every older row has been tried
-// (the catalog rotation uses the same rule).
-const nearExpiryAttempts = new Map<string, number>();
+// (the catalog rotation uses the same rule). Pairs that keep failing are
+// backed off for a day instead of consuming the budget every tick.
+const nearExpiryAttempts = new Map<string, NearExpiryAttempt>();
+let nearExpiryLast: NearExpiryStatus | null = null;
+
+export function getNearExpiryStatus(): NearExpiryStatus | null {
+  return nearExpiryLast ? { ...nearExpiryLast } : null;
+}
 
 export function orderNearExpiryEntries<
   T extends {
@@ -202,11 +223,11 @@ export function orderNearExpiryEntries<
     modelNumber: string;
     fetchedAt?: number;
   },
->(entries: T[], attempts: Map<string, number>): T[] {
+>(entries: T[], attempts: Map<string, NearExpiryAttempt>): T[] {
   const rank = (entry: T): number =>
     Math.max(
       entry.fetchedAt ?? 0,
-      attempts.get(cacheKey(entry.distributorId, entry.modelNumber)) ?? 0,
+      attempts.get(cacheKey(entry.distributorId, entry.modelNumber))?.at ?? 0,
     );
   return [...entries].sort((a, b) => rank(a) - rank(b));
 }
@@ -216,9 +237,14 @@ function rememberNearExpiryAttempt(
   at: number,
 ): void {
   const key = cacheKey(entry.distributorId, entry.modelNumber);
+  const previous = nearExpiryAttempts.get(key);
   // Delete first so the map's insertion order stays attempt order.
   nearExpiryAttempts.delete(key);
-  nearExpiryAttempts.set(key, at);
+  nearExpiryAttempts.set(key, {
+    at,
+    failures: previous?.failures ?? 0,
+    backoffUntil: previous?.backoffUntil ?? 0,
+  });
   while (nearExpiryAttempts.size > NEAR_EXPIRY_ATTEMPTS_MAX) {
     const oldest = nearExpiryAttempts.keys().next().value;
     if (!oldest) break;
@@ -226,10 +252,40 @@ function rememberNearExpiryAttempt(
   }
 }
 
+function recordNearExpiryResult(
+  entry: { distributorId: string; modelNumber: string },
+  refreshed: boolean,
+  now: number,
+): void {
+  const state = nearExpiryAttempts.get(
+    cacheKey(entry.distributorId, entry.modelNumber),
+  );
+  if (!state) return;
+  if (refreshed) {
+    state.failures = 0;
+    state.backoffUntil = 0;
+    return;
+  }
+  state.failures += 1;
+  if (state.failures >= NEAR_EXPIRY_FAILURE_LIMIT) {
+    state.backoffUntil = now + NEAR_EXPIRY_FAILURE_BACKOFF_MS;
+  }
+}
+
+function isNearExpiryBackedOff(
+  entry: { distributorId: string; modelNumber: string },
+  now: number,
+): boolean {
+  const state = nearExpiryAttempts.get(
+    cacheKey(entry.distributorId, entry.modelNumber),
+  );
+  return Boolean(state && state.backoffUntil > now);
+}
+
 function pruneNearExpiryAttempts(now: number): void {
   const cutoff = now - NEAR_EXPIRY_ATTEMPT_TTL_MS;
-  for (const [key, at] of nearExpiryAttempts) {
-    if (at >= cutoff) break;
+  for (const [key, state] of nearExpiryAttempts) {
+    if (state.at >= cutoff) break;
     nearExpiryAttempts.delete(key);
   }
 }
@@ -237,6 +293,12 @@ function pruneNearExpiryAttempts(now: number): void {
 export async function refreshNearExpiry(now: number): Promise<void> {
   const entries = await listNearExpiry(now, PRICE_TTL_MS - WARMER_LEAD_MS);
   const ordered = orderNearExpiryEntries(entries, nearExpiryAttempts);
+  const status: NearExpiryStatus = {
+    attempted: 0,
+    refreshed: 0,
+    failed: 0,
+    backedOff: 0,
+  };
 
   // Deadline, not just a count: a slow distributor can make each wave take
   // 10-20 s, and 100 rows then consumed the whole 5-minute window. In-flight
@@ -244,9 +306,18 @@ export async function refreshNearExpiry(now: number): Promise<void> {
   const startedAt = Date.now();
   for (let i = 0; i < ordered.length; i += NEAR_EXPIRY_CONCURRENCY) {
     if (i > 0 && Date.now() - startedAt >= NEAR_EXPIRY_BUDGET_MS) break;
-    const wave = ordered.slice(i, i + NEAR_EXPIRY_CONCURRENCY);
+    const wave = ordered
+      .slice(i, i + NEAR_EXPIRY_CONCURRENCY)
+      .filter((entry) => {
+        if (isNearExpiryBackedOff(entry, now)) {
+          status.backedOff += 1;
+          return false;
+        }
+        return true;
+      });
+    if (wave.length === 0) continue;
     for (const entry of wave) rememberNearExpiryAttempt(entry, now);
-    await Promise.all(
+    const results = await Promise.all(
       wave.map((entry) =>
         refreshSingleFlight(
           entry.distributorId,
@@ -254,7 +325,17 @@ export async function refreshNearExpiry(now: number): Promise<void> {
         ).catch(() => null),
       ),
     );
+    results.forEach((result, index) => {
+      status.attempted += 1;
+      if (result) {
+        status.refreshed += 1;
+      } else {
+        status.failed += 1;
+      }
+      recordNearExpiryResult(wave[index]!, result !== null, now);
+    });
   }
+  nearExpiryLast = status;
   pruneNearExpiryAttempts(now);
 }
 
@@ -330,6 +411,7 @@ export interface WarmerStatus {
   lastOk: boolean | null;
   failedSteps: number;
   steps: WarmerStepStatus[];
+  nearExpiry: NearExpiryStatus | null;
 }
 
 const warmerStatus: WarmerStatus = {
@@ -340,6 +422,7 @@ const warmerStatus: WarmerStatus = {
   lastOk: null,
   failedSteps: 0,
   steps: [],
+  nearExpiry: null,
 };
 let warmerTickFailedSteps = 0;
 let warmerTickSteps: WarmerStepStatus[] = [];
@@ -349,6 +432,7 @@ export function getWarmerStatus(): WarmerStatus {
   return {
     ...warmerStatus,
     steps: warmerStatus.steps.map((step) => ({ ...step })),
+    nearExpiry: nearExpiryLast ? { ...nearExpiryLast } : null,
   };
 }
 
