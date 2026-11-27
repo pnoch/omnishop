@@ -44,6 +44,8 @@ pnpm test:rust    # cargo test for desktop/src-tauri
 pnpm db:push      # drizzle-kit generate && migrate (schema changes; commit the SQL)
 pnpm db:migrate   # apply committed migrations (used by CI and production start)
 pnpm db:check-migrations  # fail if the schema has uncommitted migration drift
+pnpm db:backup    # logical MySQL dump (schema+data) to backups/ (gzip, 0600)
+pnpm db:restore   # restore a dump into RESTORE_DATABASE_URL (--yes; refuses prod/non-empty)
 pnpm build        # esbuild bundle server to dist/
 pnpm start        # production node server
 pnpm android      # expo start --android

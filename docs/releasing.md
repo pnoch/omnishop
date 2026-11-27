@@ -101,6 +101,7 @@ pnpm exec vitest run tests/version-lockstep.test.ts
 
 ```bash
 pnpm verify        # check + lint + test + check:desktop + desktop test + cargo test
+DATABASE_URL=... pnpm db:backup   # before releases/migrations (see Backups)
 ```
 
 The browser release gates need the web export first:
@@ -285,6 +286,45 @@ and cached for 5 s, so it is safe to poll:
 ```bash
 curl -fsS https://web.omnishop.siamcreations.app/api/status
 ```
+
+### Backups
+
+Take a logical backup before every migration, release, or manual data change:
+
+```bash
+DATABASE_URL=... pnpm db:backup
+# → backups/omnishop-YYYYMMDD-HHMMSS.sql.gz (schema + data, mode 0600)
+```
+
+The dump contains emails and password hashes. Store it off-site, encrypted at
+rest (for example with `age` or `gpg`), and never commit it — `backups/` is
+gitignored. The scripts use local MySQL 8 client tools when installed and fall
+back to the `mysql:8.4` Docker image. `BACKUP_KEEP` (default 14) prunes old
+dumps in the target directory.
+
+Railway's MySQL service may also offer dashboard backups depending on the
+plan; check its retention separately. This dump is the artifact the restore
+procedure below uses.
+
+**Restore drill** — run it after changing the schema and before trusting a
+backup:
+
+```bash
+# 1. Create an empty scratch database (the target must exist and be empty).
+mysql -h ... -u ... -p -e "CREATE DATABASE psf_restore"
+
+# 2. Restore into it. The script refuses the DATABASE_URL target and a
+#    non-empty target unless --force is passed.
+RESTORE_DATABASE_URL=mysql://.../psf_restore \
+  pnpm db:restore backups/omnishop-....sql.gz --yes
+
+# 3. Confirm the printed table/user/price counts, then drop the scratch DB.
+```
+
+For a real recovery: stop the app service, confirm the dump is the one you
+want, restore into the real database with `--force`, run `pnpm db:migrate` if
+the backup predates a migration, start the service, and check
+`/api/healthz` and `/api/status`.
 
 ### Custom domain (`web.omnishop.siamcreations.app`)
 
