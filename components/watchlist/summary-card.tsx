@@ -29,9 +29,8 @@ export function SummaryCard({
   const { width } = useWindowDimensions();
   // Four stat columns squeeze the labels below ~360px ("Back Order" wrapped
   // mid-word at 320px). Drop to a 2x2 grid instead of truncating.
-  const stacked = width < 360;
-  // At ~390px four columns still fit if the longest label is shortened; above
-  // that the full label fits, so only the narrow band changes.
+  const stacked = width < 400;
+  // Between 400 and 419px four columns fit if the longest label is shortened.
   const shortLabels = !stacked && width < 420;
 
   return (

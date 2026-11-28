@@ -4,6 +4,19 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.59] - 2026-11-28
+
+### UX
+
+- Watchlist cards are denser on phones: the stock badge and distributor count
+  moved under the model line, the price and trend share one row, and the
+  brand/category line is dropped below 430px. The product name now uses two
+  full lines instead of truncating.
+- Below 400px the image and the price column are dropped so the name has the
+  full card width; every action keeps its 44px target.
+- Watchlist summary switches to a 2x2 grid below 400px so labels never break or
+  truncate.
+
 ## [5.32.58] - 2026-11-28
 
 ### UX

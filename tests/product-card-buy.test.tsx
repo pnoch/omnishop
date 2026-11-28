@@ -31,6 +31,7 @@ vi.mock("react-native", async () => {
       spring: () => anim,
     },
     Platform: { OS: "ios" },
+    useWindowDimensions: () => ({ width: 390, height: 844, scale: 2, fontScale: 1 }),
     AccessibilityInfo: {
       isReduceMotionEnabled: async () => false,
       addEventListener: () => ({ remove: () => {} }),

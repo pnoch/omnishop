@@ -6,6 +6,7 @@ import {
   Pressable,
   Animated,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
@@ -67,6 +68,13 @@ export const ProductCard = memo(function ProductCard({
 }) {
   const colors = useColors();
   const reduceMotion = useReduceMotion();
+  const { width } = useWindowDimensions();
+  // Phones get a compact right column: the same information in fewer stacked
+  // rows, so the card is ~44px shorter and the name/model get the width back.
+  const compact = width < 430;
+  // Very narrow phones cannot fit a 112px price column beside the name, so the
+  // identity block gets the full width and the price row moves under it.
+  const stackedCard = width < 400;
   const acquired = isAcquired(product);
   const cardOpacity = useState(() => new Animated.Value(acquired ? 0.55 : 1))[0];
   useEffect(() => {
@@ -276,12 +284,14 @@ export const ProductCard = memo(function ProductCard({
             </Animated.View>
           </Animated.View>
         )}
-        <ProductImage
-          productId={product.id}
-          sourceUrls={pickImageSourceUrls(product.listings)}
-          size={48}
-          marginRight={10}
-        />
+        {!stackedCard && (
+          <ProductImage
+            productId={product.id}
+            sourceUrls={pickImageSourceUrls(product.listings)}
+            size={48}
+            marginRight={10}
+          />
+        )}
         <View style={{ flex: 1, marginRight: 10 }}>
           <Pressable
             onPress={onPress}
@@ -329,9 +339,32 @@ export const ProductCard = memo(function ProductCard({
           <Text style={{ color: colors.muted, fontSize: 12, marginTop: 3 }} numberOfLines={1} ellipsizeMode="tail">
              {product.marketplace ? `${product.marketplace.platform === "lazada" ? "Lazada TH" : "Shopee TH"} · ${product.marketplace.variant}` : product.modelNumber}
           </Text>
-          <Text style={{ color: colors.muted, fontSize: 12, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
-             {product.marketplace ? `${product.marketplace.seller} · Manual price` : `${product.brand} · ${product.category}`}
-          </Text>
+          {!compact && (
+            <Text style={{ color: colors.muted, fontSize: 12, marginTop: 1 }} numberOfLines={1} ellipsizeMode="tail">
+               {product.marketplace ? `${product.marketplace.seller} · Manual price` : `${product.brand} · ${product.category}`}
+            </Text>
+          )}
+          {compact && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 5,
+                flexWrap: "wrap",
+              }}
+            >
+              <StockBadge status={bestStatus} />
+              {distributorCount > 0 && (
+                <Text
+                  style={{ color: colors.muted, fontSize: 11 }}
+                  numberOfLines={1}
+                >
+                  {distributorCount} distributor{distributorCount !== 1 ? "s" : ""}
+                </Text>
+              )}
+            </View>
+          )}
           {!product.marketplace && (product.listings ?? []).length === 0 && onFindPrices && (
             <TouchableOpacity
               activeOpacity={0.8}
@@ -396,15 +429,47 @@ export const ProductCard = memo(function ProductCard({
               </TouchableOpacity>
             )}
         </View>
-        <View style={{ alignItems: "flex-end", gap: 6 }}>
-          <StockBadge status={bestStatus} />
-          {availability && <ScarcityBadge scarcity={availability.scarcity} />}
+        <View
+          style={{
+            alignItems: "flex-end",
+            gap: compact ? 4 : 6,
+            maxWidth: stackedCard ? undefined : compact ? 112 : undefined,
+          }}
+        >
+          {!compact && (
+            <View style={{ alignItems: "flex-end", gap: 6 }}>
+              <StockBadge status={bestStatus} />
+              {availability && <ScarcityBadge scarcity={availability.scarcity} />}
+            </View>
+          )}
           {bestPrice && (
-            <Text
-              style={{ color: colors.primaryText, fontWeight: "700", fontSize: 16 }}
-            >
-              {formatPrice(bestPrice.price, bestPrice.currency)}
-            </Text>
+            <View style={{ flexDirection: "row", alignItems: "baseline", gap: 4 }}>
+              <Text
+                style={{ color: colors.primaryText, fontWeight: "700", fontSize: 16 }}
+              >
+                {formatPrice(bestPrice.price, bestPrice.currency)}
+              </Text>
+              {priceChange && (
+                <Animated.Text
+                  style={{
+                    color: priceChange.isDown ? colors.successText : colors.errorText,
+                    fontSize: 11,
+                    fontWeight: "600",
+                    opacity: sparklineOpacity,
+                  }}
+                >
+                  {priceChange.isDown ? "▼" : "▲"}
+                  {Math.abs(priceChange.pct).toFixed(1)}%
+                </Animated.Text>
+              )}
+            </View>
+          )}
+          {sparklineData && (
+            <PriceSparkline
+              data={sparklineData}
+              width={compact ? 88 : 64}
+              height={compact ? 20 : 24}
+            />
           )}
           {bestInStockListing && (
             <TouchableOpacity
@@ -418,29 +483,18 @@ export const ProductCard = memo(function ProductCard({
               }}
               style={{
                 flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 4,
-                paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14,
+                paddingHorizontal: 10,
+                minWidth: 44,
+                borderRadius: 14,
                 minHeight: 44,
                 backgroundColor: colors.primary + "22",
               }}
             >
               <IconSymbol name="cart.fill" size={13} color={colors.primaryText} />
-              <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 12 }}>Buy</Text>
+              {!compact && (
+                <Text style={{ color: colors.primaryText, fontWeight: "600", fontSize: 12 }}>Buy</Text>
+              )}
             </TouchableOpacity>
-          )}
-          {sparklineData && (
-            <PriceSparkline data={sparklineData} width={64} height={24} />
-          )}
-          {priceChange && (
-            <Animated.Text
-              style={{
-                color: priceChange.isDown ? colors.successText : colors.errorText,
-                fontSize: 11,
-                fontWeight: "600",
-                opacity: sparklineOpacity,
-              }}
-            >
-              {priceChange.isDown ? "▼" : "▲"} {Math.abs(priceChange.pct).toFixed(1)}%
-            </Animated.Text>
           )}
         </View>
       </View>
