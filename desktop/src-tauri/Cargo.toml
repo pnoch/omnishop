@@ -19,9 +19,9 @@ tauri-plugin-fs = "2"
 tauri-plugin-updater = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-reqwest = { version = "0.12", features = ["json"] }
-scraper = "0.20"
-playwright-rs = "0.15"
+reqwest = { version = "0.13", features = ["json"] }
+scraper = "0.29"
+playwright-rs = "0.20"
 tokio = { version = "1", features = ["full"] }
 urlencoding = "2.1"
 regex = "1"
