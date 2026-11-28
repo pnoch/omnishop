@@ -397,6 +397,7 @@ export const {
   recordDisplayedEventId,
   getNotificationHistory,
   recordNotificationEvent,
+  claimNotificationEvent,
   markNotificationRead,
   markAllNotificationsRead,
   getUnreadNotificationCount,

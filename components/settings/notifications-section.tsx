@@ -16,6 +16,12 @@ import { useNotificationWebhook } from "@/hooks/use-notification-webhook";
 import { PillPicker } from "@/components/settings/pill-picker";
 import { SectionHeader } from "@/components/settings/section-header";
 import { setWebNotificationsEnabled } from "@/lib/web-notifications";
+import {
+  DEFAULT_WATCHLIST_DROP_RULE,
+  WATCHLIST_DROP_PERCENTS,
+  WATCHLIST_DROP_WINDOWS,
+  type WatchlistDropRule,
+} from "@/lib/watchlist-drop-rule";
 import type { AppSettings } from "@/lib/types";
 
 export function NotificationsSection({
@@ -43,6 +49,9 @@ export function NotificationsSection({
     commitWebhookUrl,
     handleTestWebhook,
   } = useNotificationWebhook({ settings, updateSetting });
+  const dropRule = settings.watchlistDropRule ?? DEFAULT_WATCHLIST_DROP_RULE;
+  const updateDropRule = (patch: Partial<WatchlistDropRule>) =>
+    updateSetting("watchlistDropRule", { ...dropRule, ...patch });
 
   return (
     <>
@@ -136,6 +145,113 @@ export function NotificationsSection({
           onValueChange={(v) => updateSetting("priceAlerts", v)}
           accessibilityLabel="Enable price alerts"
         />
+        <NotificationToggleRow
+          colors={colors}
+          icon="arrow.down"
+          label="Watchlist Drop Rule"
+          description="Notify when any tracked product's best price drops"
+          value={dropRule.enabled}
+          onValueChange={(v) => updateDropRule({ enabled: v })}
+          accessibilityLabel="Enable watchlist drop rule"
+        />
+        {dropRule.enabled && (
+          <View style={{ paddingHorizontal: 16, paddingBottom: 14 }}>
+            <Text
+              style={{ color: colors.foreground, fontSize: 13, fontWeight: "600" }}
+            >
+              Drop at least
+            </Text>
+            <View
+              style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}
+            >
+              {WATCHLIST_DROP_PERCENTS.map((percent) => {
+                const selected = dropRule.percent === percent;
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    key={percent}
+                    onPress={() => updateDropRule({ percent })}
+                    accessibilityLabel={`Watchlist drop threshold ${percent} percent`}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: selected }}
+                    style={{
+                      minHeight: 44,
+                      minWidth: 56,
+                      paddingHorizontal: 14,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 22,
+                      borderWidth: 1,
+                      borderColor: colors.primary,
+                      backgroundColor: selected ? colors.primary : colors.surface,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: selected ? "#fff" : colors.primaryText,
+                        fontWeight: "700",
+                        fontSize: 13,
+                      }}
+                    >
+                      {percent}%
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <Text
+              style={{
+                color: colors.foreground,
+                fontSize: 13,
+                fontWeight: "600",
+                marginTop: 12,
+              }}
+            >
+              Compare over
+            </Text>
+            <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
+              {WATCHLIST_DROP_WINDOWS.map((hours) => {
+                const selected = dropRule.windowHours === hours;
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    key={hours}
+                    onPress={() => updateDropRule({ windowHours: hours })}
+                    accessibilityLabel={
+                      hours === 168 ? "Compare over 7 days" : "Compare over 24 hours"
+                    }
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: selected }}
+                    style={{
+                      minHeight: 44,
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: colors.primary,
+                      backgroundColor: selected ? colors.primary : colors.surface,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: selected ? "#fff" : colors.primaryText,
+                        fontWeight: "600",
+                        fontSize: 13,
+                      }}
+                    >
+                      {hours === 168 ? "7 days" : "24 hours"}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <Text style={{ color: colors.muted, fontSize: 12, marginTop: 8 }}>
+              Uses the best in-stock price and needs a price point near the start
+              of the window.
+            </Text>
+          </View>
+        )}
         <NotificationToggleRow
           colors={colors}
           icon="exclamationmark.triangle.fill"

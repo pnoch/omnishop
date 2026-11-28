@@ -233,6 +233,15 @@ export interface AppSettings {
   taxExempt?: boolean;
   /** Add the destination duty/VAT estimate to the displayed total (default off). */
   includeImportEstimate?: boolean;
+  /**
+   * One rule across the watchlist: notify when any tracked product's best
+   * in-stock price falls by `percent` over `windowHours`.
+   */
+  watchlistDropRule?: {
+    enabled: boolean;
+    percent: number;
+    windowHours: 24 | 168;
+  };
 }
 
 export type Collection = "watchlist" | "alerts" | "reminders" | "settings";

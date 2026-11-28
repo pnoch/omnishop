@@ -102,7 +102,7 @@ export function TabSwitcher({ active, counts, onChange }: TabSwitcherProps) {
             >
               <Text
                 style={{
-                  color: active === tab ? "#fff" : colors.primary,
+                  color: active === tab ? "#fff" : colors.primaryText,
                   fontSize: 10,
                   fontWeight: "700",
                 }}

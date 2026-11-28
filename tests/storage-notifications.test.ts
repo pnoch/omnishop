@@ -30,6 +30,26 @@ function healthEvent(overrides: Partial<PendingHealthEvent> = {}): PendingHealth
   };
 }
 
+describe("notification history claims", () => {
+  it("claims an event exactly once", async () => {
+    const storage = makeStorage();
+    const event = {
+      id: "watchlist-drop:p1:10:24:1",
+      type: "price_drop" as const,
+      title: "Watchlist Drop Alert",
+      body: "Test Router dropped 15%",
+      productId: "p1",
+      triggeredPrice: 85,
+      currency: "USD",
+      createdAt: 1_700_000_000_000,
+    };
+    expect(await storage.claimNotificationEvent(event)).toBe(true);
+    expect(await storage.claimNotificationEvent(event)).toBe(false);
+    const history = await storage.getNotificationHistory();
+    expect(history.filter((e) => e.id === event.id)).toHaveLength(1);
+  });
+});
+
 describe("pending health events buffer", () => {
   it("starts empty", async () => {
     expect(await makeStorage().getPendingHealthEvents()).toEqual([]);

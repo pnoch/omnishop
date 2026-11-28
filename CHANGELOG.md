@@ -4,6 +4,21 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.56] - 2026-11-28
+
+### Features
+
+- Watchlist drop rule in Settings → Notifications: notify when any tracked
+  product's best in-stock price falls 5/10/15/20% over 24 hours or 7 days.
+  Evaluated after each price check, one notification per product per window,
+  with an atomic history claim so foreground and background runners cannot
+  duplicate it.
+
+### Accessibility
+
+- Alerts tab count badges now use the readable primary text token in dark mode
+  (3.65:1 → AA).
+
 ## [5.32.55] - 2026-11-28
 
 ### Features

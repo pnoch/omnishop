@@ -44,14 +44,27 @@ export function createNotificationsStorage(ctx: StorageContext) {
   async function recordNotificationEvent(
     event: Omit<NotificationHistoryEntry, "read">,
   ): Promise<void> {
-    await enqueue(KEYS.NOTIFICATION_HISTORY, async () => {
+    await claimNotificationEvent(event);
+  }
+
+  /**
+   * Atomically record an event and report whether this caller won the claim.
+   * Background and foreground checks can race; only the winner should show the
+   * OS notification.
+   */
+  async function claimNotificationEvent(
+    event: Omit<NotificationHistoryEntry, "read">,
+  ): Promise<boolean> {
+    const claimed = await enqueue(KEYS.NOTIFICATION_HISTORY, async () => {
       const list = await getNotificationHistory();
-      if (list.some((e) => e.id === event.id)) return;
+      if (list.some((e) => e.id === event.id)) return false;
       list.unshift({ ...event, read: false });
       if (list.length > 200) list.length = 200;
       await adapter.setItem(KEYS.NOTIFICATION_HISTORY, JSON.stringify(list));
       notifyLocal("notifications", event.id);
+      return true;
     });
+    return claimed === true;
   }
 
   async function markNotificationRead(id: string): Promise<void> {
@@ -107,6 +120,7 @@ export function createNotificationsStorage(ctx: StorageContext) {
     recordDisplayedEventId,
     getNotificationHistory,
     recordNotificationEvent,
+    claimNotificationEvent,
     markNotificationRead,
     markAllNotificationsRead,
     getUnreadNotificationCount,

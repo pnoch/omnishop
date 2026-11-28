@@ -11,6 +11,7 @@ import { syncServerNotifications } from "../server-notifications";
 import { evaluatePriceAlerts } from "./price-alerts";
 import { sendScheduledDigest } from "./digest";
 import { checkBasketAlert } from "./basket-alert";
+import { checkWatchlistDropRule } from "./watchlist-drop-rule";
 import { fulfillConciergePendingAlerts } from "./pending-alerts";
 import type { DistributorListing, Product } from "../types";
 import { createHealthCollector, type HealthCollector } from "./health-collector";
@@ -117,6 +118,7 @@ async function runPriceCheckCoreInner(opts?: {
   await sendScheduledDigest(settings);
   await checkBasketAlert(settings);
   await evaluatePriceAlerts(settings);
+  await checkWatchlistDropRule(settings);
 
 }
 
