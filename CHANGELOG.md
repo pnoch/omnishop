@@ -4,6 +4,20 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.54] - 2026-11-28
+
+### Fixes
+
+- Onboarding, available, and trending sample products now set `lastRefreshed`,
+  so their detail page no longer shows "Last refreshed: Never" before the
+  first live price query.
+
+### Tooling
+
+- `pnpm store:assets` generates Play phone (1080×1920), iPhone 6.7"
+  (1290×2796), and iPad 12.9" (2048×2732) screenshots plus the Play feature
+  graphic from the deployed app. Output goes to gitignored `store-assets/`.
+
 ## [5.32.53] - 2026-11-27
 
 ### Reliability
