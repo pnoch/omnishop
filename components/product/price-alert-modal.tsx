@@ -28,6 +28,10 @@ interface PriceAlertModalProps {
   onSelectDistributor?: (id: string | null) => void;
   direction?: "drop" | "rise";
   onDirectionChange?: (direction: "drop" | "rise") => void;
+  percentOptions?: { percent: number; target: number }[];
+  selectedPercent?: number | null;
+  onSelectPercent?: (percent: number) => void;
+  baselinePrice?: number | null;
   editingAlertId?: string;
 }
 
@@ -46,6 +50,10 @@ export function PriceAlertModal({
   onSelectDistributor,
   direction,
   onDirectionChange,
+  percentOptions,
+  selectedPercent,
+  onSelectPercent,
+  baselinePrice,
   editingAlertId,
 }: PriceAlertModalProps) {
   const colors = useColors();
@@ -215,6 +223,82 @@ export function PriceAlertModal({
               })}
             </View>
           )}
+          {(direction ?? "drop") === "drop" &&
+            percentOptions &&
+            percentOptions.length > 0 && (
+              <View style={{ marginBottom: 16 }}>
+                <Text
+                  style={{
+                    color: colors.muted,
+                    fontSize: 13,
+                    marginBottom: 8,
+                  }}
+                >
+                  Quick drop from the current best
+                </Text>
+                <View
+                  style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}
+                >
+                  {percentOptions.map((option) => {
+                    const selected = selectedPercent === option.percent;
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.85}
+                        key={option.percent}
+                        onPress={() => onSelectPercent?.(option.percent)}
+                        style={{
+                          paddingHorizontal: 12,
+                          paddingVertical: 7,
+                          borderRadius: 14,
+                          borderWidth: 1,
+                          borderColor: colors.primary,
+                          backgroundColor: selected
+                            ? colors.primary
+                            : colors.primary + "12",
+                          minWidth: 72,
+                          alignItems: "center",
+                        }}
+                        accessibilityLabel={`Alert at ${option.percent}% below the current price`}
+                        accessibilityRole="button"
+                        accessibilityState={{ selected }}
+                      >
+                        <Text
+                          style={{
+                            color: selected ? "#fff" : colors.primaryText,
+                            fontSize: 13,
+                            fontWeight: "700",
+                          }}
+                        >
+                          {option.percent}%
+                        </Text>
+                        <Text
+                          style={{
+                            color: selected ? "#fff" : colors.muted,
+                            fontSize: 10,
+                            marginTop: 1,
+                          }}
+                        >
+                          {formatPrice(option.target, alertCurrency)}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+                {selectedPercent != null && baselinePrice != null && (
+                  <Text
+                    style={{
+                      color: colors.muted,
+                      fontSize: 12,
+                      marginTop: 6,
+                    }}
+                  >
+                    Target is {selectedPercent}% below{" "}
+                    {formatPrice(baselinePrice, alertCurrency)}. Editing the
+                    price switches to an absolute alert.
+                  </Text>
+                )}
+              </View>
+            )}
           {distributors && distributors.length > 0 && (
             <View
               style={{

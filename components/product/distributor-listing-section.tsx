@@ -40,6 +40,7 @@ interface DistributorListingSectionProps {
   onToggleImportEstimate: (value: boolean) => void;
   onSetRegionFilter: (region: string) => void;
   onSetBestAlert: (listing: DistributorListing, targetPrice: number) => void;
+  onOpenCustomAlert?: (distributorId: string) => void;
   onToggleStockWatch: (listing: DistributorListing) => void;
   onOpenChart: (listing: DistributorListing) => void;
   onRemind?: (listing: DistributorListing) => void;
@@ -127,6 +128,7 @@ export function DistributorListingSection({
   onToggleImportEstimate,
   onSetRegionFilter,
   onSetBestAlert,
+  onOpenCustomAlert,
   onToggleStockWatch,
   onOpenChart,
   onRemind,
@@ -196,6 +198,11 @@ export function DistributorListingSection({
               product={product}
               onSetAlert={(targetPrice) =>
                 onSetBestAlert(globalBestInStockListing, targetPrice)
+              }
+              onOpenCustomAlert={
+                onOpenCustomAlert
+                  ? () => onOpenCustomAlert(globalBestInStockListing.distributorId)
+                  : undefined
               }
               displayCurrency={displayCurrency}
             />

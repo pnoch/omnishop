@@ -2,6 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { formatPrice } from "@shared/currency";
+import { alertPercentLabel } from "@/lib/alert-percent";
 import { getDistributorById } from "@shared/distributors";
 import {
   scopedAlertFor,
@@ -67,7 +68,11 @@ export function TargetTableCard({
               <Text style={{ color: colors.muted, fontSize: 11 }}>
                 {formatPrice(listing.price, listing.currency)}
                 {alert
-                  ? ` · target ${formatPrice(alert.targetPrice, alert.currency)}`
+                  ? ` · target ${formatPrice(alert.targetPrice, alert.currency)}${
+                      alertPercentLabel(alert)
+                        ? ` (${alertPercentLabel(alert)})`
+                        : ""
+                    }`
                   : ""}
               </Text>
             </View>
@@ -116,6 +121,7 @@ export function TargetTableCard({
         <Text style={{ color: colors.muted, fontSize: 11, paddingTop: 8 }}>
           Any distributor · target{" "}
           {formatPrice(wide.targetPrice, wide.currency)}
+          {alertPercentLabel(wide) ? ` (${alertPercentLabel(wide)})` : ""}
         </Text>
       )}
 

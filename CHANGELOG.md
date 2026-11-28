@@ -4,6 +4,16 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.55] - 2026-11-28
+
+### Features
+
+- Percentage-drop alerts: the alert sheet offers 5/10/15/20% quick targets
+  from the current best price, scoped to the chosen distributor and currency.
+  The baseline and percentage are stored, alert cards and target tables show
+  “10% below $451.09”, and editing converts the alert back to an absolute
+  target. The best-distributor card links directly to the percentage sheet.
+
 ## [5.32.54] - 2026-11-28
 
 ### Fixes

@@ -55,6 +55,35 @@ describe("createPriceAlert", () => {
     expect(state.added).toHaveLength(1);
   });
 
+  it("stores the percentage baseline and includes it in the id", async () => {
+    const result = await createPriceAlert({
+      ...input,
+      targetPrice: 90,
+      dropPercent: 10,
+      baselinePrice: 100,
+    });
+    expect(result.alert?.id).toBe(
+      "alert-p1-dist-1-drop-pct10-100-USD",
+    );
+    expect(result.alert).toMatchObject({
+      targetPrice: 90,
+      dropPercent: 10,
+      baselinePrice: 100,
+    });
+  });
+
+  it("does not attach percentage metadata to a rise alert", async () => {
+    const result = await createPriceAlert({
+      ...input,
+      targetPrice: 110,
+      direction: "rise",
+      dropPercent: 10,
+      baselinePrice: 100,
+    });
+    expect(result.alert?.dropPercent).toBeUndefined();
+    expect(result.alert?.baselinePrice).toBeUndefined();
+  });
+
   it("saves an alert without scheduling when permission is denied", async () => {
     state.permission = false;
     const result = await createPriceAlert(input);

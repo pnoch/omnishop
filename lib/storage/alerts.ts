@@ -101,6 +101,8 @@ export function createAlertsStorage(ctx: StorageContext) {
       currency?: string;
       direction?: "drop" | "rise";
       distributorId?: string | null;
+      dropPercent?: number | null;
+      baselinePrice?: number | null;
     },
   ): Promise<void> {
     await enqueue(KEYS.ALERTS, async () => {
@@ -114,6 +116,10 @@ export function createAlertsStorage(ctx: StorageContext) {
         if (patch.direction !== undefined) next.direction = patch.direction;
         if (patch.distributorId !== undefined)
           next.distributorId = patch.distributorId ?? undefined;
+        if (patch.dropPercent !== undefined)
+          next.dropPercent = patch.dropPercent ?? undefined;
+        if (patch.baselinePrice !== undefined)
+          next.baselinePrice = patch.baselinePrice ?? undefined;
         // Field changes re-arm the alert and clear stale trigger info.
         // Re-stamp createdAt so a stale server event cannot immediately
         // re-deactivate the edited alert (same guard as rearmAlert).

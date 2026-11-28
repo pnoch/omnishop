@@ -96,6 +96,10 @@ export default function ProductDetailScreen() {
     setAlertCurrency,
     alertSuggestions,
     alertDistributors,
+    alertPercent,
+    alertBaseline,
+    alertPercentOptions,
+    handleSelectPercent,
     handleSetBestAlert,
     handleSetTarget,
     handleSetAlert,
@@ -186,7 +190,7 @@ export default function ProductDetailScreen() {
           {dealScore != null && <DealScoreCard dealScore={dealScore} />}
           {priceVsAvg && <PriceVsAvgCard data={priceVsAvg} displayCurrency={effectiveCurrency} />}
           {availability && <AvailabilityCard data={availability} />}
-          <DistributorListingSection sortedListings={sortedListings} visibleListings={visibleListings} bestInStockListing={bestInStockListing} highlightDistributorId={highlightDistributorId} product={product} insight={insight} insightLoading={insightLoading} regionFilter={regionFilter} regions={regions} shippingRegion={effectiveShippingRegion} bestDeal={bestDeal} stockWatches={stockWatches} id={id} displayCurrency={effectiveCurrency} destination={destination} taxExempt={taxExempt} includeImportEstimate={includeImportEstimate} onSelectCountry={handleSelectCountry} onToggleTaxExempt={handleToggleTaxExempt} onToggleImportEstimate={handleToggleImportEstimate} onSetRegionFilter={setRegionFilter} onSetBestAlert={handleSetBestAlert} onToggleStockWatch={handleToggleStockWatch} onOpenChart={(listing) => router.push(`/compare/${id}?distributor=${listing.distributorId}`)} onRemind={setReminderListing} onFindPrices={handleFindPrices} findingPrices={findingPrices} findingProgress={findingProgress} hasIncompleteDiscovery={hasIncompleteDiscovery} onWatchAny={() => void toggleAnyWatch()} watchingAny={!!stockWatches["*"]} />
+          <DistributorListingSection sortedListings={sortedListings} visibleListings={visibleListings} bestInStockListing={bestInStockListing} highlightDistributorId={highlightDistributorId} product={product} insight={insight} insightLoading={insightLoading} regionFilter={regionFilter} regions={regions} shippingRegion={effectiveShippingRegion} bestDeal={bestDeal} stockWatches={stockWatches} id={id} displayCurrency={effectiveCurrency} destination={destination} taxExempt={taxExempt} includeImportEstimate={includeImportEstimate} onSelectCountry={handleSelectCountry} onToggleTaxExempt={handleToggleTaxExempt} onToggleImportEstimate={handleToggleImportEstimate} onSetRegionFilter={setRegionFilter} onSetBestAlert={handleSetBestAlert} onOpenCustomAlert={handleSetTarget} onToggleStockWatch={handleToggleStockWatch} onOpenChart={(listing) => router.push(`/compare/${id}?distributor=${listing.distributorId}`)} onRemind={setReminderListing} onFindPrices={handleFindPrices} findingPrices={findingPrices} findingProgress={findingProgress} hasIncompleteDiscovery={hasIncompleteDiscovery} onWatchAny={() => void toggleAnyWatch()} watchingAny={!!stockWatches["*"]} />
           {isOutOfStock && product?.category && (
             <AlternativesSection category={product.category} alternatives={alternatives} />
           )}
@@ -237,6 +241,10 @@ export default function ProductDetailScreen() {
         onSelectDistributor={setAlertDistributorId}
         direction={alertDirection}
         onDirectionChange={setAlertDirection}
+        percentOptions={alertPercentOptions}
+        selectedPercent={alertPercent}
+        onSelectPercent={handleSelectPercent}
+        baselinePrice={alertBaseline}
       />
     </ScreenContainer>
   );

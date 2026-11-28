@@ -133,6 +133,10 @@ export interface PriceAlert {
   distributorId?: string;
   direction?: "drop" | "rise"; // absent = drop
   snoozedUntil?: string;
+  /** Percentage-drop alert: target = baselinePrice * (1 - dropPercent / 100). */
+  dropPercent?: number;
+  /** Best price when the percentage alert was created. */
+  baselinePrice?: number;
 }
 
 export interface BackOrderReminder {

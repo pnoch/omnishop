@@ -171,9 +171,17 @@ export function useAlertsData() {
         currency: string;
         direction: "drop" | "rise";
         distributorId: string | null;
+        dropPercent?: number | null;
+        baselinePrice?: number | null;
       },
     ) => {
-      await updateAlert(alertId, patch);
+      // The Alerts edit sheet edits an absolute target; clear the percentage
+      // metadata so the row does not keep claiming "10% below" a changed price.
+      await updateAlert(alertId, {
+        ...patch,
+        dropPercent: null,
+        baselinePrice: null,
+      });
       await loadData();
     },
     [loadData],

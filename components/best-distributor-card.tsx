@@ -14,6 +14,7 @@ import { openListingUrl } from "@/lib/listing-utils";
 function BestDistributorCard({
   listing,
   onSetAlert,
+  onOpenCustomAlert,
   product: prod,
   displayCurrency = "USD",
 }: {
@@ -21,6 +22,8 @@ function BestDistributorCard({
   // Receives the suggested target (5% below the current price) so the created
   // alert matches the label the user tapped.
   onSetAlert: (targetPrice: number) => void;
+  /** Opens the full alert sheet, where percentage presets live. */
+  onOpenCustomAlert?: () => void;
   product: { name: string } | null;
   displayCurrency?: string;
 }) {
@@ -332,6 +335,23 @@ function BestDistributorCard({
           </Pressable>
         );
       })()}
+      {onOpenCustomAlert && (
+        <Pressable
+          onPress={onOpenCustomAlert}
+          style={{
+            marginTop: 4,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          accessibilityLabel="Set a percentage drop alert"
+          accessibilityRole="button"
+        >
+          <Text style={{ color: colors.primaryText, fontSize: 12, fontWeight: "600" }}>
+            Choose a % drop instead
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 }

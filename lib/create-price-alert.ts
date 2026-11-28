@@ -9,6 +9,8 @@ export interface CreatePriceAlertInput {
   currency: string;
   distributorId?: string;
   direction?: "drop" | "rise";
+  dropPercent?: number;
+  baselinePrice?: number;
 }
 
 export interface CreatePriceAlertResult {
@@ -27,7 +29,9 @@ function alertIdFor(input: CreatePriceAlertInput): string {
     input.productId,
     input.distributorId ?? "any",
     input.direction ?? "drop",
-    input.targetPrice,
+    input.dropPercent
+      ? `pct${input.dropPercent}-${input.baselinePrice ?? ""}`
+      : input.targetPrice,
     input.currency,
   ].join("-");
 }
@@ -55,6 +59,14 @@ export async function createPriceAlert(
     direction: input.direction,
     createdAt: new Date().toISOString(),
     isActive: true,
+    ...(input.dropPercent &&
+    input.baselinePrice &&
+    (input.direction ?? "drop") === "drop"
+      ? {
+          dropPercent: input.dropPercent,
+          baselinePrice: input.baselinePrice,
+        }
+      : {}),
   };
 
   let saved = false;

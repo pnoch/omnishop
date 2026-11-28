@@ -2,6 +2,7 @@ import { memo, useMemo, useCallback } from "react";
 import { Text, TouchableOpacity, View, Switch } from "react-native";
 import { PriceAlert } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
+import { alertPercentLabel } from "@/lib/alert-percent";
 import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { IconSymbol } from "@/components/ui/icon-symbol";
@@ -120,6 +121,9 @@ export const AlertCard = memo(function AlertCard({
               ellipsizeMode="tail"
             >
               Target: {formatPrice(alert.targetPrice, alert.currency)}
+              {alertPercentLabel(alert)
+                ? ` · ${alertPercentLabel(alert)}`
+                : ""}
               {distributorLabel ? ` · ${distributorLabel}` : ""}
               {snoozed
                 ? ` · snoozed until ${new Date(alert.snoozedUntil!).toLocaleDateString(undefined, {

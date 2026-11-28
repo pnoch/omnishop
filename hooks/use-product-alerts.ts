@@ -6,6 +6,11 @@ import { getDistributorById } from "@shared/distributors";
 import { createPriceAlert } from "@/lib/create-price-alert";
 import { showAlert } from "@/lib/alert";
 import { suggestAlertPrices } from "@/lib/alert-suggestions";
+import {
+  ALERT_PERCENT_PRESETS,
+  bestAlertBaseline,
+  percentTargetPrice,
+} from "@/lib/alert-percent";
 import type { DistributorListing, PriceAlert, Product } from "@/lib/types";
 
 type Options = {
@@ -31,14 +36,72 @@ export function useProductAlerts({
   const [alertDistributorId, setAlertDistributorId] = useState<string | null>(
     null,
   );
-  const [alertDirection, setAlertDirection] = useState<"drop" | "rise">("drop");
+  const [alertDirection, setAlertDirectionState] = useState<"drop" | "rise">(
+    "drop",
+  );
   const [alertPrice, setAlertPrice] = useState("");
   const [alertCurrencyOverride, setAlertCurrencyOverride] = useState<
     string | null
   >(null);
   const alertCurrency = alertCurrencyOverride ?? displayCurrency;
-  const setAlertCurrency = setAlertCurrencyOverride;
+  const [alertPercent, setAlertPercent] = useState<number | null>(null);
+  const [alertBaseline, setAlertBaseline] = useState<number | null>(null);
   const [creatingAlert, setCreatingAlert] = useState(false);
+
+  const alertBaselineNow = useMemo(
+    () => bestAlertBaseline(listings ?? [], alertDistributorId, alertCurrency),
+    [listings, alertDistributorId, alertCurrency],
+  );
+  const alertPercentOptions = useMemo(() => {
+    if (alertBaselineNow === null) return [];
+    return ALERT_PERCENT_PRESETS.flatMap((percent) => {
+      const target = percentTargetPrice(alertBaselineNow, percent);
+      return target === null ? [] : [{ percent, target }];
+    });
+  }, [alertBaselineNow]);
+
+  const setAlertDirection = useCallback((direction: "drop" | "rise") => {
+    setAlertDirectionState(direction);
+    setAlertPercent(null);
+    setAlertBaseline(null);
+  }, []);
+
+  const setAlertCurrency = useCallback((currency: string) => {
+    setAlertCurrencyOverride(currency);
+    setAlertPercent(null);
+    setAlertBaseline(null);
+  }, []);
+
+  const setAlertPriceFromInput = useCallback((price: string) => {
+    setAlertPrice(price);
+    setAlertPercent(null);
+    setAlertBaseline(null);
+  }, []);
+
+  const selectAlertDistributor = useCallback((id: string | null) => {
+    setAlertDistributorId(id);
+    setAlertPercent(null);
+    setAlertBaseline(null);
+  }, []);
+
+  const handleSelectPercent = useCallback(
+    (percent: number) => {
+      const baseline = bestAlertBaseline(
+        listings ?? [],
+        alertDistributorId,
+        alertCurrency,
+      );
+      if (baseline === null) return;
+      const target = percentTargetPrice(baseline, percent);
+      if (target === null) return;
+      setAlertBaseline(baseline);
+      setAlertPercent(percent);
+      setAlertPrice(String(target));
+      if (Platform.OS !== "web")
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    },
+    [listings, alertDistributorId, alertCurrency],
+  );
 
   const alertSuggestions = useMemo(
     // Use the live listings, not `product.listings` (which the hook only seeds
@@ -117,8 +180,10 @@ export function useProductAlerts({
     setAlertDistributorId(distributorId);
     setAlertDirection("drop");
     setAlertPrice("");
+    setAlertPercent(null);
+    setAlertBaseline(null);
     setAlertModalVisible(true);
-  }, []);
+  }, [setAlertDirection]);
 
   const handleSetAlert = useCallback(async () => {
     if (!id || creatingAlert) return;
@@ -129,6 +194,9 @@ export function useProductAlerts({
     }
     setCreatingAlert(true);
     try {
+      const percent =
+        alertDirection === "drop" ? alertPercent ?? undefined : undefined;
+      const baseline = percent ? alertBaseline ?? undefined : undefined;
       const result = await createPriceAlert({
         productId: id,
         productName: product?.name ?? "Product",
@@ -136,6 +204,9 @@ export function useProductAlerts({
         currency: alertCurrency,
         distributorId: alertDistributorId ?? undefined,
         direction: alertDirection,
+        ...(percent && baseline
+          ? { dropPercent: percent, baselinePrice: baseline }
+          : {}),
       });
       if (result.reason === "duplicate") {
         showToast("That alert already exists", "info");
@@ -153,15 +224,19 @@ export function useProductAlerts({
       setAlerts((prev) => [...prev, result.alert!]);
       setAlertModalVisible(false);
       setAlertPrice("");
+      setAlertPercent(null);
+      setAlertBaseline(null);
       if (Platform.OS !== "web")
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      const scope = alertDistributorId
+        ? `${getDistributorById(alertDistributorId)?.name ?? "that distributor"}'s price`
+        : "the price";
+      const change = percent && baseline
+        ? `${percent}% below ${formatPrice(baseline, alertCurrency)} (target ${formatPrice(price, alertCurrency)})`
+        : `${alertDirection === "rise" ? "rises above" : "drops below"} ${formatPrice(price, alertCurrency)}`;
       showToast(
         result.scheduled
-          ? `Alert set — ${
-              alertDistributorId
-                ? `${getDistributorById(alertDistributorId)?.name ?? "that distributor"}'s price`
-                : "the price"
-            } ${alertDirection === "rise" ? "rises above" : "drops below"} ${formatPrice(price, alertCurrency)}`
+          ? `Alert set — ${scope} ${change}`
           : "Alert saved — enable notifications to get push alerts",
         result.scheduled ? "success" : "info",
       );
@@ -182,6 +257,8 @@ export function useProductAlerts({
     alertCurrency,
     alertDistributorId,
     alertDirection,
+    alertPercent,
+    alertBaseline,
     setAlerts,
     showToast,
     creatingAlert,
@@ -191,13 +268,17 @@ export function useProductAlerts({
     alertModalVisible,
     setAlertModalVisible,
     alertDistributorId,
-    setAlertDistributorId,
+    setAlertDistributorId: selectAlertDistributor,
     alertDirection,
     setAlertDirection,
     alertPrice,
-    setAlertPrice,
+    setAlertPrice: setAlertPriceFromInput,
     alertCurrency,
     setAlertCurrency,
+    alertPercent,
+    alertBaseline,
+    alertPercentOptions,
+    handleSelectPercent,
     alertSuggestions,
     alertDistributors,
     creatingAlert,

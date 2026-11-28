@@ -4,6 +4,7 @@ import { useColors } from "@/hooks/use-colors";
 import { Card } from "@/components/ui/card";
 import { PriceAlert } from "@/lib/types";
 import { formatPrice } from "@shared/currency";
+import { alertPercentLabel } from "@/lib/alert-percent";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { getDistributorById } from "@shared/distributors";
 
@@ -104,6 +105,9 @@ export const TriggeredAlertCard = memo(function TriggeredAlertCard({
           ellipsizeMode="tail"
         >
           Target: {formatPrice(alert.targetPrice, alert.currency)}
+          {alertPercentLabel(alert)
+            ? ` · ${alertPercentLabel(alert)}`
+            : ""}
           {alert.triggeredPrice != null && alert.triggeredPrice > 0
             ? ` → ${formatPrice(alert.triggeredPrice, alert.currency)}`
             : ""}
