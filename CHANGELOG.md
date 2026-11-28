@@ -4,6 +4,14 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.58] - 2026-11-28
+
+### UX
+
+- Watchlist summary: the four stat columns broke a label mid-word at 320px.
+  Below 360px it now renders a 2x2 grid; 360–419px shortens “Out of Stock” to
+  “Out”; wider screens keep the full four-column row.
+
 ## [5.32.57] - 2026-11-28
 
 ### UX

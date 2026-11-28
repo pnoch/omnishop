@@ -3,6 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { useColors } from "@/hooks/use-colors";
@@ -25,6 +26,13 @@ export function SummaryCard({
   onViewStats: () => void;
 }) {
   const colors = useColors();
+  const { width } = useWindowDimensions();
+  // Four stat columns squeeze the labels below ~360px ("Back Order" wrapped
+  // mid-word at 320px). Drop to a 2x2 grid instead of truncating.
+  const stacked = width < 360;
+  // At ~390px four columns still fit if the longest label is shortened; above
+  // that the full label fits, so only the narrow band changes.
+  const shortLabels = !stacked && width < 420;
 
   return (
     <View
@@ -58,7 +66,15 @@ export function SummaryCard({
           {formatPrice(summary.totalValue, displayCurrency)}
         </Text>
       </View>
-      <View style={{ flexDirection: "row", marginTop: 12, gap: 8 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: stacked ? "wrap" : "nowrap",
+          rowGap: stacked ? 10 : 0,
+          marginTop: 12,
+          gap: 4,
+        }}
+      >
         {(
           [
             {
@@ -89,10 +105,12 @@ export function SummaryCard({
               onStatusToggle(statusFilter === col.key ? "all" : col.key);
             }}
             style={{
-              flex: 1,
+              flexGrow: 1,
+              flexBasis: stacked ? "46%" : 0,
+              flexShrink: 1,
               borderRadius: 10,
               paddingVertical: 4,
-              paddingHorizontal: 6,
+              paddingHorizontal: stacked ? 6 : 3,
               backgroundColor:
                 statusFilter === col.key
                   ? col.color + "22"
@@ -107,12 +125,23 @@ export function SummaryCard({
             >
               {col.value}
             </Text>
-            <Text style={{ color: colors.muted, fontSize: 12 }}>
-              {col.label}
+            <Text
+              style={{ color: colors.muted, fontSize: 12 }}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {shortLabels && col.key === "out_of_stock" ? "Out" : col.label}
             </Text>
           </TouchableOpacity>
         ))}
-        <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexGrow: 1,
+            flexBasis: stacked ? "46%" : 0,
+            flexShrink: 1,
+            paddingHorizontal: stacked ? 6 : 0,
+          }}
+        >
           <Text
             style={{
               color: colors.foreground,
@@ -122,7 +151,11 @@ export function SummaryCard({
           >
             {summary.listingCount}
           </Text>
-          <Text style={{ color: colors.muted, fontSize: 12 }}>
+          <Text
+            style={{ color: colors.muted, fontSize: 12 }}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             Listings
           </Text>
         </View>
