@@ -100,62 +100,48 @@ export function WatchlistListHeader({
     onViewStats={onViewStats}
   />
 )}
-{watchlistLength >= 2 && (
+{(watchlistLength >= 2 || watchlistLength > 0) && (
   <View
     style={{
+      flexDirection: "row",
+      gap: 8,
       marginHorizontal: 16,
       marginBottom: 12,
-      borderRadius: 16,
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      overflow: "hidden",
     }}
   >
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => {
-        if (Platform.OS !== "web")
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onPlanOrder();
-      }}
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
-      }}
-      accessibilityLabel="Plan order"
-      accessibilityRole="button"
-    >
-      <IconSymbol name="cart.fill" size={20} color={colors.primaryText} />
-      <View style={{ flex: 1 }}>
+    {watchlistLength >= 2 && (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          if (Platform.OS !== "web")
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          onPlanOrder();
+        }}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 8,
+          paddingHorizontal: 14,
+          minHeight: 48,
+          borderRadius: 14,
+          backgroundColor: colors.surface,
+          borderWidth: 1,
+          borderColor: colors.border,
+        }}
+        accessibilityLabel="Plan order"
+        accessibilityRole="button"
+        accessibilityHint="Find the cheapest way to buy your watchlist at once"
+      >
+        <IconSymbol name="cart.fill" size={17} color={colors.primaryText} />
         <Text
-          style={{ color: colors.foreground, fontSize: 15, fontWeight: "600" }}
+          style={{ color: colors.foreground, fontSize: 14, fontWeight: "600" }}
+          numberOfLines={1}
         >
           Plan order
         </Text>
-        <Text style={{ color: colors.muted, fontSize: 12, marginTop: 2 }}>
-          Find the cheapest way to buy your watchlist at once
-        </Text>
-      </View>
-      <IconSymbol name="chevron.right" size={12} color={colors.muted} />
-    </TouchableOpacity>
-  </View>
-)}
-{watchlistLength > 0 && (
-  <View
-    style={{
-      marginHorizontal: 16,
-      marginBottom: 12,
-      borderRadius: 16,
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      overflow: "hidden",
-    }}
-  >
+      </TouchableOpacity>
+    )}
     <TouchableOpacity
       activeOpacity={0.7}
       onPress={() => {
@@ -164,31 +150,32 @@ export function WatchlistListHeader({
         onSourcing();
       }}
       style={{
+        flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        gap: 12,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
+        gap: 8,
+        paddingHorizontal: 14,
+        minHeight: 48,
+        borderRadius: 14,
+        backgroundColor: colors.surface,
+        borderWidth: 1,
+        borderColor: colors.border,
       }}
       accessibilityLabel="Sourcing sheet"
       accessibilityRole="button"
+      accessibilityHint="Track buy prices, sell targets, and margin"
     >
       <IconSymbol
         name="dollarsign.circle.fill"
-        size={20}
+        size={17}
         color={colors.primaryText}
       />
-      <View style={{ flex: 1 }}>
-        <Text
-          style={{ color: colors.foreground, fontSize: 15, fontWeight: "600" }}
-        >
-          Sourcing sheet
-        </Text>
-        <Text style={{ color: colors.muted, fontSize: 12, marginTop: 2 }}>
-          Track buy prices, sell targets, and margin
-        </Text>
-      </View>
-      <IconSymbol name="chevron.right" size={12} color={colors.muted} />
+      <Text
+        style={{ color: colors.foreground, fontSize: 14, fontWeight: "600" }}
+        numberOfLines={1}
+      >
+        Sourcing
+      </Text>
     </TouchableOpacity>
   </View>
 )}

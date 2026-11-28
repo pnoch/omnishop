@@ -22,13 +22,13 @@ export function AlertsHeader({
       >
         <Heading
           level={1}
-          numberOfLines={2}
+          numberOfLines={1}
           style={{
             color: colors.foreground,
-            fontSize: 28,
+            fontSize: 23,
             fontWeight: "700",
-            flex: 1,
-            marginRight: 12,
+            flexShrink: 1,
+            marginRight: 8,
           }}
         >
           Alerts & Reminders
@@ -50,7 +50,7 @@ export function AlertsHeader({
           }}
         >
           <Text style={{ color: "#fff", fontSize: 13, fontWeight: "600" }}>
-            Restock Watches
+            Restock
           </Text>
         </TouchableOpacity>
       </View>

@@ -38,24 +38,25 @@ export function ChartCard({
         marginBottom: 16,
       }}
     >
+      <Text
+        style={{
+          color: colors.foreground,
+          fontWeight: "700",
+          fontSize: 15,
+        }}
+      >
+        Price History ({displayCurrency})
+      </Text>
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
+          gap: 4,
+          marginTop: 8,
           marginBottom: 4,
         }}
       >
-        <Text
-          style={{
-            color: colors.foreground,
-            fontWeight: "700",
-            fontSize: 15,
-          }}
-        >
-          Price History ({displayCurrency})
-        </Text>
-        <View style={{ flexDirection: "row", gap: 4, flexWrap: "wrap", justifyContent: "flex-end", maxWidth: 220 }}>
+        <View style={{ flexDirection: "row", gap: 2, flex: 1 }}>
           {TIME_RANGES.map((r) => {
             const active = r === timeRange;
             return (
@@ -63,11 +64,11 @@ export function ChartCard({
                 key={r}
                 onPress={() => onRangeChange(r)}
                 style={{
-                  paddingHorizontal: 8,
-                  paddingVertical: 4,
+                  flex: 1,
                   minHeight: 44,
-                  minWidth: 44,
+                  minWidth: 40,
                   alignItems: "center",
+                  justifyContent: "center",
                   borderRadius: 8,
                   backgroundColor: active
                     ? colors.primary

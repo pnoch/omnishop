@@ -5,6 +5,7 @@ import {
   Platform,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -14,6 +15,7 @@ import { ScreenContainer } from "@/components/screen-container";
 import { PageHeader } from "@/components/ui/page-header";
 import { useColors } from "@/hooks/use-colors";
 import { IconButton } from "@/components/ui/icon-button";
+import { IconSymbol } from "@/components/ui/icon-symbol";
 import { EmptyStateView } from "@/components/ui/empty-state-view";
 import { getAlerts, getSettings, getWatchlist, getPriceDigestSnapshot, updateSettings } from "@/lib/storage";
 import { BasketAlertSheet } from "@/components/stats/basket-alert-sheet";
@@ -251,41 +253,78 @@ export default function StatsScreen() {
           ) : digestPlaceholder ? (
             <View
               style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 12,
                 marginHorizontal: 16,
                 marginBottom: 12,
-                padding: 12,
+                paddingHorizontal: 14,
+                paddingVertical: 12,
                 borderRadius: 16,
                 backgroundColor: colors.surface,
                 borderWidth: 1,
                 borderColor: colors.border,
               }}
             >
-              <EmptyStateView
-                compact
-                icon="mail"
-                title={
-                  digestPlaceholder === "off" ? "Digest off" : "Digest scheduled"
-                }
-                subtitle={
-                  digestPlaceholder === "off"
-                    ? "Enable daily or weekly price digests to see changes here."
-                    : "Your first digest will appear here once it's sent."
-                }
-                ctaLabel={
-                  digestPlaceholder === "off" ? "Go to Settings" : undefined
-                }
-                onCtaPress={
-                  digestPlaceholder === "off"
-                    ? () => {
-                        if (Platform.OS !== "web")
-                          Haptics.impactAsync(
-                            Haptics.ImpactFeedbackStyle.Light,
-                          );
-                        router.push("/(tabs)/settings");
-                      }
-                    : undefined
-                }
-              />
+              <View
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 17,
+                  backgroundColor: colors.primary + "14",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconSymbol name="mail" size={17} color={colors.primaryText} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    color: colors.foreground,
+                    fontSize: 14,
+                    fontWeight: "600",
+                  }}
+                >
+                  {digestPlaceholder === "off"
+                    ? "Digest off"
+                    : "Digest scheduled"}
+                </Text>
+                <Text
+                  style={{ color: colors.muted, fontSize: 12, marginTop: 2 }}
+                >
+                  {digestPlaceholder === "off"
+                    ? "Turn on daily or weekly price digests in Settings."
+                    : "Your first digest appears here once sent."}
+                </Text>
+              </View>
+              {digestPlaceholder === "off" && (
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    if (Platform.OS !== "web")
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    router.push("/(tabs)/settings");
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Open digest settings"
+                  style={{
+                    minHeight: 44,
+                    justifyContent: "center",
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: colors.primaryText,
+                      fontSize: 13,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Settings
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           ) : null}
           <MoversCard movers={movers} days={days} onDaysChange={setDays} />

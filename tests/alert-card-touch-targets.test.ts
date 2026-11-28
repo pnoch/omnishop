@@ -66,7 +66,7 @@ describe("stats digest card survives the pre-snapshot window", () => {
   it("renders the placeholder branch instead of null", () => {
     expect(src).toMatch(/digestPlaceholder \? \(/);
     expect(src).toContain("Digest scheduled");
-    expect(src).toContain("Your first digest will appear here once it's sent.");
+    expect(src).toContain("Your first digest appears here once sent.");
   });
 });
 

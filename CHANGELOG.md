@@ -4,6 +4,24 @@ Notable changes to OmniShop. The version is kept in lockstep across
 `package.json`, `app.config.ts`, `desktop/package.json`,
 `desktop/src-tauri/tauri.conf.json` and `desktop/src-tauri/Cargo.toml`.
 
+## [5.32.57] - 2026-11-28
+
+### UX
+
+- Watchlist: the two full-width “Plan order” and “Sourcing sheet” promo rows
+  became one compact row of two shortcuts, moving the search field and products
+  up by roughly 110px on a phone.
+- Add Product: category and brand chip lists collapse to the first eight with a
+  “Show all N” toggle, so catalog results are visible above the fold instead of
+  being pushed below ~40 chips.
+- Statistics: the “Digest off” empty state is a single inline row with a
+  Settings action instead of a tall centered block.
+- Compare: the time-range chips sit on their own full-width row (all six fit on
+  one line at 390px) rather than a two-row 220px block that overlapped the
+  chart title.
+- Alerts: the header fits on one line (shorter action label, tighter title) in
+  both schemes, so it no longer truncates to “Alerts & Remi…”.
+
 ## [5.32.56] - 2026-11-28
 
 ### Features
