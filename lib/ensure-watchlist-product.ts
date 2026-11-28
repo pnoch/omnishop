@@ -40,6 +40,7 @@ export async function ensureWatchlistProduct(
       description: catalogProduct?.description ?? "",
       isWatched: true,
       addedAt: new Date().toISOString(),
+      lastRefreshed: new Date().toISOString(),
       listings: fallbackListings,
       tags: [],
     });

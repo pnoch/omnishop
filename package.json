@@ -27,6 +27,7 @@
     "audit:contrast": "tsx scripts/audit-contrast.ts",
     "audit:desktop": "node scripts/audit-desktop.mjs",
     "budget:web": "node scripts/check-bundle-budget.mjs",
+    "store:assets": "tsx scripts/store-assets.ts",
     "e2e:smoke": "tsx scripts/e2e-smoke.ts",
     "e2e:shared": "tsx scripts/e2e-shared-watchlist.ts",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",

@@ -30,9 +30,13 @@ const RESULT_LIMIT = 15;
 type CatalogEntry = (typeof PRODUCT_CATALOG)[number];
 
 function toProduct(entry: CatalogEntry): Product {
+  const now = new Date().toISOString();
   return {
     ...entry,
-    addedAt: new Date().toISOString(),
+    addedAt: now,
+    // The sample listings are fresh; without this the detail falls back to
+    // "Last refreshed: Never" until the first live query returns.
+    lastRefreshed: now,
     isWatched: true,
     // Seed the known sample listings so the first screen shows prices and
     // stock instead of "0 distributors / No data" until a live refresh lands.

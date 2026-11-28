@@ -10,6 +10,7 @@ dist/
 dist-web/
 dist-web-e2e/
 backups/
+store-assets/
 web-build/
 expo-env.d.ts
 

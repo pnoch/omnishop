@@ -53,16 +53,32 @@ Copy for App Store Connect and Google Play Console. Keep this in sync with
 | Support email | `support@siamcreations.app` (override with `EXPO_PUBLIC_SUPPORT_EMAIL`) |
 | Marketing URL | `https://omnishop.siamcreations.app/` |
 
-## Required assets (not in the repo — supply at submission)
+## Required assets
 
-| Asset | Requirement |
-| --- | --- |
-| App icon | 1024×1024 PNG, no alpha (iOS); 512×512 (Play) |
-| iPhone screenshots | 6.7" and 6.5" (1290×2796 / 1242×2688), 3–10 each |
-| iPad screenshots | 12.9" (2048×2732), if `supportsTablet` stays true |
-| Android screenshots | Phone + 7"/10" tablet, 2–8 each |
-| Feature graphic | 1024×500 (Play) |
-| App preview video | Optional |
+| Asset | Requirement | Source |
+| --- | --- | --- |
+| App icon | 1024×1024 PNG, no alpha (iOS); 512×512 (Play) | `assets/images/icon.png` |
+| iPhone screenshots | 6.7" (1290×2796), 3–10 each | `pnpm store:assets` |
+| iPad screenshots | 12.9" (2048×2732), since `supportsTablet` is true | `pnpm store:assets` |
+| Android screenshots | Phone (1080×1920), 2–8 each | `pnpm store:assets` |
+| Feature graphic | 1024×500 (Play) | `pnpm store:assets` |
+| App preview video | Optional | — |
+
+### Generating the images
+
+```bash
+# Capture the deployed app so real product images load (recommended):
+STORE_BASE_URL=https://web.omnishop.siamcreations.app pnpm store:assets
+
+# Or drive the local web export (local-only mode; product images are placeholders):
+pnpm build:web
+pnpm store:assets
+```
+
+The screenshots use a seeded demo watchlist (a few catalog products, an alert,
+a reminder) and contain no user data. The feature graphic is composed from the
+app icon and brand colours. Review the output before uploading; the iPad set is
+only needed while `supportsTablet` remains true.
 
 ## Data safety / privacy answers
 
